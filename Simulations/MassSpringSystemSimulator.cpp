@@ -5,15 +5,18 @@ MassSpringSystemSimulator::MassSpringSystemSimulator()
 	m_iTestCase = 0;
 }
 
+
 const char * MassSpringSystemSimulator::getTestCasesStr() {
 	return "Teapot,Random Objects,Triangle";
 }
+
 
 void MassSpringSystemSimulator::reset() {
 	m_mouse.x = m_mouse.y = 0;
 	m_trackmouse.x = m_trackmouse.y = 0;
 	m_oldtrackmouse.x = m_oldtrackmouse.y = 0;
 }
+
 
 void MassSpringSystemSimulator::initUI(DrawingUtilitiesClass * DUC)
 {
@@ -24,6 +27,7 @@ void MassSpringSystemSimulator::initUI(DrawingUtilitiesClass * DUC)
 	default:break;
 	}
 }
+
 
 void MassSpringSystemSimulator::notifyCaseChanged(int testCase)
 {
@@ -38,6 +42,7 @@ void MassSpringSystemSimulator::notifyCaseChanged(int testCase)
 		break;
 	}
 }
+
 
 void MassSpringSystemSimulator::externalForcesCalculations(float timeElapsed)
 {
@@ -59,6 +64,7 @@ void MassSpringSystemSimulator::externalForcesCalculations(float timeElapsed)
 	}
 }
 
+
 void MassSpringSystemSimulator::simulateTimestep(float timeStep)
 {
 	// update current setup for each frame
@@ -71,6 +77,7 @@ void MassSpringSystemSimulator::simulateTimestep(float timeStep)
 	}
 }
 
+
 void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext)
 {
 	switch (m_iTestCase)
@@ -79,11 +86,13 @@ void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateCont
 	}
 }
 
+
 void MassSpringSystemSimulator::onClick(int x, int y)
 {
 	m_trackmouse.x = x;
 	m_trackmouse.y = y;
 }
+
 
 void MassSpringSystemSimulator::onMouse(int x, int y)
 {
@@ -92,6 +101,7 @@ void MassSpringSystemSimulator::onMouse(int x, int y)
 	m_trackmouse.x = x;
 	m_trackmouse.y = y;
 }
+
 
 void MassSpringSystemSimulator::setMass(float mass) {}
 
@@ -102,22 +112,32 @@ void MassSpringSystemSimulator::setStiffness(float stiffness) {}
 void MassSpringSystemSimulator::setDampingFactor(float damping) {}
 
 
-int MassSpringSystemSimulator::addMassPoint(Vec3 position, Vec3 Velocity, bool isFixed) {}
+int MassSpringSystemSimulator::addMassPoint(Vec3 position, Vec3 Velocity, bool isFixed) {
+	return 0;
+}
 
 
 void MassSpringSystemSimulator::addSpring(int masspoint1, int masspoint2, float initialLength) {}
 
 
-int MassSpringSystemSimulator::getNumberOfMassPoints() {}
+int MassSpringSystemSimulator::getNumberOfMassPoints() {
+	return 0;
+}
 
 
-int MassSpringSystemSimulator::getNumberOfSprings() {}
+int MassSpringSystemSimulator::getNumberOfSprings() {
+	return 0;
+}
 
 
-Vec3 MassSpringSystemSimulator::getPositionOfMassPoint(int index) {}
+Vec3 MassSpringSystemSimulator::getPositionOfMassPoint(int index) {
+	return Vec3(0, 0, 0);
+}
 
 
-Vec3 MassSpringSystemSimulator::getVelocityOfMassPoint(int index) {}
+Vec3 MassSpringSystemSimulator::getVelocityOfMassPoint(int index) {
+	return Vec3(0, 0, 0);
+}
 
 
 void MassSpringSystemSimulator::applyExternalForce(Vec3 force) {}
