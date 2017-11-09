@@ -1,4 +1,6 @@
 #pragma once
+#include "Simulator.h"
+
 class Spring
 {
 public:
@@ -13,7 +15,7 @@ public:
 	float initialLength;
 
 	void computeElasticForces();
-	void addToEndPoints();
+	void addToEndPoints(Vec3 *points, Vec3 force);
 
 	void setPoint1(int point);
 	void setPoint2(int point);
