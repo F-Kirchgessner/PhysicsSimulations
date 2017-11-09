@@ -13,8 +13,11 @@ public:
 	int point2;
 	float stiffness;
 	float initialLength;
+	float currentLength;
+	Vec3 force;
 
-	void computeElasticForces();
+	float calcDirectedForce(float currentLength, float pos1, float pos2);
+	void computeElasticForces(Vec3 point1Pos, Vec3 point2Pos);
 	void addToEndPoints(Vec3 *points, Vec3 force);
 
 	void setPoint1(int point);
