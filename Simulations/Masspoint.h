@@ -1,6 +1,8 @@
 #pragma once
 #include "Simulator.h"
 
+#include "global.h"
+
 class Masspoint
 {
 public:
@@ -16,6 +18,9 @@ public:
 	float mass;
 	float damping;
 
+	void clearForce();
+	void addGravity();
+
 	void setPosition(Vec3 position);
 	void setVelocity(Vec3 velocity);
 	void setIsFixed(bool isFixed);
@@ -29,7 +34,4 @@ public:
 	bool getIsFixed();
 	float getMass();
 	float getDamping();
-
-
 };
-

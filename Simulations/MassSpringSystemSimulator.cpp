@@ -26,7 +26,6 @@ void MassSpringSystemSimulator::reset() {
 	m_fStiffness = 0;
 	m_fDamping = 0;
 	m_iIntegrator = 0;
-	m_fMassPointSize = 0.01f;
 
 	m_masspointList = {};
 	m_springList = {};
@@ -100,7 +99,7 @@ void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateCont
 	case 0: 
 		// Draw mass points
 		for (int i = 0; i < m_masspointList.size(); i++) {
-			DUC->drawSphere(m_masspointList[i].position, Vec3(m_fMassPointSize, m_fMassPointSize, m_fMassPointSize));
+			DUC->drawSphere(m_masspointList[i].position, Vec3(MASS_POINT_SIZE, MASS_POINT_SIZE, MASS_POINT_SIZE));
 		}
 
 		// Draw springs

@@ -12,6 +12,9 @@ public:
 	float stiffness;
 	float initialLength;
 
+	void computeElasticForces();
+	void addToEndPoints();
+
 	void setPoint1(int point);
 	void setPoint2(int point);
 	void setStiffness(float stiff);
