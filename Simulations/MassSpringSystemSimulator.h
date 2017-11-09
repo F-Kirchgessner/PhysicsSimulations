@@ -2,6 +2,9 @@
 #define MASSSPRINGSYSTEMSIMULATOR_h
 #include "Simulator.h"
 
+#include "Spring.h"
+#include "Masspoint.h"
+
 // Do Not Change
 #define EULER 0
 #define LEAPFROG 1
@@ -25,10 +28,11 @@ public:
 	void onMouse(int x, int y);
 
 	// Specific Functions
+	void initTestScene();
 	void setMass(float mass);
 	void setStiffness(float stiffness);
 	void setDampingFactor(float damping);
-	int addMassPoint(Vec3 position, Vec3 Velocity, bool isFixed);
+	int addMassPoint(Vec3 position, Vec3 velocity, bool isFixed);
 	void addSpring(int masspoint1, int masspoint2, float initialLength);
 	int getNumberOfMassPoints();
 	int getNumberOfSprings();
@@ -47,11 +51,16 @@ private:
 	float m_fStiffness;
 	float m_fDamping;
 	int m_iIntegrator;
+	float m_fMassPointSize;
 
 	// UI Attributes
 	Vec3 m_externalForce;
 	Point2D m_mouse;
 	Point2D m_trackmouse;
 	Point2D m_oldtrackmouse;
+
+	// Objects
+	std::vector<Masspoint> m_masspointList;
+	std::vector<Spring> m_springList;
 };
 #endif

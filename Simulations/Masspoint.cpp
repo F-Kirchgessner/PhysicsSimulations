@@ -5,7 +5,7 @@ Masspoint::Masspoint()
 
 }
 
-Masspoint::Masspoint(Vec3 position, Vec3 velocity, Vec3 force, float mass, float damping) : position(position), velocity(velocity), force(force), mass(mass), damping(damping)
+Masspoint::Masspoint(Vec3 position, Vec3 velocity, bool isFixed, Vec3 force, float mass, float damping) : position(position), velocity(velocity), isFixed(isFixed), force(force), mass(mass), damping(damping)
 {
 
 }
@@ -24,6 +24,9 @@ void Masspoint::setVelocity(Vec3 velocity) {
 void Masspoint::setForce(Vec3 force) {
 	force = force;
 }
+void Masspoint::setIsFixed(bool isFixed) {
+	isFixed = isFixed;
+}
 void Masspoint::setMass(float mass) {
 	mass = mass;
 }
@@ -39,6 +42,9 @@ Vec3 Masspoint::getVelocity() {
 }
 Vec3 Masspoint::getForce() {
 	return force;
+}
+bool  Masspoint::getIsFixed() {
+	return isFixed;
 }
 float Masspoint::getMass() {
 	return mass;
