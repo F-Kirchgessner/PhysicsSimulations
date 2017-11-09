@@ -36,17 +36,12 @@ void MassSpringSystemSimulator::reset() {
 
 void MassSpringSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 
-	typedef enum { SUMMER, FALL, WINTER, SPRING } Seasons;
-	Seasons season = WINTER;
-	TwType seasonType;
-
-	seasonType = TwDefineEnum("SeasonType", NULL, 0);
+	integratorType = TwDefineEnum("IntegrationType", NULL, 0);
 
 	this->DUC = DUC;
-	switch (1)
+	switch (m_iTestCase)
 	{
-	case 0:break;
-	case 1: TwAddVarRW(DUC->g_pTweakBar, "Season", seasonType, &season, " enum='0 {Summer}, 1 {Fall}, 2 {Winter}, 3 {Spring}' "); break;
+	case 0: TwAddVarRW(DUC->g_pTweakBar, "Integrationsmethode", integratorType, &m_iIntegrator, "enum='0 {Euler}, 1 {Leapfrog}, 2 {Midpoint}' "); break;
 	default:break;
 	}
 }

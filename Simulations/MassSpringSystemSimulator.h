@@ -46,12 +46,16 @@ public:
 		m_iIntegrator = integrator;
 	}
 
+	TwType seasonType;
+
 private:
 	// Data Attributes
 	float m_fMass;
 	float m_fStiffness;
 	float m_fDamping;
 	int m_iIntegrator;
+
+	TwType integratorType;
 
 	// UI Attributes
 	Vec3 m_externalForce;
