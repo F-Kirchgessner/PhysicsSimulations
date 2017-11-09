@@ -27,7 +27,12 @@ void Spring::computeElasticForces(Vec3 point1Pos, Vec3 point2Pos) {
 }
 
 
-void Spring::addToEndPoints() {
+void Spring::addToEndPoints(Vec3 *points, Vec3 force) {
+	for (int i = 0; i < sizeof(points); i++) {
+		points[i].x = points[i].x + force.x;
+		points[i].y = points[i].y + force.y;
+		points[i].z = points[i].z + force.z;
+	}
 }
 
 
