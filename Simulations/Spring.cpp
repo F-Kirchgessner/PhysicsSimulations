@@ -1,11 +1,14 @@
 #include "Spring.h"
 
 Spring::Spring(){
-
 }
 
-Spring::Spring(int point1, int point2, float stiffness, float initialLength) : point1(point1), point2(point2), stiffness(stiffness), initialLength(initialLength){
+Spring::Spring(Masspoint *point1, Masspoint *point2, float stiffness, float initialLength){
 	Vec3 force = Vec3(0, 0, 0);
+	*point1 = *point1;
+	*point2 = *point2;
+	stiffness = stiffness;
+	initialLength = initialLength;
 }
 
 
@@ -18,28 +21,25 @@ float Spring::calcDirectedForce(float currentLength, float pos1, float pos2) {
 }
 
 
-void Spring::computeElasticForces(Vec3 point1Pos, Vec3 point2Pos) {
-	float currentLength = sqrt(point1Pos.squaredDistanceTo(point2Pos));
+void Spring::computeElasticForces() {
+	float currentLength = sqrt(point1->position.squaredDistanceTo(point2->position));
 
-	force.x = calcDirectedForce(currentLength, point1Pos.x, point2Pos.x);
-	force.y = calcDirectedForce(currentLength, point1Pos.y, point2Pos.y);
-	force.z = calcDirectedForce(currentLength, point1Pos.z, point2Pos.z);
+	force.x = calcDirectedForce(currentLength, point1->position.x, point2->position.x);
+	force.y = calcDirectedForce(currentLength, point1->position.y, point2->position.y);
+	force.z = calcDirectedForce(currentLength, point1->position.z, point2->position.z);
 }
 
 
-void Spring::addToEndPoints(Vec3 *points, Vec3 force) {
-	for (int i = 0; i < sizeof(points); i++) {
-		points[i].x = points[i].x + force.x;
-		points[i].y = points[i].y + force.y;
-		points[i].z = points[i].z + force.z;
-	}
+void Spring::addToEndPoints(Vec3 force) {
+	point1->force = point1->force + force;
+	point2->force = point2->force + force;
 }
 
 
-void Spring::setPoint1(int point) {
+void Spring::setPoint1(Masspoint *point) {
 	point1 = point;
 }
-void Spring::setPoint2(int point) {
+void Spring::setPoint2(Masspoint *point) {
 	point2 = point;
 }
 void Spring::setStiffness(float stiff) {
@@ -49,11 +49,11 @@ void Spring::setInitalLength(float initlength) {
 	initialLength = initlength;
 }
 
-int Spring::getPoint1() {
+Masspoint *Spring::getPoint1() {
 	return point1;
 }
 
-int Spring::getPoint2() {
+Masspoint *Spring::getPoint2() {
 	return point2;
 }
 

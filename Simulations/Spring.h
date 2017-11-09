@@ -1,32 +1,33 @@
 #pragma once
 #include "Simulator.h"
+#include "Masspoint.h"
 
 class Spring
 {
 public:
 	Spring();
-	Spring(int point1, int point2, float stiffness, float initialLength);
+	Spring(Masspoint *point1, Masspoint *point2, float stiffness, float initialLength);
 	~Spring();
 
 public:
-	int point1;
-	int point2;
+	Masspoint *point1;
+	Masspoint *point2;
 	float stiffness;
 	float initialLength;
 	float currentLength;
 	Vec3 force;
 
 	float calcDirectedForce(float currentLength, float pos1, float pos2);
-	void computeElasticForces(Vec3 point1Pos, Vec3 point2Pos);
-	void addToEndPoints(Vec3 *points, Vec3 force);
+	void computeElasticForces();
+	void addToEndPoints(Vec3 force);
 
-	void setPoint1(int point);
-	void setPoint2(int point);
+	void setPoint1(Masspoint *point);
+	void setPoint2(Masspoint *point);
 	void setStiffness(float stiff);
 	void setInitalLength(float initlength);
 
-	int getPoint1();
-	int getPoint2();
+	Masspoint *getPoint1();
+	Masspoint *getPoint2();
 	float getStiffness();
 	float getInitialLength();
 
