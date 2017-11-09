@@ -108,6 +108,16 @@ void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateCont
 			DUC->drawLine(m_masspointList[m_springList.at(i).getPoint1()].position, Vec3(0, 1, 0), m_masspointList[m_springList.at(i).getPoint2()].position, Vec3(0, 1, 0));
 		}
 		DUC->endLine();
+		
+		for (auto& springs : m_springList)
+		{
+			springs.computeElasticForces();
+		}
+		for (auto& masspoints : m_masspointList)
+		{
+			masspoints.integratePosition();
+			masspoints.integrateVelocity();
+		}
 		break;
 	}
 }
