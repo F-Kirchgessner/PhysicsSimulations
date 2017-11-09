@@ -19,7 +19,7 @@ public:
 
 	float calcDirectedForce(float currentLength, float pos1, float pos2);
 	void computeElasticForces();
-	void addToEndPoints(Vec3 force);
+	void addToEndPoints();
 
 	void setPoint1(Masspoint *point);
 	void setPoint2(Masspoint *point);

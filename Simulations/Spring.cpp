@@ -30,9 +30,9 @@ void Spring::computeElasticForces() {
 }
 
 
-void Spring::addToEndPoints(Vec3 force) {
-	point1->force = point1->force + force;
-	point2->force = point2->force + force;
+void Spring::addToEndPoints() {
+	point1->force = point1->force + this->force;
+	point2->force = point2->force + this->force;
 }
 
 
