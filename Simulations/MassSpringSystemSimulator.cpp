@@ -10,6 +10,13 @@ const char * MassSpringSystemSimulator::getTestCasesStr() {
 }
 
 
+void MassSpringSystemSimulator::initTestScene() {
+	addMassPoint(Vec3(0.0, 0.0f, 0), Vec3(-1.0, 0.0f, 0), false);
+	addMassPoint(Vec3(0.0, 1.0f, 0), Vec3(1.0, 0.0f, 0), false);
+	addSpring(0, 1, 1);
+}
+
+
 void MassSpringSystemSimulator::reset() {
 	m_mouse.x = m_mouse.y = 0;
 	m_trackmouse.x = m_trackmouse.y = 0;
@@ -19,6 +26,12 @@ void MassSpringSystemSimulator::reset() {
 	m_fStiffness = 0;
 	m_fDamping = 0;
 	m_iIntegrator = 0;
+	m_fMassPointSize = 0.01f;
+
+	m_masspointList = {};
+	m_springList = {};
+
+	initTestScene();
 }
 
 
@@ -37,7 +50,7 @@ void MassSpringSystemSimulator::notifyCaseChanged(int testCase) {
 	switch (m_iTestCase)
 	{
 	case 0:
-		cout << "Mass System !\n";
+		cout << "Mass System!\n";
 		break;
 	default:
 		cout << "Empty Test!\n";
@@ -81,7 +94,19 @@ void MassSpringSystemSimulator::simulateTimestep(float timeStep) {
 void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext) {
 	switch (m_iTestCase)
 	{
-	case 0: break;
+	case 0: 
+		// Draw mass points
+		for (int i = 0; i < m_masspointList.size(); i++) {
+			DUC->drawSphere(m_masspointList[i].position, Vec3(m_fMassPointSize, m_fMassPointSize, m_fMassPointSize));
+		}
+
+		// Draw springs
+		DUC->beginLine();
+		for (int i = 0; i < m_springList.size(); i++) {
+			DUC->drawLine(m_masspointList[m_springList.at(i).getPoint1()].position, Vec3(0, 1, 0), m_masspointList[m_springList.at(i).getPoint2()].position, Vec3(0, 1, 0));
+		}
+		DUC->endLine();
+		break;
 	}
 }
 
@@ -115,22 +140,24 @@ void MassSpringSystemSimulator::setDampingFactor(float damping) {
 }
 
 
-int MassSpringSystemSimulator::addMassPoint(Vec3 position, Vec3 Velocity, bool isFixed) {
-	return 0;
+int MassSpringSystemSimulator::addMassPoint(Vec3 position, Vec3 velocity, bool isFixed) {
+	m_masspointList.push_back(Masspoint(position, velocity, isFixed, Vec3(0, 0, 0), m_fMass, m_fDamping));
+	return m_masspointList.size() - 1;
 }
 
 
 void MassSpringSystemSimulator::addSpring(int masspoint1, int masspoint2, float initialLength) {
+	m_springList.push_back(Spring(masspoint1, masspoint2, m_fStiffness, initialLength));
 }
 
 
 int MassSpringSystemSimulator::getNumberOfMassPoints() {
-	return 0;
+	return m_masspointList.size();
 }
 
 
 int MassSpringSystemSimulator::getNumberOfSprings() {
-	return 0;
+	return m_springList.size();
 }
 
 
