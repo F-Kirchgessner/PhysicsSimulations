@@ -1,22 +1,29 @@
 #include "Spring.h"
 
-Spring::Spring()
-{
+Spring::Spring(){
 
 }
 
-Spring::Spring(int point1, int point2, float stiffness, float initialLength) : point1(point1), point2(point2), stiffness(stiffness), initialLength(initialLength)
-{
-
+Spring::Spring(int point1, int point2, float stiffness, float initialLength) : point1(point1), point2(point2), stiffness(stiffness), initialLength(initialLength){
+	Vec3 force = Vec3(0, 0, 0);
 }
 
 
-Spring::~Spring()
-{
+Spring::~Spring(){
 }
 
 
-void Spring::computeElasticForces() {
+float Spring::calcDirectedForce(float currentLength, float pos1, float pos2) {
+	return -stiffness * (currentLength - initialLength) * ((pos1 - pos2) / currentLength);
+}
+
+
+void Spring::computeElasticForces(Vec3 point1Pos, Vec3 point2Pos) {
+	float currentLength = point1Pos.squaredDistanceTo(point2Pos);
+
+	force.x = calcDirectedForce(currentLength, point1Pos.x, point2Pos.x);
+	force.y = calcDirectedForce(currentLength, point1Pos.y, point2Pos.y);
+	force.z = calcDirectedForce(currentLength, point1Pos.z, point2Pos.z);
 }
 
 
