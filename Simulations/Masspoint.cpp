@@ -1,20 +1,14 @@
 #include "Masspoint.h"
 
-Masspoint::Masspoint()
-{
-
+Masspoint::Masspoint() {
 }
 
-Masspoint::Masspoint(Vec3 position, Vec3 velocity, bool isFixed, Vec3 force, float mass, float damping) : position(position), velocity(velocity), isFixed(isFixed), force(force), mass(mass), damping(damping)
-{
-
+Masspoint::Masspoint(Vec3 position, Vec3 velocity, bool isFixed, Vec3 force, float mass, float damping) : position(position), velocity(velocity), isFixed(isFixed), force(force), mass(mass), damping(damping) {
 }
 
 
-Masspoint::~Masspoint()
-{
+Masspoint::~Masspoint() {
 }
-
 
 void Masspoint::clearForce() {
 	force.x = 0;
@@ -22,11 +16,37 @@ void Masspoint::clearForce() {
 	force.z = 0;
 }
 
-
 void Masspoint::addGravity() {
 	force.y = mass * GRAVITY_ACCEL;
 }
 
+void Masspoint::integratePositionsLeapfrog(float elapsedTime) {
+
+}
+
+void Masspoint::integratePositionsMidpoint(float elapsedTime) {
+
+}
+
+void Masspoint::integratePositionsEuler(float elapsedTime) {
+	position.x += velocity.x * elapsedTime;
+	position.y += velocity.y * elapsedTime;
+	position.z += velocity.z * elapsedTime;
+}
+
+void Masspoint::integrateVelocityLeapfrog() {
+
+}
+
+void Masspoint::integrateVelocityMidpoint() {
+
+}
+
+void Masspoint::integrateVelocityEuler() {
+	velocity.x += force.x / mass;
+	velocity.y += force.y / mass;
+	velocity.z += force.z / mass;
+}
 
 void Masspoint::setPosition(Vec3 position) {
 	position = position;
