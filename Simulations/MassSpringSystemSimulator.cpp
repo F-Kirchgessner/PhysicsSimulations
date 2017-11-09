@@ -23,10 +23,18 @@ void MassSpringSystemSimulator::reset() {
 
 
 void MassSpringSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
+
+	typedef enum { SUMMER, FALL, WINTER, SPRING } Seasons;
+	Seasons season = WINTER;
+	TwType seasonType;
+
+	seasonType = TwDefineEnum("SeasonType", NULL, 0);
+
 	this->DUC = DUC;
-	switch (m_iTestCase)
+	switch (1)
 	{
 	case 0:break;
+	case 1: TwAddVarRW(DUC->g_pTweakBar, "Season", seasonType, &season, " enum='0 {Summer}, 1 {Fall}, 2 {Winter}, 3 {Spring}' "); break;
 	default:break;
 	}
 }
