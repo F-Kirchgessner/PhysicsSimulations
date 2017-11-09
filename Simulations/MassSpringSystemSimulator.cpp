@@ -164,12 +164,12 @@ int MassSpringSystemSimulator::getNumberOfSprings() {
 
 
 Vec3 MassSpringSystemSimulator::getPositionOfMassPoint(int index) {
-	return Vec3(0, 0, 0);
+	return m_masspointList.at(index).getPosition();
 }
 
 
 Vec3 MassSpringSystemSimulator::getVelocityOfMassPoint(int index) {
-	return Vec3(0, 0, 0);
+	return m_masspointList.at(index).getVelocity();
 }
 
 
