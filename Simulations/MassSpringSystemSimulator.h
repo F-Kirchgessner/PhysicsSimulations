@@ -66,5 +66,15 @@ private:
 	// Objects
 	std::vector<Masspoint> m_masspointList;
 	std::vector<Spring> m_springList;
+
+	//integrator
+	void integratePositionsMidpoint();
+	void integratePositionsLeapfrog();
+	void integratePositionsEuler();
+	void integratePositions();
+	void integrateVelocityMidpoint();
+	void integrateVelocityLeapfrog();
+	void integrateVelocityEuler();
+	void integrateVelocity();
 };
 #endif

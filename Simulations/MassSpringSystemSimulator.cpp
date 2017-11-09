@@ -175,3 +175,55 @@ Vec3 MassSpringSystemSimulator::getVelocityOfMassPoint(int index) {
 
 void MassSpringSystemSimulator::applyExternalForce(Vec3 force) {
 }
+
+void MassSpringSystemSimulator::integratePositionsLeapfrog()
+{
+
+}
+
+void MassSpringSystemSimulator::integratePositionsMidpoint()
+{
+
+}
+
+void MassSpringSystemSimulator::integratePositionsEuler()
+{
+
+}
+
+void MassSpringSystemSimulator::integratePositions() {
+	switch (m_iIntegrator) {
+	//euler
+	case 0:integratePositionsEuler(); break;
+	//leapfrog
+	case 1:integratePositionsMidpoint(); break;
+	//midpoint
+	case 2:integratePositionsLeapfrog(); break;
+	}
+}
+
+void MassSpringSystemSimulator::integrateVelocityLeapfrog()
+{
+
+}
+
+void MassSpringSystemSimulator::integrateVelocityMidpoint()
+{
+
+}
+
+void MassSpringSystemSimulator::integrateVelocityEuler()
+{
+
+}
+
+void MassSpringSystemSimulator::integrateVelocity() {
+	switch (m_iIntegrator) {
+		//euler
+	case 0:integrateVelocityEuler(); break;
+		//leapfrog
+	case 1:integrateVelocityMidpoint(); break;
+		//midpoint
+	case 2:integrateVelocityLeapfrog(); break;
+	}
+}
