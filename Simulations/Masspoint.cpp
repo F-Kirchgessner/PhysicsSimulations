@@ -15,6 +15,19 @@ Masspoint::~Masspoint()
 {
 }
 
+
+void Masspoint::clearForce() {
+	force.x = 0;
+	force.y = 0;
+	force.z = 0;
+}
+
+
+void Masspoint::addGravity() {
+	force.y = mass * GRAVITY_ACCEL;
+}
+
+
 void Masspoint::setPosition(Vec3 position) {
 	position = position;
 }

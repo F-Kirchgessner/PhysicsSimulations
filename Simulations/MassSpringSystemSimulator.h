@@ -2,6 +2,7 @@
 #define MASSSPRINGSYSTEMSIMULATOR_h
 #include "Simulator.h"
 
+#include "global.h"
 #include "Spring.h"
 #include "Masspoint.h"
 
@@ -51,7 +52,6 @@ private:
 	float m_fStiffness;
 	float m_fDamping;
 	int m_iIntegrator;
-	float m_fMassPointSize;
 
 	// UI Attributes
 	Vec3 m_externalForce;

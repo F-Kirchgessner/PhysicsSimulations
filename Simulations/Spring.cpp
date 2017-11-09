@@ -15,6 +15,15 @@ Spring::~Spring()
 {
 }
 
+
+void Spring::computeElasticForces() {
+}
+
+
+void Spring::addToEndPoints() {
+}
+
+
 void Spring::setPoint1(int point) {
 	point1 = point;
 }
