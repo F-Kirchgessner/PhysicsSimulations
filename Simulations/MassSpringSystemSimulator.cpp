@@ -1,13 +1,12 @@
 #include "MassSpringSystemSimulator.h"
 
-MassSpringSystemSimulator::MassSpringSystemSimulator()
-{
+MassSpringSystemSimulator::MassSpringSystemSimulator() {
 	m_iTestCase = 0;
 }
 
 
 const char * MassSpringSystemSimulator::getTestCasesStr() {
-	return "Teapot,Random Objects,Triangle";
+	return "MassSpringSystem";
 }
 
 
@@ -15,11 +14,15 @@ void MassSpringSystemSimulator::reset() {
 	m_mouse.x = m_mouse.y = 0;
 	m_trackmouse.x = m_trackmouse.y = 0;
 	m_oldtrackmouse.x = m_oldtrackmouse.y = 0;
+
+	m_fMass = 1;
+	m_fStiffness = 0;
+	m_fDamping = 0;
+	m_iIntegrator = 0;
 }
 
 
-void MassSpringSystemSimulator::initUI(DrawingUtilitiesClass * DUC)
-{
+void MassSpringSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 	this->DUC = DUC;
 	switch (m_iTestCase)
 	{
@@ -29,8 +32,7 @@ void MassSpringSystemSimulator::initUI(DrawingUtilitiesClass * DUC)
 }
 
 
-void MassSpringSystemSimulator::notifyCaseChanged(int testCase)
-{
+void MassSpringSystemSimulator::notifyCaseChanged(int testCase) {
 	m_iTestCase = testCase;
 	switch (m_iTestCase)
 	{
@@ -44,8 +46,7 @@ void MassSpringSystemSimulator::notifyCaseChanged(int testCase)
 }
 
 
-void MassSpringSystemSimulator::externalForcesCalculations(float timeElapsed)
-{
+void MassSpringSystemSimulator::externalForcesCalculations(float timeElapsed) {
 	// Apply the mouse deltas to g_vfMovableObjectPos (move along cameras view plane)
 	Point2D mouseDiff;
 	mouseDiff.x = m_trackmouse.x - m_oldtrackmouse.x;
@@ -65,8 +66,7 @@ void MassSpringSystemSimulator::externalForcesCalculations(float timeElapsed)
 }
 
 
-void MassSpringSystemSimulator::simulateTimestep(float timeStep)
-{
+void MassSpringSystemSimulator::simulateTimestep(float timeStep) {
 	// update current setup for each frame
 	switch (m_iTestCase)
 	{// handling different cases
@@ -78,8 +78,7 @@ void MassSpringSystemSimulator::simulateTimestep(float timeStep)
 }
 
 
-void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext)
-{
+void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext) {
 	switch (m_iTestCase)
 	{
 	case 0: break;
@@ -87,15 +86,13 @@ void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateCont
 }
 
 
-void MassSpringSystemSimulator::onClick(int x, int y)
-{
+void MassSpringSystemSimulator::onClick(int x, int y) {
 	m_trackmouse.x = x;
 	m_trackmouse.y = y;
 }
 
 
-void MassSpringSystemSimulator::onMouse(int x, int y)
-{
+void MassSpringSystemSimulator::onMouse(int x, int y) {
 	m_oldtrackmouse.x = x;
 	m_oldtrackmouse.y = y;
 	m_trackmouse.x = x;
@@ -103,13 +100,19 @@ void MassSpringSystemSimulator::onMouse(int x, int y)
 }
 
 
-void MassSpringSystemSimulator::setMass(float mass) {}
+void MassSpringSystemSimulator::setMass(float mass) {
+	m_fMass = mass;
+}
 
 
-void MassSpringSystemSimulator::setStiffness(float stiffness) {}
+void MassSpringSystemSimulator::setStiffness(float stiffness) {
+	m_fStiffness = stiffness;
+}
 
 
-void MassSpringSystemSimulator::setDampingFactor(float damping) {}
+void MassSpringSystemSimulator::setDampingFactor(float damping) {
+	m_fDamping = damping;
+}
 
 
 int MassSpringSystemSimulator::addMassPoint(Vec3 position, Vec3 Velocity, bool isFixed) {
@@ -117,7 +120,8 @@ int MassSpringSystemSimulator::addMassPoint(Vec3 position, Vec3 Velocity, bool i
 }
 
 
-void MassSpringSystemSimulator::addSpring(int masspoint1, int masspoint2, float initialLength) {}
+void MassSpringSystemSimulator::addSpring(int masspoint1, int masspoint2, float initialLength) {
+}
 
 
 int MassSpringSystemSimulator::getNumberOfMassPoints() {
@@ -140,4 +144,5 @@ Vec3 MassSpringSystemSimulator::getVelocityOfMassPoint(int index) {
 }
 
 
-void MassSpringSystemSimulator::applyExternalForce(Vec3 force) {}
+void MassSpringSystemSimulator::applyExternalForce(Vec3 force) {
+}
