@@ -3,10 +3,10 @@
 Spring::Spring(){
 }
 
-Spring::Spring(Masspoint *point1, Masspoint *point2, float stiffness, float initialLength){
+Spring::Spring(Masspoint& point1, Masspoint& point2, float stiffness, float initialLength){
 	Vec3 force = Vec3(0, 0, 0);
-	*point1 = *point1;
-	*point2 = *point2;
+	point1 = point1;
+	point2 = point2;
 	stiffness = stiffness;
 	initialLength = initialLength;
 }

@@ -113,11 +113,10 @@ void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateCont
 		{
 			springs.computeElasticForces();
 		}
-		for (auto& masspoints : m_masspointList)
-		{
-			masspoints.integratePosition();
-			masspoints.integrateVelocity();
-		}
+
+		integratePositions();
+		integrateVelocity();
+
 		break;
 	}
 }
@@ -188,14 +187,14 @@ void MassSpringSystemSimulator::applyExternalForce(Vec3 force) {
 
 
 void MassSpringSystemSimulator::integratePositions(float elapsedTime) {
-	for (int i = 0; i < m_masspointList.size(); i++) {
+	for (auto &massspoint : m_masspointList) {
 		switch (m_iIntegrator) {
 		//euler
-		case 0:m_masspointList[i].integratePositionsEuler(elapsedTime); break;
+		case 0:massspoint.integratePositionsEuler(elapsedTime); break;
 		//leapfrog
-		case 1:m_masspointList[i].integratePositionsMidpoint(elapsedTime); break;
+		case 1:massspoint.integratePositionsMidpoint(elapsedTime); break;
 		//midpoint
-		case 2:m_masspointList[i].integratePositionsLeapfrog(elapsedTime); break;
+		case 2:massspoint.integratePositionsLeapfrog(elapsedTime); break;
 		}
 	}
 }
@@ -203,14 +202,14 @@ void MassSpringSystemSimulator::integratePositions(float elapsedTime) {
 
 
 void MassSpringSystemSimulator::integrateVelocity() {
-	for (int i = 0; i < m_masspointList.size(); i++) {
+	for (auto &massspoint: m_masspointList) {
 		switch (m_iIntegrator) {
 			//euler
-		case 0:m_masspointList[i].integrateVelocityEuler(); break;
+		case 0:massspoint.integrateVelocityEuler(); break;
 			//leapfrog
-		case 1:m_masspointList[i].integrateVelocityMidpoint(); break;
+		case 1:massspoint.integrateVelocityMidpoint(); break;
 			//midpoint
-		case 2:m_masspointList[i].integrateVelocityLeapfrog(); break;
+		case 2:massspoint.integrateVelocityLeapfrog(); break;
 		}
 	}
 }
