@@ -23,8 +23,8 @@ void MassSpringSystemSimulator::reset() {
 	m_oldtrackmouse.x = m_oldtrackmouse.y = 0;
 
 	m_fMass = 1;
-	m_fStiffness = 0;
-	m_fDamping = 0;
+	m_fStiffness = 1;
+	m_fDamping = 1;
 	m_iIntegrator = 0;
 
 	m_masspointList = {};

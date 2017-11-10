@@ -24,9 +24,10 @@ float Spring::calcDirectedForce(float currentLength, float pos1, float pos2) {
 void Spring::computeElasticForces() {
 	float currentLength = sqrt(point1->position.squaredDistanceTo(point2->position));
 
-	force.x = calcDirectedForce(currentLength, point1->position.x, point2->position.x);
-	force.y = calcDirectedForce(currentLength, point1->position.y, point2->position.y);
-	force.z = calcDirectedForce(currentLength, point1->position.z, point2->position.z);
+	this->force.x = calcDirectedForce(currentLength, point1->position.x, point2->position.x);
+	this->force.y = calcDirectedForce(currentLength, point1->position.y, point2->position.y);
+	this->force.z = calcDirectedForce(currentLength, point1->position.z, point2->position.z);
+	std::cout << force.x << " | " << force.y << " | " << force.z << endl;
 }
 
 
