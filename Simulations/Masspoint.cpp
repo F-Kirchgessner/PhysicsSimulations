@@ -17,7 +17,7 @@ void Masspoint::clearForce() {
 }
 
 void Masspoint::addGravity() {
-	force.y = mass * GRAVITY_ACCEL;
+	force.y -= mass * GRAVITY_ACCEL;
 }
 
 void Masspoint::integratePositionsLeapfrog(float elapsedTime) {
@@ -29,9 +29,11 @@ void Masspoint::integratePositionsMidpoint(float elapsedTime) {
 }
 
 void Masspoint::integratePositionsEuler(float elapsedTime) {
-	position.x += velocity.x * elapsedTime;
-	position.y += velocity.y * elapsedTime;
-	position.z += velocity.z * elapsedTime;
+	if (!isFixed) {
+		position.x += velocity.x * elapsedTime;
+		position.y += velocity.y * elapsedTime;
+		position.z += velocity.z * elapsedTime;
+	}
 }
 
 void Masspoint::integrateVelocityLeapfrog() {
@@ -46,6 +48,10 @@ void Masspoint::integrateVelocityEuler() {
 	velocity.x += force.x / mass;
 	velocity.y += force.y / mass;
 	velocity.z += force.z / mass;
+}
+
+void Masspoint::applyForce(Vec3 force) {
+	this->force += force;
 }
 
 void Masspoint::setPosition(Vec3 position) {

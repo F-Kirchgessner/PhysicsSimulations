@@ -26,6 +26,7 @@ public:
 	void integrateVelocityMidpoint();
 	void integrateVelocityLeapfrog();
 	void integrateVelocityEuler();
+	void applyForce(Vec3 force);
 
 	void setPosition(Vec3 position);
 	void setVelocity(Vec3 velocity);

@@ -4,11 +4,11 @@ Spring::Spring(){
 }
 
 Spring::Spring(Masspoint *point1, Masspoint *point2, float stiffness, float initialLength){
-	Vec3 force = Vec3(0, 0, 0);
-	*point1 = *point1;
-	*point2 = *point2;
-	stiffness = stiffness;
-	initialLength = initialLength;
+	this->force = Vec3(0, 0, 0);
+	this->point1 = point1;
+	this->point2 = point2;
+	this->stiffness = stiffness;
+	this->initialLength = initialLength;
 }
 
 
@@ -31,8 +31,8 @@ void Spring::computeElasticForces() {
 
 
 void Spring::addToEndPoints() {
-	point1->force = point1->force + this->force;
-	point2->force = point2->force + this->force;
+	point1->applyForce(this->force);
+	point2->applyForce(this->force);
 }
 
 
