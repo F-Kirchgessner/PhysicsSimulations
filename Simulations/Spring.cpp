@@ -14,6 +14,8 @@ Spring::Spring(Masspoint& point1, Masspoint& point2, float stiffness, float init
 
 
 Spring::~Spring(){
+	mass_point1 = nullptr;
+	mass_point2 = nullptr;
 }
 
 
