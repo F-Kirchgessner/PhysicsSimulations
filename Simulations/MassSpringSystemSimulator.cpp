@@ -6,7 +6,7 @@ MassSpringSystemSimulator::MassSpringSystemSimulator() {
 
 
 const char * MassSpringSystemSimulator::getTestCasesStr() {
-	return "MassSpringSystem";
+	return "Demo_1,Demo_2,Demo_3,Demo_4,Demo_5";
 }
 
 
