@@ -36,12 +36,12 @@ void MassSpringSystemSimulator::reset() {
 
 void MassSpringSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 
-	integratorType = TwDefineEnum("IntegrationType", NULL, 0);
-
+	TwType TW_TYPE_INTEGRATORTYPE = TwDefineEnumFromString("IntegrationType", "Euler,Leapfrog,Midpoint");
+	
 	this->DUC = DUC;
 	switch (m_iTestCase)
 	{
-	case 0: TwAddVarRW(DUC->g_pTweakBar, "Integrationsmethode", integratorType, &m_iIntegrator, "enum='0 {Euler}, 1 {Leapfrog}, 2 {Midpoint}' "); break;
+	case 0: TwAddVarRW(DUC->g_pTweakBar, "IntegrationType", TW_TYPE_INTEGRATORTYPE, &m_iIntegrator, ""); break;
 	default:break;
 	}
 }
