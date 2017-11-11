@@ -6,7 +6,7 @@ MassSpringSystemSimulator::MassSpringSystemSimulator() {
 
 
 const char * MassSpringSystemSimulator::getTestCasesStr() {
-	return "Demo_1,Demo_2,Demo_3,Demo_4,Demo_5";
+	return "Basic Test, Complex Test";
 }
 
 
@@ -19,9 +19,6 @@ void MassSpringSystemSimulator::initTestScene() {
 		addSpring(0, 1, 0.25f);
 		break;
 	case 1: break;
-	case 2: break;
-	case 3: break;
-	case 4: break;
 	default:
 		break;
 	}
@@ -56,6 +53,7 @@ void MassSpringSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 	switch (m_iTestCase)
 	{
 	case 0: TwAddVarRW(DUC->g_pTweakBar, "IntegrationType", TW_TYPE_INTEGRATORTYPE, &m_iIntegrator, ""); break;
+	case 1: TwAddVarRW(DUC->g_pTweakBar, "IntegrationType", TW_TYPE_INTEGRATORTYPE, &m_iIntegrator, ""); break;
 	default:break;
 	}
 }
@@ -102,9 +100,6 @@ void MassSpringSystemSimulator::simulateTimestep(float timeStep) {
 	{
 	case 0: integrate(timeStep); break;
 	case 1: break;
-	case 2: break;
-	case 3: break;
-	case 4: break;
 	default: break;
 	}
 }
