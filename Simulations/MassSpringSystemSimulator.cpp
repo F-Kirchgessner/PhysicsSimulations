@@ -104,14 +104,14 @@ void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateCont
 	{
 	case 0: 
 		// Draw mass points
-		for (unsigned i = 0; i < m_masspointList.size(); i++) {
-			DUC->drawSphere(m_masspointList[i].position, Vec3(MASS_POINT_SIZE, MASS_POINT_SIZE, MASS_POINT_SIZE));
+		for (auto& masspoint : m_masspointList) {
+			DUC->drawSphere(masspoint.position, Vec3(MASS_POINT_SIZE, MASS_POINT_SIZE, MASS_POINT_SIZE));
 		}
 
 		// Draw springs
 		DUC->beginLine();
-		for (unsigned i = 0; i < m_springList.size(); i++) {
-			DUC->drawLine(m_springList.at(i).mass_point1->position, Vec3(0, 1, 0), m_springList.at(i).mass_point2->position, Vec3(0, 1, 0));
+		for (auto& spring : m_springList) {
+			DUC->drawLine(spring.mass_point1->position, Vec3(0, 1, 0), spring.mass_point2->position, Vec3(0, 1, 0));
 		}
 		DUC->endLine();
 		break;
