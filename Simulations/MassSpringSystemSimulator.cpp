@@ -52,6 +52,7 @@ void MassSpringSystemSimulator::notifyCaseChanged(int testCase) {
 	switch (m_iTestCase)
 	{
 	case 0:
+		//ToDo: Clear point and spring list and add them again.
 		cout << "Mass System!\n";
 		break;
 	default:
@@ -83,14 +84,14 @@ void MassSpringSystemSimulator::externalForcesCalculations(float timeElapsed) {
 
 void MassSpringSystemSimulator::simulateTimestep(float timeStep) {
 	// update current setup for each frame
-	for (unsigned i = 0; i < m_masspointList.size(); i++) {
-		m_masspointList[i].clearForce();
-		m_masspointList[i].addGravity();
+	for (auto& masspoint : m_masspointList) {
+		masspoint.clearForce();
+		masspoint.addGravity();
 	}
 
-	for (unsigned i = 0; i < m_springList.size(); i++) {
-		m_springList.at(i).computeElasticForces();
-		m_springList.at(i).addToEndPoints();
+	for (auto& spring : m_springList) {
+		spring.computeElasticForces();
+		spring.addToEndPoints();
 	}
 
 	integrateVelocity();
