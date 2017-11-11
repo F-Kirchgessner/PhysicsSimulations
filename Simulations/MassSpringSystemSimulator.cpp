@@ -11,9 +11,20 @@ const char * MassSpringSystemSimulator::getTestCasesStr() {
 
 
 void MassSpringSystemSimulator::initTestScene() {
-	addMassPoint(Vec3(0.25f, 0.0f, 0), Vec3(-1.0, 0.0f, 0), false);
-	addMassPoint(Vec3(0.0, 0.5f, 0), Vec3(1.0, 0.0f, 0), true);
-	addSpring(0, 1, 0.25f);
+	switch (m_iTestCase)
+	{
+	case 0:
+		addMassPoint(Vec3(0.25f, 0.0f, 0), Vec3(-1.0, 0.0f, 0), false);
+		addMassPoint(Vec3(0.0, 0.5f, 0), Vec3(1.0, 0.0f, 0), true);
+		addSpring(0, 1, 0.25f);
+		break;
+	case 1: break;
+	case 2: break;
+	case 3: break;
+	case 4: break;
+	default:
+		break;
+	}
 }
 
 
@@ -29,6 +40,9 @@ void MassSpringSystemSimulator::reset() {
 
 	m_masspointList = {};
 	m_springList = {};
+
+	m_masspointList.clear();
+	m_springList.clear();
 
 	initTestScene();
 }
@@ -84,9 +98,15 @@ void MassSpringSystemSimulator::externalForcesCalculations(float timeElapsed) {
 
 void MassSpringSystemSimulator::simulateTimestep(float timeStep) {
 	// update current setup for each frame
-
-
-	integrate(timeStep);
+	switch (m_iTestCase)
+	{
+	case 0: integrate(timeStep); break;
+	case 1: break;
+	case 2: break;
+	case 3: break;
+	case 4: break;
+	default: break;
+	}
 }
 
 
