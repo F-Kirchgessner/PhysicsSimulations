@@ -94,8 +94,7 @@ void MassSpringSystemSimulator::simulateTimestep(float timeStep) {
 		spring.addToEndPoints();
 	}
 
-	integrateVelocity();
-	integratePositions(timeStep);
+	integrate(timeStep);
 }
 
 
@@ -184,31 +183,22 @@ Vec3 MassSpringSystemSimulator::getVelocityOfMassPoint(int index) {
 void MassSpringSystemSimulator::applyExternalForce(Vec3 force) {
 }
 
-
-void MassSpringSystemSimulator::integratePositions(float elapsedTime) {
-	for (auto &massspoint : m_masspointList) {
-		switch (m_iIntegrator) {
-		//euler
-		case 0:massspoint.integratePositionsEuler(elapsedTime); break;
-		//leapfrog
-		case 1:massspoint.integratePositionsMidpoint(elapsedTime); break;
-		//midpoint
-		case 2:massspoint.integratePositionsLeapfrog(elapsedTime); break;
-		}
-	}
-}
-
-
-
-void MassSpringSystemSimulator::integrateVelocity() {
+void MassSpringSystemSimulator::integrate(float elapsedTime) {
 	for (auto &massspoint: m_masspointList) {
 		switch (m_iIntegrator) {
 			//euler
-		case 0:massspoint.integrateVelocityEuler(); break;
+		case 0:
+			massspoint.integrateVelocityEuler();
+			massspoint.integratePositionsEuler(elapsedTime); 
+			break;
 			//leapfrog
-		case 1:massspoint.integrateVelocityMidpoint(); break;
+		case 1:
+			massspoint.integrateVelocityMidpoint();
+			massspoint.integratePositionsMidpoint(elapsedTime); break;
 			//midpoint
-		case 2:massspoint.integrateVelocityLeapfrog(); break;
+		case 2:
+			massspoint.integrateVelocityLeapfrog();
+			massspoint.integratePositionsLeapfrog(elapsedTime); break;
 		}
 	}
 }

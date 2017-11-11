@@ -68,7 +68,6 @@ private:
 	std::vector<Spring> m_springList;
 
 	// Integrator
-	void integratePositions(float elapsedTime);
-	void integrateVelocity();
+	void integrate(float elapsedTime);
 };
 #endif
