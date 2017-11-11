@@ -6,12 +6,12 @@ class Spring
 {
 public:
 	Spring();
-	Spring(Masspoint *point1, Masspoint *point2, float stiffness, float initialLength);
+	Spring(Masspoint& point1, Masspoint& point2, float stiffness, float initialLength);
 	~Spring();
 
 public:
-	Masspoint *point1;
-	Masspoint *point2;
+	Masspoint *mass_point1;
+	Masspoint *mass_point2;
 	float stiffness;
 	float initialLength;
 	float currentLength;
@@ -30,6 +30,5 @@ public:
 	Masspoint *getPoint2();
 	float getStiffness();
 	float getInitialLength();
-
 };
 

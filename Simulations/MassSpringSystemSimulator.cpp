@@ -11,9 +11,9 @@ const char * MassSpringSystemSimulator::getTestCasesStr() {
 
 
 void MassSpringSystemSimulator::initTestScene() {
-	addMassPoint(Vec3(0.0, 0.0f, 0), Vec3(-1.0, 0.0f, 0), false);
-	addMassPoint(Vec3(0.0, 1.0f, 0), Vec3(1.0, 0.0f, 0), false);
-	addSpring(0, 1, 1);
+	addMassPoint(Vec3(0.25f, 0.0f, 0), Vec3(-1.0, 0.0f, 0), false);
+	addMassPoint(Vec3(0.0, 0.5f, 0), Vec3(1.0, 0.0f, 0), true);
+	addSpring(0, 1, 0.25f);
 }
 
 
@@ -23,8 +23,8 @@ void MassSpringSystemSimulator::reset() {
 	m_oldtrackmouse.x = m_oldtrackmouse.y = 0;
 
 	m_fMass = 1;
-	m_fStiffness = 0;
-	m_fDamping = 0;
+	m_fStiffness = 1;
+	m_fDamping = 1;
 	m_iIntegrator = 0;
 
 	m_masspointList = {};
@@ -83,13 +83,18 @@ void MassSpringSystemSimulator::externalForcesCalculations(float timeElapsed) {
 
 void MassSpringSystemSimulator::simulateTimestep(float timeStep) {
 	// update current setup for each frame
-	switch (m_iTestCase)
-	{// handling different cases
-	case 0:
-		break;
-	default:
-		break;
+	for (unsigned i = 0; i < m_masspointList.size(); i++) {
+		m_masspointList[i].clearForce();
+		m_masspointList[i].addGravity();
 	}
+
+	for (unsigned i = 0; i < m_springList.size(); i++) {
+		m_springList.at(i).computeElasticForces();
+		m_springList.at(i).addToEndPoints();
+	}
+
+	integrateVelocity();
+	integratePositions(timeStep);
 }
 
 
@@ -98,25 +103,16 @@ void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateCont
 	{
 	case 0: 
 		// Draw mass points
-		for (int i = 0; i < m_masspointList.size(); i++) {
+		for (unsigned i = 0; i < m_masspointList.size(); i++) {
 			DUC->drawSphere(m_masspointList[i].position, Vec3(MASS_POINT_SIZE, MASS_POINT_SIZE, MASS_POINT_SIZE));
 		}
 
 		// Draw springs
 		DUC->beginLine();
-		for (int i = 0; i < m_springList.size(); i++) {
-			DUC->drawLine(m_masspointList[m_springList.at(i).getPoint1()].position, Vec3(0, 1, 0), m_masspointList[m_springList.at(i).getPoint2()].position, Vec3(0, 1, 0));
+		for (unsigned i = 0; i < m_springList.size(); i++) {
+			DUC->drawLine(m_springList.at(i).mass_point1->position, Vec3(0, 1, 0), m_springList.at(i).mass_point2->position, Vec3(0, 1, 0));
 		}
 		DUC->endLine();
-		
-		for (auto& springs : m_springList)
-		{
-			springs.computeElasticForces();
-		}
-
-		integratePositions();
-		integrateVelocity();
-
 		break;
 	}
 }
@@ -158,7 +154,9 @@ int MassSpringSystemSimulator::addMassPoint(Vec3 position, Vec3 velocity, bool i
 
 
 void MassSpringSystemSimulator::addSpring(int masspoint1, int masspoint2, float initialLength) {
-	m_springList.push_back(Spring(masspoint1, masspoint2, m_fStiffness, initialLength));
+	Spring s(m_masspointList.at(masspoint1), m_masspointList.at(masspoint2), m_fStiffness, initialLength);
+	m_springList.push_back(s);
+	int a = 0;
 }
 
 
