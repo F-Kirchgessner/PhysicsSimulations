@@ -198,10 +198,12 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 			//leapfrog
 		case 1:
 			//massspoint.integrateVelocityMidpoint();
-			//massspoint.integratePositionsMidpoint(elapsedTime); break;
+			//massspoint.integratePositionsMidpoint(elapsedTime); 
+			break;
 			//midpoint
 		case 2:
 			//massspoint.integrateVelocityLeapfrog();
-			//massspoint.integratePositionsLeapfrog(elapsedTime); break;
+			//massspoint.integratePositionsLeapfrog(elapsedTime); 
+			break;
 		}
 }
