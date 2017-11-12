@@ -20,10 +20,9 @@ public:
 
 	void clearForce();
 	void addGravity();
-	void integratePositionsMidpoint(float elapsedTime);
 	void integratePositionsLeapfrog(float elapsedTime);
 	void integratePositionsEuler(float elapsedTime);
-	void integrateVelocityMidpoint(float elapsedTime);
+	void integrateMidpoint(float elapsedTime);
 	void integrateVelocityLeapfrog(float elapsedTime);
 	void integrateVelocityEuler(float elapsedTime);
 	void applyForce(Vec3 force);

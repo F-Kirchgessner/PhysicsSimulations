@@ -262,8 +262,29 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 			break;
 			//midpoint
 		case 2:
-			//massspoint.integrateVelocityLeapfrog(elapsedTime);
-			//massspoint.integratePositionsLeapfrog(elapsedTime); 
+
+			for (auto& spring : m_springList) {
+				spring.computeElasticForces();
+				spring.addToEndPoints();
+			}
+
+			for (auto &massspoint : m_masspointList) {
+				massspoint.integrateMidpoint(elapsedTime/2);
+			}
+
+			for (auto& spring : m_springList) {
+				spring.computeElasticForces();
+				spring.addToEndPoints();
+			}
+
+			for (auto &massspoint : m_masspointList) {
+				massspoint.integrateMidpoint(elapsedTime);
+			}
+
+			for (auto& masspoint : m_masspointList) {
+				masspoint.clearForce();
+				masspoint.addGravity();
+			}
 			break;
 		}
 }
