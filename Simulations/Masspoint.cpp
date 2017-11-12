@@ -195,6 +195,13 @@ void Masspoint::computeY(float elapsedTime, vector <Vec3>& VelTemp, int index) {
 	velocity.y += ((force.y - damping * VelTemp[index].y) / mass) * elapsedTime;
 	velocity.z += ((force.z - damping * VelTemp[index].z) / mass) * elapsedTime;
 
+	if (velocity.x * velocity.x < VELOCITY_MIN_SQ)
+		velocity.x = 0;
+	if (velocity.y * velocity.y < VELOCITY_MIN_SQ)
+		velocity.y = 0;
+	if (velocity.z * velocity.z < VELOCITY_MIN_SQ)
+		velocity.z = 0;
+
 }
 
 void Masspoint::integrateVelocityEuler(float elapsedTime) {

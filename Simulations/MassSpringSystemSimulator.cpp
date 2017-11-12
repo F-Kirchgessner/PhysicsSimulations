@@ -335,8 +335,9 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 		}
 
 		for (auto &massspoint : m_masspointList) {
-			massspoint.integrateVelocityEuler(elapsedTime);
 			massspoint.integratePositionsEuler(elapsedTime);
+			massspoint.integrateVelocityEuler(elapsedTime);
+			
 		}
 
 		for (auto& masspoint : m_masspointList) {
