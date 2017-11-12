@@ -21,7 +21,34 @@ void Masspoint::addGravity() {
 }
 
 void Masspoint::integratePositionsLeapfrog(float elapsedTime) {
+	if (isFixed) {
+		position.x += velocity.x * elapsedTime;
+		position.y += velocity.y * elapsedTime;
+		position.z += velocity.z * elapsedTime;
 
+		if (position.y < GROUND_HEIGHT) {
+			position.y = GROUND_HEIGHT;
+			velocity.y = -velocity.y * GROUND_DAMPING;
+		}
+
+		if (position.x < -BOX_SIZE) {
+			position.x = -BOX_SIZE;
+			velocity.x = -velocity.x * GROUND_DAMPING;
+		}
+		else if (position.x > BOX_SIZE) {
+			position.x = BOX_SIZE;
+			velocity.x = -velocity.x * GROUND_DAMPING;
+		}
+
+		if (position.z < -BOX_SIZE) {
+			position.z = -BOX_SIZE;
+			velocity.z = -velocity.z * GROUND_DAMPING;
+		}
+		else if (position.z > BOX_SIZE) {
+			position.z = BOX_SIZE;
+			velocity.z = -velocity.z * GROUND_DAMPING;
+		}
+	}
 }
 
 void Masspoint::integratePositionsMidpoint(float elapsedTime) {
@@ -60,7 +87,16 @@ void Masspoint::integratePositionsEuler(float elapsedTime) {
 }
 
 void Masspoint::integrateVelocityLeapfrog(float elapsedTime) {
-
+	velocity.x = velocity.x + (force.x / mass) * elapsedTime;
+	velocity.y = velocity.y + (force.y / mass) * elapsedTime;
+	velocity.z = velocity.z + (force.z / mass) * elapsedTime;
+	
+	if (velocity.x * velocity.x < VELOCITY_MIN_SQ)
+		velocity.x = 0;
+	if (velocity.y * velocity.y < VELOCITY_MIN_SQ)
+		velocity.y = 0;
+	if (velocity.z * velocity.z < VELOCITY_MIN_SQ)
+		velocity.z = 0;
 }
 
 void Masspoint::integrateVelocityMidpoint(float elapsedTime) {
