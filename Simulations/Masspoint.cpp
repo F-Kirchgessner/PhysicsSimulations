@@ -16,12 +16,12 @@ void Masspoint::clearForce() {
 	force.z = 0;
 }
 
-void Masspoint::addGravity() {
-	force.y -= mass * GRAVITY_ACCEL;
+void Masspoint::addGravity(float gravityAccel) {
+	force.y -= mass * gravityAccel;
 }
 
 void Masspoint::integratePositionsLeapfrog(float elapsedTime) {
-	if (isFixed) {
+	if (!isFixed) {
 		position.x += velocity.x * elapsedTime;
 		position.y += velocity.y * elapsedTime;
 		position.z += velocity.z * elapsedTime;
