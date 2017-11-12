@@ -3,6 +3,7 @@
 MassSpringSystemSimulator::MassSpringSystemSimulator() {
 	m_iTestCase = 0;
 	m_iIntegrator = 0;
+	m_fInputScale = 0.001f;
 }
 
 
@@ -144,7 +145,6 @@ void MassSpringSystemSimulator::reset() {
 	m_fStiffness = m_fStiffnessOld = 20.0f;
 	m_fDamping = m_fDampingOld = 0.5f;
 	m_fGravityAccel = 0.1f;
-	m_fInputScale = 0.01f;
 
 	m_masspointList.clear();
 	m_springList.clear();
@@ -182,7 +182,7 @@ void MassSpringSystemSimulator::notifyCaseChanged(int testCase) {
 		reset();
 		break;
 	default:
-		cout << "Empty Test!\n";
+		cout << "Complex Test!\n";
 		reset();
 		break;
 	}
