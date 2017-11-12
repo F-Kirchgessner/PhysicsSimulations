@@ -394,9 +394,6 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 			std::vector<Vec3> oldPos;
 			std::vector<Vec3> oldVel;
 
-			for (auto& masspoint : m_masspointList) {
-				masspoint.clearForce();
-			}
 
 			for (auto &massspoint : m_masspointList) {
 				massspoint.integrateMidpointPosTemp(elapsedTime / 2, PosTemp);
