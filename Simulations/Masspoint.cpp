@@ -191,9 +191,9 @@ void Masspoint::computeX(float elapsedTime, vector <Vec3>& VelTemp, int index) {
 
 void Masspoint::computeY(float elapsedTime, vector <Vec3>& VelTemp, int index) {
 
-	velocity.x += elapsedTime*(force.x) / mass;
-	velocity.y += elapsedTime*(force.y) / mass;
-	velocity.z += elapsedTime*(force.z) / mass;
+	velocity.x += elapsedTime*(force.x - damping * velocity.x * elapsedTime) / mass;
+	velocity.y += elapsedTime*(force.y - damping * velocity.x * elapsedTime) / mass;
+	velocity.z += elapsedTime*(force.z - damping * velocity.x * elapsedTime) / mass;
 
 }
 
