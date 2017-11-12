@@ -14,9 +14,11 @@ void MassSpringSystemSimulator::initTestScene() {
 	switch (m_iTestCase)
 	{
 	case 0:
-		addMassPoint(Vec3(0.25f, 0.0f, 0), Vec3(-1.0, 0.0f, 0), false);
-		addMassPoint(Vec3(0.0, 0.5f, 0), Vec3(1.0, 0.0f, 0), true);
+		addMassPoint(Vec3(0.0f, 0.5f, 0), Vec3(0.0, 0.0, 0), true);
+		addMassPoint(Vec3(0.2f, 0.3f, 0), Vec3(0.0, 0.0, 0), false);
+		addMassPoint(Vec3(0.4f, 0.4f, 0), Vec3(0.0, 0.0, 0), false);
 		addSpring(0, 1, 0.25f);
+		addSpring(1, 2, 0.25f);
 		break;
 	case 1: break;
 	default:
@@ -30,13 +32,10 @@ void MassSpringSystemSimulator::reset() {
 	m_trackmouse.x = m_trackmouse.y = 0;
 	m_oldtrackmouse.x = m_oldtrackmouse.y = 0;
 
-	m_fMass = 1;
-	m_fStiffness = 1;
-	m_fDamping = 1;
+	m_fMass = 1.0f;
+	m_fStiffness = 1.0f;
+	m_fDamping = 0.005f;
 	m_iIntegrator = 0;
-
-	m_masspointList = {};
-	m_springList = {};
 
 	m_masspointList.clear();
 	m_springList.clear();
@@ -66,6 +65,7 @@ void MassSpringSystemSimulator::notifyCaseChanged(int testCase) {
 	case 0:
 		//ToDo: Clear point and spring list and add them again.
 		cout << "Mass System!\n";
+		reset();
 		break;
 	default:
 		cout << "Empty Test!\n";
@@ -163,7 +163,6 @@ int MassSpringSystemSimulator::addMassPoint(Vec3 position, Vec3 velocity, bool i
 void MassSpringSystemSimulator::addSpring(int masspoint1, int masspoint2, float initialLength) {
 	Spring s(m_masspointList.at(masspoint1), m_masspointList.at(masspoint2), m_fStiffness, initialLength);
 	m_springList.push_back(s);
-	int a = 0;
 }
 
 

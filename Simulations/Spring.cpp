@@ -30,13 +30,14 @@ void Spring::computeElasticForces() {
 	this->force.x = calcDirectedForce(currentLength, mass_point1->position.x, mass_point2->position.x);
 	this->force.y = calcDirectedForce(currentLength, mass_point1->position.y, mass_point2->position.y);
 	this->force.z = calcDirectedForce(currentLength, mass_point1->position.z, mass_point2->position.z);
-	std::cout << force.x << " | " << force.y << " | " << force.z << endl;
+
+	//std::cout << force.x << " | " << force.y << " | " << force.z << endl;
 }
 
 
 void Spring::addToEndPoints() {
 	mass_point1->applyForce(force);
-	mass_point2->applyForce(force);
+	mass_point2->applyForce(-force);
 }
 
 

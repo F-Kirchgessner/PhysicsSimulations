@@ -45,9 +45,18 @@ void Masspoint::integrateVelocityMidpoint() {
 }
 
 void Masspoint::integrateVelocityEuler() {
-	velocity.x += force.x / mass;
-	velocity.y += force.y / mass;
-	velocity.z += force.z / mass;
+	velocity.x += (force.x - damping * velocity.x) / mass;
+	velocity.y += (force.y - damping * velocity.y) / mass;
+	velocity.z += (force.z - damping * velocity.z) / mass;
+
+	if (velocity.x * velocity.x < VELOCITY_MIN_SQ)
+		velocity.x = 0;
+	if (velocity.y * velocity.y < VELOCITY_MIN_SQ)
+		velocity.y = 0;
+	if (velocity.z * velocity.z < VELOCITY_MIN_SQ)
+		velocity.z = 0;
+
+	//std::cout << velocity.x << " | " << velocity.y << " | " << velocity.z << endl;
 }
 
 void Masspoint::applyForce(Vec3 force) {
