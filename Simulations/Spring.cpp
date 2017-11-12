@@ -20,20 +20,14 @@ Spring::~Spring(){
 
 
 float Spring::calcDirectedForce(float currentLength, float pos1, float pos2) {
-	
-	float currLength = currentLength;
-
-	if (currLength <= 0)
-		currLength = 0.002;
-		
-		return -stiffness * (currLength - initialLength) * ((pos1 - pos2) / currLength);
-
+	return -stiffness * (currentLength - initialLength) * ((pos1-pos2) / currentLength);
 }
 
 
 void Spring::computeElasticForces() {
-	float currentLength = sqrt(mass_point1->position.squaredDistanceTo(mass_point2->position));
 
+	float currentLength = sqrt(mass_point1->position.squaredDistanceTo(mass_point2->position));
+	
 	this->force.x = calcDirectedForce(currentLength, mass_point1->position.x, mass_point2->position.x);
 	this->force.y = calcDirectedForce(currentLength, mass_point1->position.y, mass_point2->position.y);
 	this->force.z = calcDirectedForce(currentLength, mass_point1->position.z, mass_point2->position.z);

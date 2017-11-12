@@ -108,12 +108,60 @@ void Masspoint::integrateVelocityLeapfrog(float elapsedTime) {
 		velocity.z = 0;
 }
 
-void Masspoint::integrateMidpoint(float elapsedTime) {
+void Masspoint::integrateMidpointPosTemp(float elapsedTime, vector<Vec3>& PosTemp) {
+		Vec3 tmp;
+		
+		tmp.x = position.x + (elapsedTime)* velocity.x;
+		tmp.y = position.y + (elapsedTime)* velocity.y;
+		tmp.z = position.z + (elapsedTime)* velocity.z;
+
+		PosTemp.push_back(tmp);
+}
+
+void Masspoint::integrateMidpointVelTemp(float elapsedTime, vector<Vec3>& VelTemp) {
+
+		Vec3 tmp;
+
+		tmp.x = velocity.x + elapsedTime*(force.x) / mass;
+		tmp.y = velocity.y + elapsedTime*(force.y) / mass;
+		tmp.z = velocity.z + elapsedTime*(force.z) / mass;
+
+		VelTemp.push_back(tmp);
+}
+
+void Masspoint::integrateSwitch(vector <Vec3>& VelTemp, vector <Vec3>& PosTemp, vector <Vec3>& oldVel, vector <Vec3>& oldPos, int index) {
+
+	oldPos.push_back(position);
+	oldVel.push_back(velocity);
+
+	position.x = PosTemp[index].x;
+	position.y = PosTemp[index].y;
+	position.z = PosTemp[index].z;
+
+	velocity.x = VelTemp[index].x;
+	velocity.y = VelTemp[index].y;
+	velocity.z = VelTemp[index].z;
+
+}
+
+void Masspoint::integrateSwitchBack(vector <Vec3>& oldVel, vector <Vec3>& oldPos, int index) {
+
+	position.x = oldPos[index].x;
+	position.y = oldPos[index].y;
+	position.z = oldPos[index].z;
+
+	velocity.x = oldVel[index].x;
+	velocity.y = oldVel[index].y;
+	velocity.z = oldVel[index].z;
+
+}
+
+void Masspoint::computeX(float elapsedTime, vector <Vec3>& VelTemp, int index) {
 	if (!isFixed) {
 
-		position.x += (elapsedTime) * velocity.x;
-		position.y += (elapsedTime) * velocity.y;
-		position.z += (elapsedTime) * velocity.z;
+		position.x += elapsedTime*VelTemp[index].x;
+		position.y += elapsedTime*VelTemp[index].y;
+		position.z += elapsedTime*VelTemp[index].z;
 
 		if (position.y < GROUND_HEIGHT) {
 			position.y = GROUND_HEIGHT;
@@ -126,7 +174,7 @@ void Masspoint::integrateMidpoint(float elapsedTime) {
 		}
 		else if (position.x > BOX_SIZE) {
 			position.x = BOX_SIZE;
-			velocity.x = velocity.x * GROUND_DAMPING;
+			velocity.x = -velocity.x * GROUND_DAMPING;
 		}
 
 		if (position.z < -BOX_SIZE) {
@@ -139,9 +187,13 @@ void Masspoint::integrateMidpoint(float elapsedTime) {
 		}
 	}
 
-	velocity.x += (elapsedTime)*(force.x - damping * velocity.x ) / mass;
-	velocity.y += (elapsedTime)*(force.y - damping * velocity.y ) / mass;
-	velocity.z += (elapsedTime)*(force.z - damping * velocity.z ) / mass;
+}
+
+void Masspoint::computeY(float elapsedTime, vector <Vec3>& VelTemp, int index) {
+
+	velocity.x += (force.x) / mass;
+	velocity.y += (force.y) / mass;
+	velocity.z += (force.z) / mass;
 
 }
 

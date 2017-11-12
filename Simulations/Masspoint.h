@@ -22,7 +22,13 @@ public:
 	void addGravity(float gravityAccel);
 	void integratePositionsLeapfrog(float elapsedTime);
 	void integratePositionsEuler(float elapsedTime);
-	void integrateMidpoint(float elapsedTime);
+	void integrateMidpointPosTemp(float elapsedTime, vector<Vec3>& PosTemp);
+	void integrateMidpointVelTemp(float elapsedTime, vector<Vec3>& VelTemp);
+	void integrateSwitch(vector <Vec3>& VelTemp, vector <Vec3>& PosTemp, vector <Vec3>& oldVel, vector <Vec3>& oldPos, int index);
+	void integrateSwitchBack(vector <Vec3>& oldVel, vector <Vec3>& oldPos, int index);
+	void computeX(float elapsedTime,vector <Vec3>& VelTemp, int index);
+	void computeY(float elapsedTime, vector <Vec3>& VelTemp, int index);
+
 	void integrateVelocityLeapfrog(float elapsedTime);
 	void integrateVelocityEuler(float elapsedTime);
 	void applyForce(Vec3 force);
