@@ -41,6 +41,26 @@ void MassSpringSystemSimulator::initTestScene() {
 		addSpring(8, 9, 0.25f);
 		addSpring(9, 10, 0.25f);
 
+		addMassPoint(Vec3(-0.3f, 0.5f, -0.3f), Vec3(0.0, 0.0, 0), true);
+		addMassPoint(Vec3(-0.3f, 0.5f, -0.5f), Vec3(0.0, 0.0, 0), false);
+		addMassPoint(Vec3(-0.5f, 0.5f, -0.5f), Vec3(0.0, 0.0, 0), false);
+		addMassPoint(Vec3(-0.5f, 0.5f, -0.3f), Vec3(0.0, 0.0, 0), false);
+		addMassPoint(Vec3(-0.3f, 0.5f, -0.3f), Vec3(0.0, 0.0, 0), false);
+		addMassPoint(Vec3(-0.3f, 0.5f, -0.5f), Vec3(0.0, 0.0, 0), false);
+		addMassPoint(Vec3(-0.5f, 0.5f, -0.5f), Vec3(0.0, 0.0, 0), false);
+		addMassPoint(Vec3(-0.5f, 0.5f, -0.3f), Vec3(0.0, 0.0, 0), false);
+		addMassPoint(Vec3(-0.3f, 0.5f, -0.3f), Vec3(0.0, 0.0, 0), false);
+		addMassPoint(Vec3(-0.5f, 0.4f, -0.5f), Vec3(0.0, 0.0, 0), true);
+		addSpring(11, 12, 0.05f);
+		addSpring(12, 13, 0.05f);
+		addSpring(13, 14, 0.05f);
+		addSpring(14, 15, 0.05f);
+		addSpring(15, 16, 0.05f);
+		addSpring(16, 17, 0.05f);
+		addSpring(17, 18, 0.05f);
+		addSpring(18, 19, 0.05f);
+		addSpring(19, 20, 0.05f);
+
 		break;
 	case 1: break;
 	default:
