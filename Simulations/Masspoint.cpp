@@ -16,8 +16,8 @@ void Masspoint::clearForce() {
 	force.z = 0;
 }
 
-void Masspoint::addGravity() {
-	force.y -= mass * GRAVITY_ACCEL;
+void Masspoint::addGravity(float gravityAccel) {
+	force.y -= mass * gravityAccel;
 }
 
 void Masspoint::integratePositionsLeapfrog(float elapsedTime) {
@@ -142,6 +142,7 @@ void Masspoint::integrateMidpoint(float elapsedTime) {
 	velocity.x += (elapsedTime)*(force.x - damping * velocity.x ) / mass;
 	velocity.y += (elapsedTime)*(force.y - damping * velocity.y ) / mass;
 	velocity.z += (elapsedTime)*(force.z - damping * velocity.z ) / mass;
+
 }
 
 void Masspoint::integrateVelocityEuler(float elapsedTime) {

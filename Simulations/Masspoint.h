@@ -19,7 +19,7 @@ public:
 	float damping;
 
 	void clearForce();
-	void addGravity();
+	void addGravity(float gravityAccel);
 	void integratePositionsLeapfrog(float elapsedTime);
 	void integratePositionsEuler(float elapsedTime);
 	void integrateMidpoint(float elapsedTime);

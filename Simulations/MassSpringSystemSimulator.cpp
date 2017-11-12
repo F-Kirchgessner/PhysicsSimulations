@@ -2,6 +2,7 @@
 
 MassSpringSystemSimulator::MassSpringSystemSimulator() {
 	m_iTestCase = 0;
+	m_iIntegrator = 0;
 }
 
 
@@ -77,7 +78,7 @@ void MassSpringSystemSimulator::reset() {
 	m_fMass = 0.05f;
 	m_fStiffness = 20.0f;
 	m_fDamping = 0.5f;
-	m_iIntegrator = 0;
+	m_fGravityAccel = 0.1f;
 
 	m_masspointList.clear();
 	m_springList.clear();
@@ -92,6 +93,7 @@ void MassSpringSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 	TwAddVarRW(DUC->g_pTweakBar, "Mass", TW_TYPE_FLOAT, &m_fMass, "step=0.01 min=0.0001");
 	TwAddVarRW(DUC->g_pTweakBar, "Stiffness", TW_TYPE_FLOAT, &m_fStiffness, "step=0.1 min=0.0001");
 	TwAddVarRW(DUC->g_pTweakBar, "Damping", TW_TYPE_FLOAT, &m_fDamping, "step=0.01 min=0.0001");
+	TwAddVarRW(DUC->g_pTweakBar, "Gravity", TW_TYPE_FLOAT, &m_fGravityAccel, "step=0.01 min=0.0001");
 	
 	this->DUC = DUC;
 	switch (m_iTestCase)
@@ -255,7 +257,7 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 
 			for (auto& masspoint : m_masspointList) {
 				masspoint.clearForce();
-				masspoint.addGravity();
+				masspoint.addGravity(m_fGravityAccel);
 			}
 			break;
 			//leapfrog
@@ -279,7 +281,7 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 
 			for (auto& masspoint : m_masspointList) {
 				masspoint.clearForce();
-				masspoint.addGravity();
+				masspoint.addGravity(m_fGravityAccel);
 			}
 			break;
 			//midpoint
@@ -305,7 +307,7 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 
 			for (auto& masspoint : m_masspointList) {
 				masspoint.clearForce();
-				masspoint.addGravity();
+				masspoint.addGravity(m_fGravityAccel);
 			}
 			break;
 		}
