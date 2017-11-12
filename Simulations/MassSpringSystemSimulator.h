@@ -56,6 +56,11 @@ private:
 	int m_iIntegrator;
 	bool init = true;
 	float m_fGravityAccel;
+	float m_fInputScale;
+
+	float m_fMassOld;
+	float m_fStiffnessOld;
+	float m_fDampingOld;
 
 	TwType integratorType;
 

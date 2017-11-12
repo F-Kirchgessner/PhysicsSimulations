@@ -75,10 +75,11 @@ void MassSpringSystemSimulator::reset() {
 	m_trackmouse.x = m_trackmouse.y = 0;
 	m_oldtrackmouse.x = m_oldtrackmouse.y = 0;
 
-	m_fMass = 0.05f;
-	m_fStiffness = 20.0f;
-	m_fDamping = 0.5f;
+	m_fMass = m_fMassOld = 0.05f;
+	m_fStiffness = m_fStiffnessOld = 20.0f;
+	m_fDamping = m_fDampingOld = 0.5f;
 	m_fGravityAccel = 0.1f;
+	m_fInputScale = 0.01f;
 
 	m_masspointList.clear();
 	m_springList.clear();
@@ -94,6 +95,7 @@ void MassSpringSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 	TwAddVarRW(DUC->g_pTweakBar, "Stiffness", TW_TYPE_FLOAT, &m_fStiffness, "step=0.1 min=0.0001");
 	TwAddVarRW(DUC->g_pTweakBar, "Damping", TW_TYPE_FLOAT, &m_fDamping, "step=0.01 min=0.0001");
 	TwAddVarRW(DUC->g_pTweakBar, "Gravity", TW_TYPE_FLOAT, &m_fGravityAccel, "step=0.01 min=0.0001");
+	TwAddVarRW(DUC->g_pTweakBar, "InputForce", TW_TYPE_FLOAT, &m_fInputScale, "step=0.01 min=0.0001");
 	
 	this->DUC = DUC;
 	switch (m_iTestCase)
@@ -132,7 +134,7 @@ void MassSpringSystemSimulator::externalForcesCalculations(float timeElapsed) {
 		worldViewInv = worldViewInv.inverse();
 		Vec3 inputView = Vec3((float)mouseDiff.x, (float)-mouseDiff.y, 0);
 		Vec3 inputWorld = worldViewInv.transformVectorNormal(inputView);
-		inputWorld = inputWorld * INPUT_SCALE;
+		inputWorld = inputWorld * m_fInputScale;
 
 		// Apply to mass points
 		for (auto& masspoint : m_masspointList) {
@@ -173,6 +175,26 @@ void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateCont
 		DUC->endLine();
 		break;
 	}
+
+	if (m_fMass != m_fMassOld) {
+		for (auto& masspoint : m_masspointList) {
+			masspoint.setMass(m_fMass);
+		}
+	}
+	if (m_fDamping != m_fDampingOld) {
+		for (auto& masspoint : m_masspointList) {
+			masspoint.setDamping(m_fDamping);
+		}
+	}
+	if (m_fStiffness != m_fStiffnessOld) {
+		for (auto& spring : m_springList) {
+			spring.setStiffness(m_fStiffness);
+		}
+	}
+
+	m_fMassOld = m_fMass;
+	m_fStiffnessOld = m_fStiffness;
+	m_fDampingOld = m_fDamping;
 }
 
 
