@@ -394,16 +394,19 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 			std::vector<Vec3> VelTemp;
 			std::vector<Vec3> oldPos;
 			std::vector<Vec3> oldVel;
-
-			// Compute xtmp at t+h/2 based on v(t)
-			for (auto &massspoint : m_masspointList) {
-				massspoint.integrateMidpointPosTemp(elapsedTime / 2, PosTemp);
-			}
+			Vec3 inputForce;
+			if (m_masspointList.size() > 0)
+				inputForce = m_masspointList[0].getForce();
 
 			// Compute a(t)
 			for (auto& spring : m_springList) {
 				spring.computeElasticForces();
 				spring.addToEndPoints();
+			}
+
+			// Compute xtmp at t+h/2 based on v(t)
+			for (auto &massspoint : m_masspointList) {
+				massspoint.integrateMidpointPosTemp(elapsedTime / 2, PosTemp);
 			}
 
 			// Compute vtmp at t+h/2 based on a(t)
@@ -417,7 +420,7 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 
 			// Compute a at t+h based on xtmp and vtmp
 			for (auto& masspoint : m_masspointList) {
-				masspoint.clearForce();
+				masspoint.setForce(inputForce);
 				masspoint.addGravity(m_fGravityAccel);
 			}
 
@@ -433,8 +436,8 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 			// Compute x at t+h
 			// Compute x at t+h
 			for (unsigned int i = 0; i < m_masspointList.size(); i++) {
-				m_masspointList[i].computeX(elapsedTime / 2, VelTemp, i);
-				m_masspointList[i].computeY(elapsedTime / 2, VelTemp, i);
+				m_masspointList[i].computeX(elapsedTime, VelTemp, i);
+				m_masspointList[i].computeY(elapsedTime, VelTemp, i);
 			}
 
 			// Compute v at t+h
