@@ -14,11 +14,33 @@ void MassSpringSystemSimulator::initTestScene() {
 	switch (m_iTestCase)
 	{
 	case 0:
+		addMassPoint(Vec3(0.0f, 0.0f, 0.1f), Vec3(0.0, 0.0, 0), false);	// 0
+		addMassPoint(Vec3(0.0f, 0.2f, 0.1f), Vec3(0.0, 0.0, 0), false);	// 1
+		addMassPoint(Vec3(0.2f, 0.2f, 0.1f), Vec3(0.0, 0.0, 0), false);	// 2
+		addMassPoint(Vec3(0.2f, 0.0f, 0.1f), Vec3(0.0, 0.0, 0), false);	// 3
+		addMassPoint(Vec3(0.0f, 0.0f, 0.3f), Vec3(0.0, 0.0, 0), false);	// 4
+		addMassPoint(Vec3(0.0f, 0.2f, 0.3f), Vec3(0.0, 0.0, 0), false);	// 5
+		addMassPoint(Vec3(0.2f, 0.2f, 0.3f), Vec3(0.0, 0.0, 0), false);	// 6
+		addMassPoint(Vec3(0.2f, 0.0f, 0.3f), Vec3(0.0, 0.0, 0), false);	// 7
+		addSpring(0, 1, 0.2f);
+		addSpring(1, 2, 0.2f);
+		addSpring(2, 3, 0.2f);
+		addSpring(3, 0, 0.2f);
+		addSpring(4, 5, 0.2f);
+		addSpring(5, 6, 0.2f);
+		addSpring(6, 7, 0.2f);
+		addSpring(7, 4, 0.2f);
+		addSpring(0, 4, 0.2f);
+		addSpring(1, 5, 0.2f);
+		addSpring(2, 6, 0.2f);
+		addSpring(3, 7, 0.2f);
+
 		addMassPoint(Vec3(0.0f, 0.5f, 0), Vec3(0.0, 0.0, 0), true);
 		addMassPoint(Vec3(0.2f, 0.3f, 0), Vec3(0.0, 0.0, 0), false);
 		addMassPoint(Vec3(0.4f, 0.4f, 0), Vec3(0.0, 0.0, 0), false);
-		addSpring(0, 1, 0.25f);
-		addSpring(1, 2, 0.25f);
+		addSpring(8, 9, 0.25f);
+		addSpring(9, 10, 0.25f);
+
 		break;
 	case 1: break;
 	default:

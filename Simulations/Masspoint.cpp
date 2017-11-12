@@ -33,6 +33,11 @@ void Masspoint::integratePositionsEuler(float elapsedTime) {
 		position.x += velocity.x * elapsedTime;
 		position.y += velocity.y * elapsedTime;
 		position.z += velocity.z * elapsedTime;
+
+		if (position.y < GROUND_HEIGHT) {
+			position.y = GROUND_HEIGHT;
+			velocity.y = -velocity.y * GROUND_DAMPING;
+		}
 	}
 }
 
