@@ -263,7 +263,7 @@ void MassSpringSystemSimulator::applyExternalForce(Vec3 force) {
 }
 
 void MassSpringSystemSimulator::integrate(float elapsedTime) {
-	
+		
 		switch (m_iIntegrator) {
 			//euler
 		case 0:
@@ -289,6 +289,13 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 				spring.addToEndPoints();
 			}
 
+			if (init) {
+				for (auto &massspoint : m_masspointList) {
+					massspoint.initVelocity(elapsedTime / 2);
+				}
+			}
+			init = false;
+
 			for (auto &massspoint : m_masspointList) {
 				massspoint.integrateVelocityLeapfrog(elapsedTime);
 				massspoint.integratePositionsLeapfrog(elapsedTime);
@@ -298,8 +305,6 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 				masspoint.clearForce();
 				masspoint.addGravity(m_fGravityAccel);
 			}
-			//massspoint.integrateVelocityMidpoint(elapsedTime);
-			//massspoint.integratePositionsMidpoint(elapsedTime); 
 			break;
 			//midpoint
 		case 2:
