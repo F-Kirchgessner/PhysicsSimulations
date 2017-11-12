@@ -4,6 +4,7 @@ MassSpringSystemSimulator::MassSpringSystemSimulator() {
 	m_iTestCase = 0;
 	m_iIntegrator = 0;
 	m_fInputScale = 0.001f;
+	m_fGravityAccel = 9.81f;
 }
 
 
@@ -141,10 +142,10 @@ void MassSpringSystemSimulator::reset() {
 	m_trackmouse.x = m_trackmouse.y = 0;
 	m_oldtrackmouse.x = m_oldtrackmouse.y = 0;
 
-	m_fMass = m_fMassOld = 0.05f;
-	m_fStiffness = m_fStiffnessOld = 20.0f;
-	m_fDamping = m_fDampingOld = 0.5f;
-	m_fGravityAccel = 0.1f;
+	m_fMass = m_fMassOld = 0.01f;
+	m_fStiffness = m_fStiffnessOld = 25.0f;
+	m_fDamping = m_fDampingOld = 0.01f;
+	m_fGravityAccel = 9.81f;
 
 	m_masspointList.clear();
 	m_springList.clear();
@@ -394,40 +395,51 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 			std::vector<Vec3> oldPos;
 			std::vector<Vec3> oldVel;
 
-
+			// Compute xtmp at t+h/2 based on v(t)
 			for (auto &massspoint : m_masspointList) {
 				massspoint.integrateMidpointPosTemp(elapsedTime / 2, PosTemp);
 			}
 
+			// Compute a(t)
 			for (auto& spring : m_springList) {
 				spring.computeElasticForces();
 				spring.addToEndPoints();
 			}
 
+			// Compute vtmp at t+h/2 based on a(t)
 			for (auto &massspoint : m_masspointList) {
 				massspoint.integrateMidpointVelTemp(elapsedTime / 2, VelTemp);
 			}
 
 			for (unsigned int  i = 0; i < m_masspointList.size(); i++) {
-				m_masspointList[i].integrateSwitch(VelTemp,PosTemp,oldVel,oldPos,i);
+				m_masspointList[i].integrateSwitch(VelTemp, PosTemp, oldVel, oldPos, i);
+			}
+
+			// Compute a at t+h based on xtmp and vtmp
+			for (auto& masspoint : m_masspointList) {
+				masspoint.clearForce();
+				masspoint.addGravity(m_fGravityAccel);
 			}
 
 			for (auto& spring : m_springList) {
-			
 				spring.computeElasticForces();
 				spring.addToEndPoints();
 			}
 
 			for (unsigned int i = 0; i < m_masspointList.size(); i++) {
-				m_masspointList[i].integrateSwitchBack(oldVel,oldPos, i);
+				m_masspointList[i].integrateSwitchBack(oldVel, oldPos, i);
 			}
 
+			// Compute x at t+h
+			// Compute x at t+h
 			for (unsigned int i = 0; i < m_masspointList.size(); i++) {
-				m_masspointList[i].computeX(elapsedTime, VelTemp, i);
-				m_masspointList[i].computeY(elapsedTime, VelTemp, i);
+				m_masspointList[i].computeX(elapsedTime / 2, VelTemp, i);
+				m_masspointList[i].computeY(elapsedTime / 2, VelTemp, i);
 			}
 
+			// Compute v at t+h
 			for (auto& masspoint : m_masspointList) {
+				
 				masspoint.clearForce();
 				masspoint.addGravity(m_fGravityAccel);
 			}
