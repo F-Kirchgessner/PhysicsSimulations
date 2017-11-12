@@ -96,9 +96,9 @@ void Masspoint::initVelocity(float halfElapsedTime) {
 }
 
 void Masspoint::integrateVelocityLeapfrog(float elapsedTime) {
-	velocity.x += ((force.x - damping * velocity.x) / mass) * elapsedTime;
-	velocity.y += ((force.y - damping * velocity.y) / mass) * elapsedTime;
-	velocity.z += ((force.z - damping * velocity.z) / mass) * elapsedTime;
+	velocity.x += ((force.x - damping * velocity.x * elapsedTime) / mass) * elapsedTime;
+	velocity.y += ((force.y - damping * velocity.y * elapsedTime) / mass) * elapsedTime;
+	velocity.z += ((force.z - damping * velocity.z * elapsedTime) / mass) * elapsedTime;
 	
 	if (velocity.x * velocity.x < VELOCITY_MIN_SQ)
 		velocity.x = 0;
@@ -111,9 +111,9 @@ void Masspoint::integrateVelocityLeapfrog(float elapsedTime) {
 void Masspoint::integrateMidpointPosTemp(float elapsedTime, vector<Vec3>& PosTemp) {
 		Vec3 tmp;
 		
-		tmp.x = position.x +elapsedTime * velocity.x;
-		tmp.y = position.y + elapsedTime * velocity.y;
-		tmp.z = position.z + elapsedTime * velocity.z;
+		tmp.x = position.x + (elapsedTime)* velocity.x;
+		tmp.y = position.y + (elapsedTime)* velocity.y;
+		tmp.z = position.z + (elapsedTime)* velocity.z;
 
 		PosTemp.push_back(tmp);
 }
@@ -122,9 +122,9 @@ void Masspoint::integrateMidpointVelTemp(float elapsedTime, vector<Vec3>& VelTem
 
 		Vec3 tmp;
 
-		tmp.x = velocity.x + ((force.x - damping * velocity.x) / mass) * elapsedTime;
-		tmp.y = velocity.y + ((force.y - damping * velocity.y) / mass) * elapsedTime;
-		tmp.z = velocity.z + ((force.z - damping * velocity.z) / mass) * elapsedTime;
+		tmp.x = velocity.x + ((force.x - damping * velocity.x * elapsedTime) / mass) * elapsedTime;
+		tmp.y = velocity.y + ((force.y - damping * velocity.y * elapsedTime) / mass) * elapsedTime;
+		tmp.z = velocity.z + ((force.z - damping * velocity.z * elapsedTime) / mass) * elapsedTime;
 
 		VelTemp.push_back(tmp);
 }
@@ -159,9 +159,9 @@ void Masspoint::integrateSwitchBack(vector <Vec3>& oldVel, vector <Vec3>& oldPos
 void Masspoint::computeX(float elapsedTime, vector <Vec3>& VelTemp, int index) {
 	if (!isFixed) {
 
-		position.x += elapsedTime * VelTemp[index].x;
-		position.y += elapsedTime * VelTemp[index].y;
-		position.z += elapsedTime * VelTemp[index].z;
+		position.x += elapsedTime*VelTemp[index].x;
+		position.y += elapsedTime*VelTemp[index].y;
+		position.z += elapsedTime*VelTemp[index].z;
 
 		if (position.y < GROUND_HEIGHT) {
 			position.y = GROUND_HEIGHT;
@@ -191,16 +191,16 @@ void Masspoint::computeX(float elapsedTime, vector <Vec3>& VelTemp, int index) {
 
 void Masspoint::computeY(float elapsedTime, vector <Vec3>& VelTemp, int index) {
 
-	velocity.x += ((force.x - damping * VelTemp[index].x * 0.5) / mass) * elapsedTime;
-	velocity.y += ((force.y - damping * VelTemp[index].y * 0.5) / mass) * elapsedTime;
-	velocity.z += ((force.z - damping * VelTemp[index].z * 0.5) / mass) * elapsedTime;
+	velocity.x += ((force.x - damping * VelTemp[index].x * 0.5) / mass) * elapsedTime * 0.5;
+	velocity.y += ((force.y - damping * VelTemp[index].y * 0.5) / mass) * elapsedTime * 0.5;
+	velocity.z += ((force.z - damping * VelTemp[index].z * 0.5) / mass) * elapsedTime * 0.5;
 
 }
 
 void Masspoint::integrateVelocityEuler(float elapsedTime) {
-	velocity.x += ((force.x - damping * velocity.x) / mass) * elapsedTime;
-	velocity.y += ((force.y - damping * velocity.y) / mass) * elapsedTime;
-	velocity.z += ((force.z - damping * velocity.z) / mass) * elapsedTime;
+	velocity.x += ((force.x - damping * velocity.x * elapsedTime) / mass) * elapsedTime;
+	velocity.y += ((force.y - damping * velocity.y * elapsedTime) / mass) * elapsedTime;
+	velocity.z += ((force.z - damping * velocity.z * elapsedTime) / mass) * elapsedTime;
 
 	if (velocity.x * velocity.x < VELOCITY_MIN_SQ)
 		velocity.x = 0;
