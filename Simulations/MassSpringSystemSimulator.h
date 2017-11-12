@@ -54,6 +54,7 @@ private:
 	float m_fStiffness;
 	float m_fDamping;
 	int m_iIntegrator;
+	bool init = true;
 	float m_fGravityAccel;
 
 	TwType integratorType;
