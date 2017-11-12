@@ -152,24 +152,23 @@ void Masspoint::applyForce(Vec3 force) {
 }
 
 void Masspoint::setPosition(Vec3 position) {
-	position = position;
+	this->position = position;
 }
 void Masspoint::setVelocity(Vec3 velocity) {
-	velocity = velocity;
+	this->velocity = velocity;
 }
 void Masspoint::setForce(Vec3 force) {
-	force = force;
+	this->force = force;
 }
 void Masspoint::setIsFixed(bool isFixed) {
-	isFixed = isFixed;
+	this->isFixed = isFixed;
 }
 void Masspoint::setMass(float mass) {
-	mass = mass;
+	this->mass = mass;
 }
 void Masspoint::setDamping(float damping) {
-	damping = damping;
+	this->damping = damping;
 }
-
 Vec3 Masspoint::getPosition() {
 	return position;
 }

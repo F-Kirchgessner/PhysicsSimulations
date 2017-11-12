@@ -55,6 +55,11 @@ private:
 	float m_fDamping;
 	int m_iIntegrator;
 	float m_fGravityAccel;
+	float m_fInputScale;
+
+	float m_fMassOld;
+	float m_fStiffnessOld;
+	float m_fDampingOld;
 
 	TwType integratorType;
 

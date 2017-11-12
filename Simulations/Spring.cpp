@@ -34,13 +34,10 @@ void Spring::computeElasticForces() {
 	//std::cout << force.x << " | " << force.y << " | " << force.z << endl;
 }
 
-
 void Spring::addToEndPoints() {
 	mass_point1->applyForce(force);
 	mass_point2->applyForce(-force);
 }
-
-
 
 void Spring::setStiffness(float stiff) {
 	stiffness = stiff;
