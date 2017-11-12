@@ -394,9 +394,6 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 			std::vector<Vec3> oldPos;
 			std::vector<Vec3> oldVel;
 
-			for (auto& masspoint : m_masspointList) {
-				masspoint.clearForce();
-			}
 
 			for (auto &massspoint : m_masspointList) {
 				massspoint.integrateMidpointPosTemp(elapsedTime / 2, PosTemp);
@@ -412,11 +409,7 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 			}
 
 			for (unsigned int  i = 0; i < m_masspointList.size(); i++) {
-				m_masspointList[i].integrateSwitch(PosTemp,VelTemp,oldPos,oldVel,i);
-			}
-
-			for (auto& masspoint : m_masspointList) {
-				masspoint.clearForce();
+				m_masspointList[i].integrateSwitch(VelTemp,PosTemp,oldVel,oldPos,i);
 			}
 
 			for (auto& spring : m_springList) {
@@ -426,7 +419,7 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 			}
 
 			for (unsigned int i = 0; i < m_masspointList.size(); i++) {
-				m_masspointList[i].integrateSwitchBack(oldPos, oldVel, i);
+				m_masspointList[i].integrateSwitchBack(oldVel,oldPos, i);
 			}
 
 			for (unsigned int i = 0; i < m_masspointList.size(); i++) {
