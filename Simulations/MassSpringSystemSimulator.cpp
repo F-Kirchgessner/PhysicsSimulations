@@ -50,7 +50,7 @@ void MassSpringSystemSimulator::initTestScene() {
 		addMassPoint(Vec3(-0.5f, 0.5f, -0.5f), Vec3(0.0, 0.0, 0), false);
 		addMassPoint(Vec3(-0.5f, 0.5f, -0.3f), Vec3(0.0, 0.0, 0), false);
 		addMassPoint(Vec3(-0.3f, 0.5f, -0.3f), Vec3(0.0, 0.0, 0), false);
-		addMassPoint(Vec3(-0.5f, 0.4f, -0.5f), Vec3(0.0, 0.0, 0), true);
+		addMassPoint(Vec3(-0.5f, 0.5f, -0.1f), Vec3(0.0, 0.0, 0), false);
 		addSpring(11, 12, 0.05f);
 		addSpring(12, 13, 0.05f);
 		addSpring(13, 14, 0.05f);
@@ -74,9 +74,9 @@ void MassSpringSystemSimulator::reset() {
 	m_trackmouse.x = m_trackmouse.y = 0;
 	m_oldtrackmouse.x = m_oldtrackmouse.y = 0;
 
-	m_fMass = 1.0f;
-	m_fStiffness = 1.0f;
-	m_fDamping = 5.0f;
+	m_fMass = 0.05f;
+	m_fStiffness = 20.0f;
+	m_fDamping = 0.5f;
 	m_iIntegrator = 0;
 
 	m_masspointList.clear();
@@ -127,9 +127,12 @@ void MassSpringSystemSimulator::externalForcesCalculations(float timeElapsed) {
 		worldViewInv = worldViewInv.inverse();
 		Vec3 inputView = Vec3((float)mouseDiff.x, (float)-mouseDiff.y, 0);
 		Vec3 inputWorld = worldViewInv.transformVectorNormal(inputView);
-		// find a proper scale!
-		float inputScale = 0.001f;
-		inputWorld = inputWorld * inputScale;
+		inputWorld = inputWorld * INPUT_SCALE;
+
+		// Apply to mass points
+		for (auto& masspoint : m_masspointList) {
+			masspoint.applyForce(inputWorld);
+		}
 	}
 	else {
 	}
@@ -237,11 +240,6 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 		switch (m_iIntegrator) {
 			//euler
 		case 0:
-			for (auto& masspoint : m_masspointList) {
-				masspoint.clearForce();
-				masspoint.addGravity();
-			}
-
 			for (auto& spring : m_springList) {
 				spring.computeElasticForces();
 				spring.addToEndPoints();
@@ -250,6 +248,11 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 			for (auto &massspoint : m_masspointList) {
 				massspoint.integrateVelocityEuler(elapsedTime);
 				massspoint.integratePositionsEuler(elapsedTime);
+			}
+
+			for (auto& masspoint : m_masspointList) {
+				masspoint.clearForce();
+				masspoint.addGravity();
 			}
 			break;
 			//leapfrog
