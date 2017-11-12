@@ -41,18 +41,18 @@ void Masspoint::integratePositionsEuler(float elapsedTime) {
 	}
 }
 
-void Masspoint::integrateVelocityLeapfrog() {
+void Masspoint::integrateVelocityLeapfrog(float elapsedTime) {
 
 }
 
-void Masspoint::integrateVelocityMidpoint() {
+void Masspoint::integrateVelocityMidpoint(float elapsedTime) {
 
 }
 
-void Masspoint::integrateVelocityEuler() {
-	velocity.x += (force.x - damping * velocity.x) / mass;
-	velocity.y += (force.y - damping * velocity.y) / mass;
-	velocity.z += (force.z - damping * velocity.z) / mass;
+void Masspoint::integrateVelocityEuler(float elapsedTime) {
+	velocity.x += (force.x - damping * velocity.x * elapsedTime) / mass;
+	velocity.y += (force.y - damping * velocity.y * elapsedTime) / mass;
+	velocity.z += (force.z - damping * velocity.z * elapsedTime) / mass;
 
 	if (velocity.x * velocity.x < VELOCITY_MIN_SQ)
 		velocity.x = 0;

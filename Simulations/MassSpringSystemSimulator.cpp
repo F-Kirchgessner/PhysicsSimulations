@@ -76,7 +76,7 @@ void MassSpringSystemSimulator::reset() {
 
 	m_fMass = 1.0f;
 	m_fStiffness = 1.0f;
-	m_fDamping = 0.005f;
+	m_fDamping = 5.0f;
 	m_iIntegrator = 0;
 
 	m_masspointList.clear();
@@ -159,7 +159,8 @@ void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateCont
 		// Draw springs
 		DUC->beginLine();
 		for (auto& spring : m_springList) {
-			DUC->drawLine(spring.mass_point1->position, Vec3(0, 1, 0), spring.mass_point2->position, Vec3(0, 1, 0));
+			float springForce = spring.force.squaredDistanceTo(Vec3(0, 0, 0)) * 20;
+			DUC->drawLine(spring.mass_point1->position, Vec3(0, 1 - springForce, springForce), spring.mass_point2->position, Vec3(0, 1 - springForce, springForce));
 		}
 		DUC->endLine();
 		break;
@@ -247,18 +248,18 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 			}
 
 			for (auto &massspoint : m_masspointList) {
-				massspoint.integrateVelocityEuler();
+				massspoint.integrateVelocityEuler(elapsedTime);
 				massspoint.integratePositionsEuler(elapsedTime);
 			}
 			break;
 			//leapfrog
 		case 1:
-			//massspoint.integrateVelocityMidpoint();
+			//massspoint.integrateVelocityMidpoint(elapsedTime);
 			//massspoint.integratePositionsMidpoint(elapsedTime); 
 			break;
 			//midpoint
 		case 2:
-			//massspoint.integrateVelocityLeapfrog();
+			//massspoint.integrateVelocityLeapfrog(elapsedTime);
 			//massspoint.integratePositionsLeapfrog(elapsedTime); 
 			break;
 		}

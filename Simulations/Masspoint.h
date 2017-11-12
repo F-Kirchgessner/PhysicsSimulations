@@ -23,9 +23,9 @@ public:
 	void integratePositionsMidpoint(float elapsedTime);
 	void integratePositionsLeapfrog(float elapsedTime);
 	void integratePositionsEuler(float elapsedTime);
-	void integrateVelocityMidpoint();
-	void integrateVelocityLeapfrog();
-	void integrateVelocityEuler();
+	void integrateVelocityMidpoint(float elapsedTime);
+	void integrateVelocityLeapfrog(float elapsedTime);
+	void integrateVelocityEuler(float elapsedTime);
 	void applyForce(Vec3 force);
 
 	void setPosition(Vec3 position);
