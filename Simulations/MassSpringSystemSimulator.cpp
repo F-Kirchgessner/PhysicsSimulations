@@ -1,6 +1,6 @@
 #include "MassSpringSystemSimulator.h"
 
-MassSpringSystemSimulator::MassSpringSystemSimulator() {
+	MassSpringSystemSimulator::MassSpringSystemSimulator() {
 	m_iTestCase = 0;
 	m_iIntegrator = 0;
 	m_fInputScale = 0.001f;
@@ -162,7 +162,7 @@ void MassSpringSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 	TwAddVarRW(DUC->g_pTweakBar, "Damping", TW_TYPE_FLOAT, &m_fDamping, "step=0.01 min=0.0001");
 	TwAddVarRW(DUC->g_pTweakBar, "Gravity", TW_TYPE_FLOAT, &m_fGravityAccel, "step=0.01 min=0.0001");
 	TwAddVarRW(DUC->g_pTweakBar, "InputForce", TW_TYPE_FLOAT, &m_fInputScale, "step=0.01 min=0.0001");
-	
+
 	this->DUC = DUC;
 	switch (m_iTestCase)
 	{
@@ -227,7 +227,7 @@ void MassSpringSystemSimulator::simulateTimestep(float timeStep) {
 void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext) {
 	switch (m_iTestCase)
 	{
-	case 0: 
+	case 0:
 		// Draw mass points
 		for (auto& masspoint : m_masspointList) {
 			DUC->drawSphere(masspoint.position, Vec3(MASS_POINT_SIZE, MASS_POINT_SIZE, MASS_POINT_SIZE));
@@ -344,103 +344,108 @@ void MassSpringSystemSimulator::applyExternalForce(Vec3 force) {
 }
 
 void MassSpringSystemSimulator::integrate(float elapsedTime) {
-		
-		switch (m_iIntegrator) {
-			//euler
-		case 0:
-			for (auto& spring : m_springList) {
-				spring.computeElasticForces();
-				spring.addToEndPoints();
-			}
 
+	switch (m_iIntegrator) {
+		//euler
+	case 0:
+		for (auto& spring : m_springList) {
+			spring.computeElasticForces();
+			spring.addToEndPoints();
+		}
+
+		for (auto &massspoint : m_masspointList) {
+			massspoint.integrateVelocityEuler(elapsedTime);
+			massspoint.integratePositionsEuler(elapsedTime);
+		}
+
+		for (auto& masspoint : m_masspointList) {
+			masspoint.clearForce();
+			masspoint.addGravity(m_fGravityAccel);
+		}
+		break;
+		//leapfrog
+	case 1:
+		for (auto& spring : m_springList) {
+			spring.computeElasticForces();
+			spring.addToEndPoints();
+		}
+
+		if (init) {
 			for (auto &massspoint : m_masspointList) {
-				massspoint.integrateVelocityEuler(elapsedTime);
-				massspoint.integratePositionsEuler(elapsedTime);
-			}
-
-			for (auto& masspoint : m_masspointList) {
-				masspoint.clearForce();
-				masspoint.addGravity(m_fGravityAccel);
-			}
-			break;
-			//leapfrog
-		case 1:
-			for (auto& spring : m_springList) {
-				spring.computeElasticForces();
-				spring.addToEndPoints();
-			}
-
-			if (init) {
-				for (auto &massspoint : m_masspointList) {
-					massspoint.initVelocity(elapsedTime / 2);
-				}
-			}
-			init = false;
-
-			for (auto &massspoint : m_masspointList) {
-				massspoint.integrateVelocityLeapfrog(elapsedTime);
-				massspoint.integratePositionsLeapfrog(elapsedTime);
-			}
-
-			for (auto& masspoint : m_masspointList) {
-				masspoint.clearForce();
-				masspoint.addGravity(m_fGravityAccel);
-			}
-			break;
-			//midpoint
-		case 2:
-
-			std::vector<Vec3> PosTemp;
-			std::vector<Vec3> VelTemp;
-			std::vector<Vec3> oldPos;
-			std::vector<Vec3> oldVel;
-
-			// Compute xtmp at t+h/2 based on v(t)
-			for (auto &massspoint : m_masspointList) {
-				massspoint.integrateMidpointPosTemp(elapsedTime / 2, PosTemp);
-			}
-
-			// Compute a at t+h based on xtmp and vtmp
-			//for (auto& masspoint : m_masspointList) {
-			//	masspoint.clearForce();
-			//	masspoint.addGravity(m_fGravityAccel);
-			//}
-
-			// Compute a(t)
-			for (auto& spring : m_springList) {
-				spring.computeElasticForces();
-				spring.addToEndPoints();
-			}
-
-			// Compute vtmp at t+h/2 based on a(t)
-			for (auto &massspoint : m_masspointList) {
-				massspoint.integrateMidpointVelTemp(elapsedTime / 2, VelTemp);
-			}
-
-			for (unsigned int  i = 0; i < m_masspointList.size(); i++) {
-				m_masspointList[i].integrateSwitch(VelTemp, PosTemp, oldVel, oldPos, i);
-			}
-
-			// Compute a at t+h based on xtmp and vtmp
-			for (auto& masspoint : m_masspointList) {
-				masspoint.clearForce();
-				masspoint.addGravity(m_fGravityAccel);
-			}
-
-			for (auto& spring : m_springList) {
-				spring.computeElasticForces();
-				spring.addToEndPoints();
-			}
-
-			for (unsigned int i = 0; i < m_masspointList.size(); i++) {
-				m_masspointList[i].integrateSwitchBack(oldVel, oldPos, i);
-			}
-
-			// Compute x at t+h
-			// Compute x at t+h
-			for (unsigned int i = 0; i < m_masspointList.size(); i++) {
-				m_masspointList[i].computeX(elapsedTime / 2, VelTemp, i);
-				m_masspointList[i].computeY(elapsedTime / 2, VelTemp, i);
+				massspoint.initVelocity(elapsedTime / 2);
 			}
 		}
+		init = false;
+
+		for (auto &massspoint : m_masspointList) {
+			massspoint.integrateVelocityLeapfrog(elapsedTime);
+			massspoint.integratePositionsLeapfrog(elapsedTime);
+		}
+
+		for (auto& masspoint : m_masspointList) {
+			masspoint.clearForce();
+			masspoint.addGravity(m_fGravityAccel);
+		}
+		break;
+		//midpoint
+	case 2:
+
+		std::vector<Vec3> PosTemp;
+		std::vector<Vec3> VelTemp;
+		std::vector<Vec3> oldPos;
+		std::vector<Vec3> oldVel;
+		Vec3 inputForce;
+		if (m_masspointList.size() > 0)
+			inputForce = m_masspointList[0].getForce();
+
+		// Compute a(t)
+		for (auto& spring : m_springList) {
+			spring.computeElasticForces();
+			spring.addToEndPoints();
+		}
+
+		// Compute xtmp at t+h/2 based on v(t)
+		for (auto &massspoint : m_masspointList) {
+			massspoint.integrateMidpointPosTemp(elapsedTime / 2, PosTemp);
+		}
+
+		// Compute vtmp at t+h/2 based on a(t)
+		for (auto &massspoint : m_masspointList) {
+			massspoint.integrateMidpointVelTemp(elapsedTime / 2, VelTemp);
+		}
+
+		for (unsigned int i = 0; i < m_masspointList.size(); i++) {
+			m_masspointList[i].integrateSwitch(VelTemp, PosTemp, oldVel, oldPos, i);
+		}
+
+		// Compute a at t+h based on xtmp and vtmp
+		for (auto& masspoint : m_masspointList) {
+			masspoint.setForce(inputForce);
+			masspoint.addGravity(m_fGravityAccel);
+		}
+
+		for (auto& spring : m_springList) {
+			spring.computeElasticForces();
+			spring.addToEndPoints();
+		}
+
+		for (unsigned int i = 0; i < m_masspointList.size(); i++) {
+			m_masspointList[i].integrateSwitchBack(oldVel, oldPos, i);
+		}
+
+		// Compute x at t+h
+		// Compute x at t+h
+		for (unsigned int i = 0; i < m_masspointList.size(); i++) {
+			m_masspointList[i].computeX(elapsedTime, VelTemp, i);
+			m_masspointList[i].computeY(elapsedTime, VelTemp, i);
+		}
+
+		// Compute v at t+h
+		for (auto& masspoint : m_masspointList) {
+
+			masspoint.clearForce();
+			masspoint.addGravity(m_fGravityAccel);
+		}
+		break;
+	}
 }
