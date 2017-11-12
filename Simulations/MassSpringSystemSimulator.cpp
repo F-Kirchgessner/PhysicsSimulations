@@ -89,6 +89,9 @@ void MassSpringSystemSimulator::reset() {
 void MassSpringSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 
 	TwType TW_TYPE_INTEGRATORTYPE = TwDefineEnumFromString("IntegrationType", "Euler,Leapfrog,Midpoint");
+	TwAddVarRW(DUC->g_pTweakBar, "Mass", TW_TYPE_FLOAT, &m_fMass, "step=0.01 min=0.0001");
+	TwAddVarRW(DUC->g_pTweakBar, "Stiffness", TW_TYPE_FLOAT, &m_fStiffness, "step=0.1 min=0.0001");
+	TwAddVarRW(DUC->g_pTweakBar, "Damping", TW_TYPE_FLOAT, &m_fDamping, "step=0.01 min=0.0001");
 	
 	this->DUC = DUC;
 	switch (m_iTestCase)
@@ -276,8 +279,29 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 			break;
 			//midpoint
 		case 2:
-			//massspoint.integrateVelocityLeapfrog(elapsedTime);
-			//massspoint.integratePositionsLeapfrog(elapsedTime); 
+
+			for (auto& spring : m_springList) {
+				spring.computeElasticForces();
+				spring.addToEndPoints();
+			}
+
+			for (auto &massspoint : m_masspointList) {
+				massspoint.integrateMidpoint(elapsedTime/2);
+			}
+
+			for (auto& spring : m_springList) {
+				spring.computeElasticForces();
+				spring.addToEndPoints();
+			}
+
+			for (auto &massspoint : m_masspointList) {
+				massspoint.integrateMidpoint(elapsedTime);
+			}
+
+			for (auto& masspoint : m_masspointList) {
+				masspoint.clearForce();
+				masspoint.addGravity();
+			}
 			break;
 		}
 }
