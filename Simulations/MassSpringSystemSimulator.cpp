@@ -400,6 +400,12 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 				massspoint.integrateMidpointPosTemp(elapsedTime / 2, PosTemp);
 			}
 
+			// Compute a at t+h based on xtmp and vtmp
+			//for (auto& masspoint : m_masspointList) {
+			//	masspoint.clearForce();
+			//	masspoint.addGravity(m_fGravityAccel);
+			//}
+
 			// Compute a(t)
 			for (auto& spring : m_springList) {
 				spring.computeElasticForces();
@@ -436,13 +442,5 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 				m_masspointList[i].computeX(elapsedTime / 2, VelTemp, i);
 				m_masspointList[i].computeY(elapsedTime / 2, VelTemp, i);
 			}
-
-			// Compute v at t+h
-			for (auto& masspoint : m_masspointList) {
-				
-				masspoint.clearForce();
-				masspoint.addGravity(m_fGravityAccel);
-			}
-			break;
 		}
 }
