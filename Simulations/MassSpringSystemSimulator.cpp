@@ -430,7 +430,7 @@ void MassSpringSystemSimulator::integrate(float elapsedTime) {
 			}
 
 			for (unsigned int i = 0; i < m_masspointList.size(); i++) {
-				m_masspointList[i].computeX(elapsedTime,VelTemp,i);
+				m_masspointList[i].computeX(elapsedTime, VelTemp, i);
 				m_masspointList[i].computeY(elapsedTime, VelTemp, i);
 			}
 
