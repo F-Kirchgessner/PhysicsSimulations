@@ -26,6 +26,7 @@ public:
 	void integrateVelocityLeapfrog(float elapsedTime);
 	void integrateVelocityEuler(float elapsedTime);
 	void applyForce(Vec3 force);
+	void initVelocity(float halfElapsedTime);
 
 	void setPosition(Vec3 position);
 	void setVelocity(Vec3 velocity);

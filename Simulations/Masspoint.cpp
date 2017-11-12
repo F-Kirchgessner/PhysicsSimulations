@@ -21,7 +21,7 @@ void Masspoint::addGravity() {
 }
 
 void Masspoint::integratePositionsLeapfrog(float elapsedTime) {
-	if (isFixed) {
+	if (!isFixed) {
 		position.x += velocity.x * elapsedTime;
 		position.y += velocity.y * elapsedTime;
 		position.z += velocity.z * elapsedTime;
@@ -82,10 +82,23 @@ void Masspoint::integratePositionsEuler(float elapsedTime) {
 	}
 }
 
+void Masspoint::initVelocity(float halfElapsedTime) {
+	velocity.x = velocity.x + (force.x / mass) * halfElapsedTime;
+	velocity.y = velocity.y + (force.y / mass) * halfElapsedTime;
+	velocity.z = velocity.z + (force.z / mass) * halfElapsedTime;
+
+	if (velocity.x * velocity.x < VELOCITY_MIN_SQ)
+		velocity.x = 0;
+	if (velocity.y * velocity.y < VELOCITY_MIN_SQ)
+		velocity.y = 0;
+	if (velocity.z * velocity.z < VELOCITY_MIN_SQ)
+		velocity.z = 0;
+}
+
 void Masspoint::integrateVelocityLeapfrog(float elapsedTime) {
-	velocity.x = velocity.x + (force.x / mass) * elapsedTime;
-	velocity.y = velocity.y + (force.y / mass) * elapsedTime;
-	velocity.z = velocity.z + (force.z / mass) * elapsedTime;
+	velocity.x += (force.x - damping * velocity.x * elapsedTime) / mass;
+	velocity.y += (force.y - damping * velocity.y * elapsedTime) / mass;
+	velocity.z += (force.z - damping * velocity.z * elapsedTime) / mass;
 	
 	if (velocity.x * velocity.x < VELOCITY_MIN_SQ)
 		velocity.x = 0;
