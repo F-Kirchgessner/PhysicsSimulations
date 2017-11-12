@@ -3,6 +3,7 @@
 MassSpringSystemSimulator::MassSpringSystemSimulator() {
 	m_iTestCase = 0;
 	m_iIntegrator = 0;
+	m_fInputScale = 0.001f;
 }
 
 
@@ -63,7 +64,72 @@ void MassSpringSystemSimulator::initTestScene() {
 		addSpring(19, 20, 0.05f);
 
 		break;
-	case 1: break;
+	case 1:
+		addMassPoint(Vec3(0.0f, 0.0f, 0.1f), Vec3(0.0, 0.0, 0), false);	// 0
+		addMassPoint(Vec3(0.2f, -0.15f, 0.1f), Vec3(0.0, 0.0, 0), false);	// 1
+		addMassPoint(Vec3(-0.2f, -0.15f, 0.1f), Vec3(0.0, 0.0, 0), false);	// 2
+		addMassPoint(Vec3(0.1f, -0.35f, 0.1f), Vec3(0.0, 0.0, 0), false);	// 3
+		addMassPoint(Vec3(-0.1f, -0.35f, 0.1f), Vec3(0.0, 0.0, 0), false);	// 4
+
+		addMassPoint(Vec3(0.0f, -0.175f, 0.35f), Vec3(0.0, 0.0, 0), false);	// 5
+		addMassPoint(Vec3(0.0f, -0.175f, 0.05f), Vec3(0.0, 0.0, 0), false);	// 6
+
+		addMassPoint(Vec3(0.0f, -0.35f, 0.25f), Vec3(0.0, 0.0, 0), false);	// 7
+		addMassPoint(Vec3(0.2f, -0.2f, 0.25f), Vec3(0.0, 0.0, 0), false);	// 8
+		addMassPoint(Vec3(-0.2f, -0.2f, 0.25f), Vec3(0.0, 0.0, 0), false);	// 9
+		addMassPoint(Vec3(0.1f, 0.0f, 0.25f), Vec3(0.0, 0.0, 0), false);	// 10
+		addMassPoint(Vec3(-0.1f, 0.0f, 0.25f), Vec3(0.0, 0.0, 0), false);	// 11
+
+		addMassPoint(Vec3(0.0f, -0.175f, 0.2f), Vec3(0.0, 0.0, 0), false);	// 12
+
+		addSpring(0, 10, 0.2f);
+		addSpring(0, 11, 0.2f);
+		addSpring(1, 10, 0.2f);
+		addSpring(1, 8, 0.2f);
+		addSpring(3, 7, 0.2f);
+		addSpring(3, 8, 0.2f);
+		addSpring(4, 7, 0.2f);
+		addSpring(4, 9, 0.2f);
+		addSpring(2, 9, 0.2f);
+		addSpring(2, 11, 0.2f);
+
+		addSpring(0, 1, 0.2f);
+		addSpring(1, 3, 0.2f);
+		addSpring(3, 4, 0.2f);
+		addSpring(4, 2, 0.2f);
+		addSpring(2, 0, 0.2f);
+
+		addSpring(7, 8, 0.2f);
+		addSpring(7, 9, 0.2f);
+		addSpring(9, 11, 0.2f);
+		addSpring(10, 11, 0.2f);
+		addSpring(10, 8, 0.2f);
+
+		addSpring(6, 0, 0.2f);
+		addSpring(6, 1, 0.2f);
+		addSpring(6, 2, 0.2f);
+		addSpring(6, 3, 0.2f);
+		addSpring(6, 4, 0.2f);
+
+		addSpring(5, 7, 0.2f);
+		addSpring(5, 8, 0.2f);
+		addSpring(5, 9, 0.2f);
+		addSpring(5, 10, 0.2f);
+		addSpring(5, 11, 0.2f);
+
+		addSpring(12, 0, 0.2f);
+		addSpring(12, 1, 0.2f);
+		addSpring(12, 2, 0.2f);
+		addSpring(12, 3, 0.2f);
+		addSpring(12, 4, 0.2f);
+		addSpring(12, 5, 0.2f);
+		addSpring(12, 6, 0.2f);
+		addSpring(12, 7, 0.2f);
+		addSpring(12, 8, 0.2f);
+		addSpring(12, 9, 0.2f);
+		addSpring(12, 10, 0.2f);
+		addSpring(12, 11, 0.2f);
+		break;
 	default:
 		break;
 	}
@@ -79,7 +145,6 @@ void MassSpringSystemSimulator::reset() {
 	m_fStiffness = m_fStiffnessOld = 20.0f;
 	m_fDamping = m_fDampingOld = 0.5f;
 	m_fGravityAccel = 0.1f;
-	m_fInputScale = 0.01f;
 
 	m_masspointList.clear();
 	m_springList.clear();
@@ -117,7 +182,8 @@ void MassSpringSystemSimulator::notifyCaseChanged(int testCase) {
 		reset();
 		break;
 	default:
-		cout << "Empty Test!\n";
+		cout << "Complex Test!\n";
+		reset();
 		break;
 	}
 }
@@ -151,7 +217,7 @@ void MassSpringSystemSimulator::simulateTimestep(float timeStep) {
 	switch (m_iTestCase)
 	{
 	case 0: integrate(timeStep); break;
-	case 1: break;
+	case 1: integrate(timeStep); break;
 	default: break;
 	}
 }
@@ -161,6 +227,20 @@ void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateCont
 	switch (m_iTestCase)
 	{
 	case 0: 
+		// Draw mass points
+		for (auto& masspoint : m_masspointList) {
+			DUC->drawSphere(masspoint.position, Vec3(MASS_POINT_SIZE, MASS_POINT_SIZE, MASS_POINT_SIZE));
+		}
+
+		// Draw springs
+		DUC->beginLine();
+		for (auto& spring : m_springList) {
+			float springForce = spring.force.squaredDistanceTo(Vec3(0, 0, 0)) * 20;
+			DUC->drawLine(spring.mass_point1->position, Vec3(0, 1 - springForce, springForce), spring.mass_point2->position, Vec3(0, 1 - springForce, springForce));
+		}
+		DUC->endLine();
+		break;
+	case 1:
 		// Draw mass points
 		for (auto& masspoint : m_masspointList) {
 			DUC->drawSphere(masspoint.position, Vec3(MASS_POINT_SIZE, MASS_POINT_SIZE, MASS_POINT_SIZE));
