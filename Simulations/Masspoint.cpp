@@ -113,7 +113,7 @@ void Masspoint::integrateMidpoint(float elapsedTime) {
 		}
 		else if (position.x > BOX_SIZE) {
 			position.x = BOX_SIZE;
-			velocity.x = -velocity.x * GROUND_DAMPING;
+			velocity.x = velocity.x * GROUND_DAMPING;
 		}
 
 		if (position.z < -BOX_SIZE) {
