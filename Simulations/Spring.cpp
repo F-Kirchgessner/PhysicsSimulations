@@ -20,7 +20,14 @@ Spring::~Spring(){
 
 
 float Spring::calcDirectedForce(float currentLength, float pos1, float pos2) {
-	return -stiffness * (currentLength - initialLength) * ((pos1 - pos2) / currentLength);
+	
+	float currLength = currentLength;
+
+	if (currLength <= 0)
+		currLength = 0.002;
+		
+		return -stiffness * (currLength - initialLength) * ((pos1 - pos2) / currLength);
+
 }
 
 
