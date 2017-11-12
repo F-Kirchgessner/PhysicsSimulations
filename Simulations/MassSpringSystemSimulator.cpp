@@ -225,37 +225,18 @@ void MassSpringSystemSimulator::simulateTimestep(float timeStep) {
 
 
 void MassSpringSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext) {
-	switch (m_iTestCase)
-	{
-	case 0:
-		// Draw mass points
-		for (auto& masspoint : m_masspointList) {
-			DUC->drawSphere(masspoint.position, Vec3(MASS_POINT_SIZE, MASS_POINT_SIZE, MASS_POINT_SIZE));
-		}
-
-		// Draw springs
-		DUC->beginLine();
-		for (auto& spring : m_springList) {
-			float springForce = spring.force.squaredDistanceTo(Vec3(0, 0, 0)) * 20;
-			DUC->drawLine(spring.mass_point1->position, Vec3(0, 1 - springForce, springForce), spring.mass_point2->position, Vec3(0, 1 - springForce, springForce));
-		}
-		DUC->endLine();
-		break;
-	case 1:
-		// Draw mass points
-		for (auto& masspoint : m_masspointList) {
-			DUC->drawSphere(masspoint.position, Vec3(MASS_POINT_SIZE, MASS_POINT_SIZE, MASS_POINT_SIZE));
-		}
-
-		// Draw springs
-		DUC->beginLine();
-		for (auto& spring : m_springList) {
-			float springForce = spring.force.squaredDistanceTo(Vec3(0, 0, 0)) * 20;
-			DUC->drawLine(spring.mass_point1->position, Vec3(0, 1 - springForce, springForce), spring.mass_point2->position, Vec3(0, 1 - springForce, springForce));
-		}
-		DUC->endLine();
-		break;
+	// Draw mass points
+	for (auto& masspoint : m_masspointList) {
+		DUC->drawSphere(masspoint.position, Vec3(MASS_POINT_SIZE, MASS_POINT_SIZE, MASS_POINT_SIZE));
 	}
+
+	// Draw springs
+	DUC->beginLine();
+	for (auto& spring : m_springList) {
+		float springForce = spring.force.squaredDistanceTo(Vec3(0, 0, 0));
+		DUC->drawLine(spring.mass_point1->position, Vec3(0, 1 - springForce, springForce), spring.mass_point2->position, Vec3(0, 1 - springForce, springForce));
+	}
+	DUC->endLine();
 
 	if (m_fMass != m_fMassOld) {
 		for (auto& masspoint : m_masspointList) {
