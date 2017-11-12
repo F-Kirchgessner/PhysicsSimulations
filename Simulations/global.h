@@ -6,4 +6,4 @@
 #define GROUND_HEIGHT -0.5f
 #define GROUND_DAMPING 0.5f
 #define BOX_SIZE 0.5f
-#define INPUT_SCALE 0.0001f
+#define INPUT_SCALE 0.01f
