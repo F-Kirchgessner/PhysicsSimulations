@@ -122,9 +122,9 @@ void Masspoint::integrateMidpointVelTemp(float elapsedTime, vector<Vec3>& VelTem
 
 		Vec3 tmp;
 
-		tmp.x = velocity.x + elapsedTime*(force.x) / mass;
-		tmp.y = velocity.y + elapsedTime*(force.y) / mass;
-		tmp.z = velocity.z + elapsedTime*(force.z) / mass;
+		tmp.x = velocity.x + elapsedTime*(force.x - damping * velocity.x * elapsedTime) / mass;
+		tmp.y = velocity.y + elapsedTime*(force.y - damping * velocity.y * elapsedTime) / mass;
+		tmp.z = velocity.z + elapsedTime*(force.z - damping * velocity.z * elapsedTime) / mass;
 
 		VelTemp.push_back(tmp);
 }
