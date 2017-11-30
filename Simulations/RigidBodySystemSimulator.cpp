@@ -11,7 +11,7 @@ const char * RigidBodySystemSimulator::getTestCasesStr() {
 }
 
 void RigidBodySystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
-	
+	this->DUC = DUC;
 }
 void RigidBodySystemSimulator::initTestScene()
 {
@@ -34,7 +34,7 @@ void RigidBodySystemSimulator::reset() {
 
 }
 void RigidBodySystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext) {
-	DUC->setUpLighting(Vec3(0, 0, 0), 0.4*Vec3(1, 1, 1), 2000.0, Vec3(0.5, 0.5, 0.5));
+	DUC->setUpLighting(Vec3(0, 0, 0), 0.4*Vec3(1, 1, 1), 2.0, Vec3(0.5, 0.5, 0.5));
 	// Draw mass points
 	for (auto& rigidbodySystem : m_rigidbodysystems) {
 		rigidbodySystem.Obj2WorldMatrix = rigidbodySystem.scaleMat * rigidbodySystem.rotMat * rigidbodySystem.transMat;
