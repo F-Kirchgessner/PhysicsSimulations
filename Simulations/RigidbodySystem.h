@@ -11,7 +11,8 @@ public:
 	RigidbodySystem(Vec3 size, Vec3 position, int mass);
 	~RigidbodySystem();
 
-	Vec3 position;
+	// x_cm
+	Vec3 m_position;
 	// Translation Matrix
 	Mat4 transMat;
 
@@ -27,13 +28,25 @@ public:
 	
 	Mat4 Obj2WorldMatrix;
 
-
-	float mass;
+	//M
+	int mass;
+	//i
 	float interiatensor;
+	//v_cm
 	Vec3 velocity;
+	//F
 	Vec3 force;
-	float anglevelocity;
-	float torque;
+	//w
+	float angluarvelocity;
+	//q
+	Vec3 torque;
+
+	void calculateInteriaTensor() {
+	// i = sum(x_n*<x_n,x_n>)
+	};
+	// add Force and Torque, External Forces in the Simulation Algo.
+	void applyForce(Vec3& loc, Vec3& f);
+	void updateStep(float elapsedTime);
 
 };
 

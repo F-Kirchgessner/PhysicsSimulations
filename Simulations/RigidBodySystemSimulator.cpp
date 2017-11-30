@@ -18,7 +18,9 @@ void RigidBodySystemSimulator::initTestScene()
 	switch (m_iTestCase)
 	{
 	case 0:
-		addRigidBody(Vec3(0.0f, 0.0f, 0.0f), Vec3(3.0f, 3.0f, 3.0f), 5);
+		addRigidBody(Vec3(0.0f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 5);
+		setVelocityOf(getNumberOfRigidBodies()-1,Vec3(0.0f,1.0f,0.0f));
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0,0,0), Vec3(0, 100, 0));
 		break;
 	}
 }
@@ -50,6 +52,16 @@ void RigidBodySystemSimulator::externalForcesCalculations(float timeElapsed) {
 }
 void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
 
+	// update current setup for each frame
+	switch (m_iTestCase)
+	{
+	case 0: 
+		for (auto& rigidbodySystem : m_rigidbodysystems) {
+			rigidbodySystem.updateStep(timeStep);
+		}
+		break;
+	}
+
 }
 void RigidBodySystemSimulator::onClick(int x, int y) {
 
@@ -63,16 +75,16 @@ int RigidBodySystemSimulator::getNumberOfRigidBodies() {
 	return m_rigidbodysystems.size();
 }
 Vec3 RigidBodySystemSimulator::getPositionOfRigidBody(int i) {
-	return m_rigidbodysystems.at(i).position;
+	return m_rigidbodysystems.at(i).m_position;
 }
 Vec3 RigidBodySystemSimulator::getLinearVelocityOfRigidBody(int i) {
 	return m_rigidbodysystems.at(i).velocity;
 }
 Vec3 RigidBodySystemSimulator::getAngularVelocityOfRigidBody(int i) {
-	return m_rigidbodysystems.at(i).anglevelocity;
+	return m_rigidbodysystems.at(i).angluarvelocity;
 }
 void RigidBodySystemSimulator::applyForceOnBody(int i, Vec3 loc, Vec3 force) {
-
+	m_rigidbodysystems.at(i).applyForce(loc, force);
 }
 void RigidBodySystemSimulator::addRigidBody(Vec3 position, Vec3 size, int mass) {
 	RigidbodySystem rig(size,position,mass);
@@ -84,5 +96,5 @@ void RigidBodySystemSimulator::setOrientationOf(int i, Quat orientation) {
 	
 }
 void RigidBodySystemSimulator::setVelocityOf(int i, Vec3 velocity) {
-
+	m_rigidbodysystems.at(i).velocity = velocity;
 }
