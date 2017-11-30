@@ -2,7 +2,7 @@
 
 // Construtors
 RigidBodySystemSimulator::RigidBodySystemSimulator() {
-
+	m_iTestCase = 0;
 }
 
 // Functions
@@ -34,12 +34,11 @@ void RigidBodySystemSimulator::reset() {
 
 }
 void RigidBodySystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext) {
-
+	DUC->setUpLighting(Vec3(0, 0, 0), 0.4*Vec3(1, 1, 1), 2000.0, Vec3(0.5, 0.5, 0.5));
 	// Draw mass points
-	for (auto& RigidbodySystem : m_rigidbodysystems) {
-		DUC->setUpLighting(Vec3(0, 0, 0), 0.4*Vec3(1, 1, 1), 2000.0, Vec3(0.5, 0.5, 0.5));
-		BodyA.Obj2WorldMatrix = BodyA.scaleMat * BodyA.rotMat * BodyA.translatMat;
-		DUC->drawRigidBody(BodyA.Obj2WorldMatrix);
+	for (auto& rigidbodySystem : m_rigidbodysystems) {
+		rigidbodySystem.Obj2WorldMatrix = rigidbodySystem.scaleMat * rigidbodySystem.rotMat * rigidbodySystem.transMat;
+		DUC->drawRigidBody(rigidbodySystem.Obj2WorldMatrix);
 	}
 
 }
@@ -76,17 +75,13 @@ void RigidBodySystemSimulator::applyForceOnBody(int i, Vec3 loc, Vec3 force) {
 
 }
 void RigidBodySystemSimulator::addRigidBody(Vec3 position, Vec3 size, int mass) {
-	RigidbodySystem rig;
-	rig.position = position;
-	rig.shape.size = size;
-	rig.shape.mass = mass;
+	RigidbodySystem rig(size,position,mass);
 	//create; copy; delete; because of inner function, maybe emplace_back?
 	m_rigidbodysystems.push_back(rig);
 }
 void RigidBodySystemSimulator::setOrientationOf(int i, Quat orientation) {
 	// ToDo use Quaterion for orientation;
-	// 45 deg.
-	m_rigidbodysystems.at(i).orientation = sqrt(2) / 2;
+	
 }
 void RigidBodySystemSimulator::setVelocityOf(int i, Vec3 velocity) {
 
