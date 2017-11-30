@@ -2,7 +2,7 @@
 #define RIGIDBODYSYSTEMSIMULATOR_h
 #include "Simulator.h"
 //add your header for your rigid body system, for e.g.,
-//#include "rigidBodySystem.h" 
+#include "RigidBodySystem.h" 
 
 #define TESTCASEUSEDTORUNTEST 2
 
@@ -31,6 +31,10 @@ public:
 	void addRigidBody(Vec3 position, Vec3 size, int mass);
 	void setOrientationOf(int i,Quat orientation);
 	void setVelocityOf(int i, Vec3 velocity);
+
+	void initTestScene();
+
+	std::vector<RigidbodySystem> m_rigidbodysystems;
 
 private:
 	// Attributes
