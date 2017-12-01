@@ -70,8 +70,20 @@ void RigidbodySystem::clearForce() {
 	torque.z = 0;
 }
 
-void RigidbodySystem::calculateInteriaTensor() {
-	float a = size.x;
-	float b = size.y;
-	interiatensor = mass*(a*a + b*b) / 12.0f;
+void RigidbodySystem::calculateInteriaTensor() {	
+	//Rotation around z-achse
+	//float a = size.x;
+	//float b = size.y;
+	//interiatensor = mass*(a*a + b*b) / 12.0f;
+
+	float w = size.x;
+	float h = size.y;
+	float d = size.z;
+
+	interiatensor = Mat4(mass*(h*h+d*d)/12, 0.0f, 0.0f, 0.0f,
+						 0.0f, mass*(w*w + d*d) / 12, 0.0f, 0.0f,
+					     0.0f, 0.0f, mass*(w*w + h*h) / 12, 0.0f,
+						 0.0f, 0.0f, 0.0f, 1.0f);
+
+
 };
