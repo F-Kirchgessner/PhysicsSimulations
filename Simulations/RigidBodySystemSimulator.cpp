@@ -19,7 +19,7 @@ void RigidBodySystemSimulator::initTestScene()
 	{
 	case 0:
 		addRigidBody(Vec3(0.0f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 5);
-		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0.25f, 0.25f,0), Vec3(100, 0, 0));
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0.25f, 0.20f,0), Vec3(100, 50, 0));
 		break;
 	}
 }
