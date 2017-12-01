@@ -225,16 +225,21 @@
   <ItemGroup>
     <ClCompile Include="Masspoint.cpp" />
     <ClCompile Include="MassSpringSystemSimulator.cpp" />
+    <ClCompile Include="RigidbodySystem.cpp" />
+    <ClCompile Include="RigidBodySystemSimulator.cpp" />
     <ClCompile Include="Spring.cpp" />
     <ClCompile Include="TemplateSimulator.cpp" />
     <ClCompile Include="util\FFmpeg.cpp" />
     <ClCompile Include="util\util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="collisionDetect.h" />
     <ClInclude Include="DrawingUtilitiesClass.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="Masspoint.h" />
     <ClInclude Include="MassSpringSystemSimulator.h" />
+    <ClInclude Include="RigidbodySystem.h" />
+    <ClInclude Include="RigidBodySystemSimulator.h" />
     <ClInclude Include="Simulator.h" />
     <ClInclude Include="Spring.h" />
     <ClInclude Include="TemplateSimulator.h" />
