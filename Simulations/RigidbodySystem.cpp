@@ -44,18 +44,19 @@ void RigidbodySystem::applyForce(Vec3& loc, Vec3& f)
 void RigidbodySystem::updateStep(float elapsedTime)
 {
 	float h = elapsedTime;
+	Mat4 rotMatTranspose = Mat4(rotMat);
+	rotMatTranspose.transpose();
 
 	m_position += h * velocity;
 	velocity += h * (force / mass);
 
-	//orientation += h * angluarvelocity;
-	//angluarvelocity += h * (torque.z / interiatensor);
-
 	orientation += h / 2 * Quat(angluarvelocity.x, angluarvelocity.y, angluarvelocity.z, 0) * orientation;
 	angularMomentum += h * torque;
+	interiatensor = rotMat * interiatensor * rotMatTranspose;
+	angluarvelocity = interiatensor * angularMomentum;
 
 	transMat.initTranslation(m_position.x, m_position.y, m_position.z);
-	rotMat.initRotationZ(orientation);
+	rotMat.initRotationXYZ(orientation.x, orientation.y, orientation.z);
 
 	clearForce();
 }
