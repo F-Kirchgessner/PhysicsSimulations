@@ -19,6 +19,8 @@ public:
 	void notifyCaseChanged(int testCase);
 	void externalForcesCalculations(float timeElapsed);
 	void simulateTimestep(float timeStep);
+	void checkForCollisions();
+	void collisionDetected(RigidbodySystem &bodyA, RigidbodySystem &bodyB, Vec3 collisionPointWorld, Vec3 normalWorld);
 	void onClick(int x, int y);
 	void onMouse(int x, int y);
 

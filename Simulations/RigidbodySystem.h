@@ -51,5 +51,6 @@ public:
 	void updateStep(float elapsedTime);
 	void calculateInteriaTensor();
 	void clearForce();
+	void collisionDetected(Vec3 collisionPointWorld, Vec3 normal);
 };
 
