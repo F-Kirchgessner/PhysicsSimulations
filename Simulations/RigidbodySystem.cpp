@@ -7,7 +7,7 @@ RigidbodySystem::RigidbodySystem()
 
 }
 
-RigidbodySystem::RigidbodySystem(Vec3 size, Vec3 position, int mass) : size(size), m_position(position), mass(mass)
+RigidbodySystem::RigidbodySystem(Vec3 size, Vec3 position, float mass) : size(size), m_position(position), mass(mass)
 {
 	// 45 deg. 
 	// need to be removed
@@ -83,10 +83,9 @@ void RigidbodySystem::calculateInteriaTensor() {
 	float w = size.x;
 	float h = size.y;
 	float d = size.z;
-	float massInv = 1 / mass;
 
-	interiatensor = Mat4(massInv*(h*h+d*d) / 12.0f, 0.0f, 0.0f, 0.0f,
-						 0.0f, massInv*(w*w + d*d) / 12.0f, 0.0f, 0.0f,
-					     0.0f, 0.0f, massInv*(w*w + h*h) / 12.0f, 0.0f,
+	interiatensor = Mat4(mass*(h*h+d*d) / 12.0f, 0.0f, 0.0f, 0.0f,
+						 0.0f, mass*(w*w + d*d) / 12.0f, 0.0f, 0.0f,
+					     0.0f, 0.0f, mass*(w*w + h*h) / 12.0f, 0.0f,
 						 0.0f, 0.0f, 0.0f, 1.0f);
 };
