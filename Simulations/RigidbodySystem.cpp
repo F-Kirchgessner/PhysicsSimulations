@@ -50,7 +50,7 @@ void RigidbodySystem::updateStep(float elapsedTime)
 	m_position += h * velocity;
 	velocity += h * (force / mass);
 
-	orientation += h / 2 * Quat(angluarvelocity.x, angluarvelocity.y, angluarvelocity.z, 0) * orientation;
+	orientation += h / 2 * Quat(0, angluarvelocity.x, angluarvelocity.y, angluarvelocity.z) * orientation;
 	angularMomentum += h * torque;
 	interiatensor = rotMat * interiatensor * rotMatTranspose;
 	angluarvelocity = interiatensor * angularMomentum;
@@ -86,5 +86,5 @@ void RigidbodySystem::calculateInteriaTensor() {
 					     0.0f, 0.0f, mass*(w*w + h*h) / 12, 0.0f,
 						 0.0f, 0.0f, 0.0f, 1.0f);
 
-
+	interiatensor.inverse();
 };
