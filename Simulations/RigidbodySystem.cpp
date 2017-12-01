@@ -89,3 +89,7 @@ void RigidbodySystem::calculateInteriaTensor() {
 					     0.0f, 0.0f, 12.0f / (mass*(w*w + h*h)), 0.0f,
 						 0.0f, 0.0f, 0.0f, 1.0f);
 };
+
+void RigidbodySystem::collisionDetected(Vec3 collisionPointWorld, Vec3 normal) {
+	
+}

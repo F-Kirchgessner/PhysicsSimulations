@@ -2,7 +2,7 @@
 
 // Construtors
 RigidBodySystemSimulator::RigidBodySystemSimulator() {
-	m_iTestCase = 0;
+	m_iTestCase = 1;
 }
 
 // Functions
@@ -20,6 +20,11 @@ void RigidBodySystemSimulator::initTestScene()
 	case 0:
 		addRigidBody(Vec3(0.0f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0, 0, 0.125f), Vec3(10, 0, 0));
+		break;
+	case 1:
+		addRigidBody(Vec3(0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
+		addRigidBody(Vec3(-0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(-0.25f, 0.0f, 0), Vec3(100, 30, 30));
 		break;
 	}
 }
@@ -50,18 +55,56 @@ void RigidBodySystemSimulator::externalForcesCalculations(float timeElapsed) {
 
 }
 void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
-
 	// update current setup for each frame
 	switch (m_iTestCase)
 	{
 	case 0: 
+	case 1:
+		checkForCollisions();
 		for (auto& rigidbodySystem : m_rigidbodysystems) {
 			rigidbodySystem.updateStep(timeStep);
 		}
 		break;
 	}
-
 }
+
+void RigidBodySystemSimulator::checkForCollisions() {
+	for (int a = 0; a < m_rigidbodysystems.size(); a++) {
+		for (int b = 0; b < m_rigidbodysystems.size(); b++) {
+			if (a != b) {
+				RigidbodySystem &bodyA = m_rigidbodysystems[a];
+				RigidbodySystem &bodyB = m_rigidbodysystems[b];
+				Mat4 worldA = bodyA.scaleMat * bodyA.rotMat * bodyA.transMat;
+				Mat4 worldB = bodyB.scaleMat * bodyB.rotMat * bodyB.transMat;
+				CollisionInfo simpletest = checkCollisionSAT(worldA, worldB);
+				if (simpletest.isValid) {
+					std::printf("collision detected at normal: %f, %f, %f\n", simpletest.normalWorld.x, simpletest.normalWorld.y, simpletest.normalWorld.z);
+					std::printf("collision point : %f, %f, %f\n", (simpletest.collisionPointWorld).x, (simpletest.collisionPointWorld).y, (simpletest.collisionPointWorld).z);
+					collisionDetected(bodyA, bodyB, simpletest.collisionPointWorld, simpletest.normalWorld);
+
+					return;	// change this, otherwise a, b collide and b, a collide
+				}
+			}
+		}
+	}
+}
+
+void RigidBodySystemSimulator::collisionDetected(RigidbodySystem &bodyA, RigidbodySystem &bodyB, Vec3 collisionPointWorld, Vec3 normalWorld) {
+	Mat4 worldInvA = (bodyA.scaleMat * bodyA.rotMat * bodyA.transMat).inverse();
+	Mat4 worldInvB = (bodyA.scaleMat * bodyB.rotMat * bodyB.transMat).inverse();
+	Vec3 collisionPointA = worldInvA.transformVector(collisionPointWorld);
+	Vec3 collisionPointB = worldInvB.transformVector(collisionPointWorld);
+
+	// not correct approach
+	bodyA.applyForce(collisionPointA, normalWorld * GamePhysics::norm(bodyB.velocity));
+	bodyB.applyForce(collisionPointB, -normalWorld * GamePhysics::norm(bodyA.velocity));
+
+	/*bodyA.velocity = -bodyA.velocity;
+	bodyA.angluarvelocity = -bodyA.angluarvelocity;
+	bodyB.velocity = -bodyB.velocity;
+	bodyB.angluarvelocity = -bodyB.angluarvelocity;*/
+}
+
 void RigidBodySystemSimulator::onClick(int x, int y) {
 
 }
