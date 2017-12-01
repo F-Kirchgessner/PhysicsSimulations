@@ -30,7 +30,7 @@ public:
 	Mat4 Obj2WorldMatrix;
 
 	//M
-	int mass;
+	float mass;
 	//i
 	Mat4 interiatensor;
 	//v_cm
