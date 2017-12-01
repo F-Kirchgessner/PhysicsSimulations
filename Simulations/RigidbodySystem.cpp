@@ -50,7 +50,7 @@ void RigidbodySystem::updateStep(float elapsedTime)
 	rotMatTranspose.transpose();
 
 	m_position += h * velocity;
-	velocity += h * (force / (float)mass);
+	velocity += h * (force / mass);
 
 	orientation += h / 2.0f * Quat(angluarvelocity.x, angluarvelocity.y, angluarvelocity.z, 0) * orientation;
 	orientation.unit();
