@@ -50,13 +50,13 @@ void RigidbodySystem::updateStep(float elapsedTime)
 	rotMatTranspose.transpose();
 
 	m_position += h * velocity;
-	velocity += h * (force / mass);
+	velocity += h * (force / (float)mass);
 
 	orientation += h / 2.0f * Quat(angluarvelocity.x, angluarvelocity.y, angluarvelocity.z, 0) * orientation;
 	orientation.unit();
 	angularMomentum += h * torque;
 	Mat4 tempInteriatensor = rotMat * interiatensor * rotMatTranspose;
-	angluarvelocity = tempInteriatensor.transformVector(angularMomentum) * 10000;
+	angluarvelocity = tempInteriatensor.transformVector(angularMomentum);
 
 	transMat.initTranslation(m_position.x, m_position.y, m_position.z);
 	rotMat = orientation.getRotMat();
