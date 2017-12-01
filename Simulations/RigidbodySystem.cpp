@@ -45,4 +45,24 @@ void RigidbodySystem::updateStep(float elapsedTime)
 {
 	float h = elapsedTime;
 
+	m_position += h * velocity;
+	velocity += h * (force / mass);
+
+	orientation += h * angluarvelocity;
+	angluarvelocity += h * (torque.z / interiatensor);
+
+	transMat.initTranslation(m_position.x, m_position.y, m_position.z);
+	rotMat.initRotationZ(orientation);
+
+	clearForce();
+}
+
+void RigidbodySystem::clearForce() {
+	force.x = 0;
+	force.y = 0;
+	force.z = 0;
+
+	torque.x = 0;
+	torque.y = 0;
+	torque.z = 0;
 }

@@ -48,6 +48,6 @@ public:
 	// add Force and Torque, External Forces in the Simulation Algo.
 	void applyForce(Vec3& loc, Vec3& f);
 	void updateStep(float elapsedTime);
-
+	void clearForce();
 };
 
