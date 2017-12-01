@@ -14,7 +14,7 @@ RigidbodySystem::RigidbodySystem(Vec3 size, Vec3 position, int mass) : size(size
 	// ------------------------
 	//orientation = sqrt(2) / 2;
 	// ------------------------
-	orientation = Quat(0, 0.5, 0.5, 1);
+	orientation = Quat(0, 0.0, 0.0, 1);
 	rotMat.initRotationZ(0);
 	transMat.initTranslation(position.x, position.y, position.z);
 	scaleMat.initScaling(size.x, size.y, size.z);
@@ -36,7 +36,7 @@ void RigidbodySystem::applyForce(Vec3& loc, Vec3& f)
 	force += f;
 	//loc is probably in world space as m_position
 	// armvector = x - loc
-	Vec3 armVector = m_position - loc;
+	Vec3 armVector = loc - m_position;
 	//Watch out should be += not =
 	torque += GamePhysics::cross(armVector,f);
 
@@ -55,7 +55,7 @@ void RigidbodySystem::updateStep(float elapsedTime)
 	orientation.unit();
 	angularMomentum += h * torque;
 	Mat4 tempInteriatensor = rotMat * interiatensor * rotMatTranspose;
-	angluarvelocity = tempInteriatensor.transformVector(angularMomentum);
+	angluarvelocity = tempInteriatensor.transformVector(angularMomentum) * 10000;
 
 	transMat.initTranslation(m_position.x, m_position.y, m_position.z);
 	rotMat = orientation.getRotMat();
@@ -82,11 +82,10 @@ void RigidbodySystem::calculateInteriaTensor() {
 	float w = size.x;
 	float h = size.y;
 	float d = size.z;
+	float massInv = 1 / mass;
 
-	interiatensor = Mat4(mass*(h*h+d*d)/12, 0.0f, 0.0f, 0.0f,
-						 0.0f, mass*(w*w + d*d) / 12, 0.0f, 0.0f,
-					     0.0f, 0.0f, mass*(w*w + h*h) / 12, 0.0f,
+	interiatensor = Mat4(massInv*(h*h+d*d) / 12.0f, 0.0f, 0.0f, 0.0f,
+						 0.0f, massInv*(w*w + d*d) / 12.0f, 0.0f, 0.0f,
+					     0.0f, 0.0f, massInv*(w*w + h*h) / 12.0f, 0.0f,
 						 0.0f, 0.0f, 0.0f, 1.0f);
-
-	interiatensor.inverse();
 };
