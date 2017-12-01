@@ -22,6 +22,7 @@ public:
 
 	// For test purpose only! One axis, hence orientation is a scalar i.e. radian [0...2pi]! 
 	// ToDo use quaterions!
+	// r
 	float orientation;
 	//RotationMatrix;
 	Mat4 rotMat;

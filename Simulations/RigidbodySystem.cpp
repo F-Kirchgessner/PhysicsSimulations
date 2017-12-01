@@ -37,7 +37,7 @@ void RigidbodySystem::applyForce(Vec3& loc, Vec3& f)
 	// armvector = x - loc
 	Vec3 armVector = m_position - loc;
 	//Watch out should be += not =
-	torque += loc.x * force.y - force.y * loc.x;
+	torque += GamePhysics::cross(armVector,f);
 
 }
 
