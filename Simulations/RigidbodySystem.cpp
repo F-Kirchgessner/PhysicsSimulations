@@ -14,7 +14,7 @@ RigidbodySystem::RigidbodySystem(Vec3 size, Vec3 position, int mass) : size(size
 	// ------------------------
 	//orientation = sqrt(2) / 2;
 	// ------------------------
-	orientation = Quat(0, 0.5, 0.5, 1);
+	orientation = Quat(0, 0.0, 0.0, 1);
 	rotMat.initRotationZ(0);
 	transMat.initTranslation(position.x, position.y, position.z);
 	scaleMat.initScaling(size.x, size.y, size.z);
@@ -36,7 +36,7 @@ void RigidbodySystem::applyForce(Vec3& loc, Vec3& f)
 	force += f;
 	//loc is probably in world space as m_position
 	// armvector = x - loc
-	Vec3 armVector = m_position - loc;
+	Vec3 armVector = loc - m_position;
 	//Watch out should be += not =
 	torque += GamePhysics::cross(armVector,f);
 
@@ -45,7 +45,8 @@ void RigidbodySystem::applyForce(Vec3& loc, Vec3& f)
 void RigidbodySystem::updateStep(float elapsedTime)
 {
 	float h = elapsedTime;
-	Mat4 rotMatTranspose = Mat4(rotMat);
+	Mat4 rotation = orientation.getRotMat();
+	Mat4 rotMatTranspose = rotation;
 	rotMatTranspose.transpose();
 
 	m_position += h * velocity;
