@@ -79,7 +79,7 @@ void RigidbodySystem::calculateInteriaTensor() {
 	//float a = size.x;
 	//float b = size.y;
 	//interiatensor = mass*(a*a + b*b) / 12.0f;
-
+	//comment
 	float w = size.x;
 	float h = size.y;
 	float d = size.z;
