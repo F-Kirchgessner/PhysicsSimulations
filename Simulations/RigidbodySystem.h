@@ -23,7 +23,7 @@ public:
 	// For test purpose only! One axis, hence orientation is a scalar i.e. radian [0...2pi]! 
 	// ToDo use quaterions!
 	// r
-	float orientation;
+	Quat orientation;
 	//RotationMatrix;
 	Mat4 rotMat;
 	
@@ -32,25 +32,22 @@ public:
 	//M
 	int mass;
 	//i
-	float interiatensor;
+	Mat4 interiatensor;
 	//v_cm
 	Vec3 velocity;
 	//F
 	Vec3 force;
 	//w
-	float angluarvelocity;
+	Vec3 angluarvelocity;
 	//q
 	Vec3 torque;
+	//L
+	Vec3 angularMomentum;
 
-	void calculateInteriaTensor() {
-		float a = size.x;
-		float b = size.y;
-		interiatensor = mass*(a*a+b*b)/12.0f;
-
-	};
 	// add Force and Torque, External Forces in the Simulation Algo.
 	void applyForce(Vec3& loc, Vec3& f);
 	void updateStep(float elapsedTime);
+	void calculateInteriaTensor();
 	void clearForce();
 };
 

@@ -12,9 +12,9 @@ RigidbodySystem::RigidbodySystem(Vec3 size, Vec3 position, int mass) : size(size
 	// 45 deg. 
 	// need to be removed
 	// ------------------------
-	orientation = sqrt(2) / 2;
+	//orientation = sqrt(2) / 2;
 	// ------------------------
-	rotMat.initRotationZ(orientation);
+	rotMat.initRotationZ(0);
 	transMat.initTranslation(position.x, position.y, position.z);
 	scaleMat.initScaling(size.x, size.y, size.z);
 	angluarvelocity = 0;
@@ -48,8 +48,11 @@ void RigidbodySystem::updateStep(float elapsedTime)
 	m_position += h * velocity;
 	velocity += h * (force / mass);
 
-	orientation += h * angluarvelocity;
-	angluarvelocity += h * (torque.z / interiatensor);
+	//orientation += h * angluarvelocity;
+	//angluarvelocity += h * (torque.z / interiatensor);
+
+	orientation += h / 2 * Quat(angluarvelocity.x, angluarvelocity.y, angluarvelocity.z, 0) * orientation;
+	angularMomentum += h * torque;
 
 	transMat.initTranslation(m_position.x, m_position.y, m_position.z);
 	rotMat.initRotationZ(orientation);
@@ -66,3 +69,9 @@ void RigidbodySystem::clearForce() {
 	torque.y = 0;
 	torque.z = 0;
 }
+
+void RigidbodySystem::calculateInteriaTensor() {
+	float a = size.x;
+	float b = size.y;
+	interiatensor = mass*(a*a + b*b) / 12.0f;
+};
