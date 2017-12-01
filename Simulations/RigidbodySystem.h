@@ -3,6 +3,8 @@
 #include "util\matrixbase.h"
 
 #include <DirectXMath.h>
+#include "collisionDetect.h"
+
 
 class RigidbodySystem
 {
