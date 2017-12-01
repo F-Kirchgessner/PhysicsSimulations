@@ -18,7 +18,7 @@ void RigidBodySystemSimulator::initTestScene()
 	switch (m_iTestCase)
 	{
 	case 0:
-		addRigidBody(Vec3(0.0f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 5);
+		addRigidBody(Vec3(0.0f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0.25f, 0.20f,0), Vec3(100, 50, 50));
 		break;
 	}
@@ -85,7 +85,7 @@ Vec3 RigidBodySystemSimulator::getAngularVelocityOfRigidBody(int i) {
 void RigidBodySystemSimulator::applyForceOnBody(int i, Vec3 loc, Vec3 force) {
 	m_rigidbodysystems.at(i).applyForce(loc, force);
 }
-void RigidBodySystemSimulator::addRigidBody(Vec3 position, Vec3 size, int mass) {
+void RigidBodySystemSimulator::addRigidBody(Vec3 position, Vec3 size, float mass) {
 	RigidbodySystem rig(size,position,mass);
 	//create; copy; delete; because of inner function, maybe emplace_back?
 	m_rigidbodysystems.push_back(rig);

@@ -7,7 +7,7 @@ RigidbodySystem::RigidbodySystem()
 
 }
 
-RigidbodySystem::RigidbodySystem(Vec3 size, Vec3 position, int mass) : size(size), m_position(position), mass(mass)
+RigidbodySystem::RigidbodySystem(Vec3 size, Vec3 position, float mass) : size(size), m_position(position), mass(mass)
 {
 	// 45 deg. 
 	// need to be removed
@@ -55,7 +55,7 @@ void RigidbodySystem::updateStep(float elapsedTime)
 	orientation.unit();
 	angularMomentum += h * torque;
 	Mat4 tempInteriatensor = rotMat * interiatensor * rotMatTranspose;
-	angluarvelocity = tempInteriatensor.transformVector(angularMomentum) * 10000;
+	angluarvelocity = tempInteriatensor.transformVector(angularMomentum);
 
 	transMat.initTranslation(m_position.x, m_position.y, m_position.z);
 	rotMat = orientation.getRotMat();
@@ -82,10 +82,9 @@ void RigidbodySystem::calculateInteriaTensor() {
 	float w = size.x;
 	float h = size.y;
 	float d = size.z;
-	float massInv = 1 / mass;
 
-	interiatensor = Mat4(massInv*(h*h+d*d) / 12.0f, 0.0f, 0.0f, 0.0f,
-						 0.0f, massInv*(w*w + d*d) / 12.0f, 0.0f, 0.0f,
-					     0.0f, 0.0f, massInv*(w*w + h*h) / 12.0f, 0.0f,
+	interiatensor = Mat4(mass*(h*h+d*d) / 12.0f, 0.0f, 0.0f, 0.0f,
+						 0.0f, mass*(w*w + d*d) / 12.0f, 0.0f, 0.0f,
+					     0.0f, 0.0f, mass*(w*w + h*h) / 12.0f, 0.0f,
 						 0.0f, 0.0f, 0.0f, 1.0f);
 };

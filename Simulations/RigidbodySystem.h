@@ -8,7 +8,7 @@ class RigidbodySystem
 {
 public:
 	RigidbodySystem();
-	RigidbodySystem(Vec3 size, Vec3 position, int mass);
+	RigidbodySystem(Vec3 size, Vec3 position, float mass);
 	~RigidbodySystem();
 
 	// x_cm
