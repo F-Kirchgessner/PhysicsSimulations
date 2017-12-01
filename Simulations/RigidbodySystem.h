@@ -43,7 +43,9 @@ public:
 	Vec3 torque;
 
 	void calculateInteriaTensor() {
-		interiatensor = 0.001;//mass*GamePhysics::dot(size, size);
+		float a = size.x;
+		float b = size.y;
+		interiatensor = mass*(a*a+b*b)/12.0f;
 
 	};
 	// add Force and Torque, External Forces in the Simulation Algo.
