@@ -14,6 +14,7 @@ RigidbodySystem::RigidbodySystem(Vec3 size, Vec3 position, int mass) : size(size
 	// ------------------------
 	//orientation = sqrt(2) / 2;
 	// ------------------------
+	orientation = Quat(0, 0, 0.1, 1);
 	rotMat.initRotationZ(0);
 	transMat.initTranslation(position.x, position.y, position.z);
 	scaleMat.initScaling(size.x, size.y, size.z);
@@ -56,7 +57,7 @@ void RigidbodySystem::updateStep(float elapsedTime)
 	angluarvelocity = interiatensor * angularMomentum;
 
 	transMat.initTranslation(m_position.x, m_position.y, m_position.z);
-	rotMat.initRotationXYZ(orientation.x, orientation.y, orientation.z);
+	rotMat = orientation.getRotMat();
 
 	clearForce();
 }
