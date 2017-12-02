@@ -4,6 +4,8 @@
 //add your header for your rigid body system, for e.g.,
 #include "RigidBodySystem.h" 
 
+#include <random>
+
 #define TESTCASEUSEDTORUNTEST 2
 
 class RigidBodySystemSimulator:public Simulator{
@@ -37,6 +39,8 @@ public:
 	void initTestScene();
 
 	std::vector<RigidbodySystem> m_rigidbodysystems;
+	std::random_device rd;  //Will be used to obtain a seed for the random number engine
+
 
 private:
 	// Attributes

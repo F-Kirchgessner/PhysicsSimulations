@@ -1,8 +1,10 @@
 #include "RigidBodySystemSimulator.h"
 
+
 // Construtors
 RigidBodySystemSimulator::RigidBodySystemSimulator() {
 	m_iTestCase = 1;
+
 }
 
 // Functions
@@ -24,7 +26,7 @@ void RigidBodySystemSimulator::initTestScene()
 	case 1:
 		addRigidBody(Vec3(0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		addRigidBody(Vec3(-0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(-0.25f, 0.0f, 0), Vec3(100, 30, 30));
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(-0.25f, 0.0f, 0), Vec3(10, 0, 0));
 		break;
 	}
 }
@@ -40,9 +42,10 @@ void RigidBodySystemSimulator::reset() {
 
 }
 void RigidBodySystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext) {
-	DUC->setUpLighting(Vec3(0, 0, 0), 0.4*Vec3(1, 1, 1), 2.0, Vec3(0.5, 0.5, 0.5));
+
 	// Draw mass points
 	for (auto& rigidbodySystem : m_rigidbodysystems) {
+		DUC->setUpLighting(Vec3(rigidbodySystem.red, rigidbodySystem.green, rigidbodySystem.blue), 0.4*Vec3(1, 1, 1), 2000.0, Vec3(0.5, 0.5, 0.5));
 		rigidbodySystem.Obj2WorldMatrix = rigidbodySystem.scaleMat * rigidbodySystem.rotMat * rigidbodySystem.transMat;
 		DUC->drawRigidBody(rigidbodySystem.Obj2WorldMatrix);
 	}
@@ -62,7 +65,7 @@ void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
 	case 1:
 		checkForCollisions();
 		for (auto& rigidbodySystem : m_rigidbodysystems) {
-			rigidbodySystem.updateStep(timeStep);
+			rigidbodySystem.updateStep(timeStep=0.01);
 		}
 		break;
 	}
@@ -70,8 +73,8 @@ void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
 
 void RigidBodySystemSimulator::checkForCollisions() {
 	for (int a = 0; a < m_rigidbodysystems.size(); a++) {
-		for (int b = 0; b < m_rigidbodysystems.size(); b++) {
-			if (a != b) {
+		for (int b = a+1; b < m_rigidbodysystems.size(); b++) {
+
 				RigidbodySystem &bodyA = m_rigidbodysystems[a];
 				RigidbodySystem &bodyB = m_rigidbodysystems[b];
 				Mat4 worldA = bodyA.scaleMat * bodyA.rotMat * bodyA.transMat;
@@ -82,9 +85,8 @@ void RigidBodySystemSimulator::checkForCollisions() {
 					std::printf("collision point : %f, %f, %f\n", (simpletest.collisionPointWorld).x, (simpletest.collisionPointWorld).y, (simpletest.collisionPointWorld).z);
 					collisionDetected(bodyA, bodyB, simpletest.collisionPointWorld, simpletest.normalWorld);
 
-					return;	// change this, otherwise a, b collide and b, a collide
 				}
-			}
+			
 		}
 	}
 }
@@ -130,6 +132,11 @@ void RigidBodySystemSimulator::applyForceOnBody(int i, Vec3 loc, Vec3 force) {
 }
 void RigidBodySystemSimulator::addRigidBody(Vec3 position, Vec3 size, float mass) {
 	RigidbodySystem rig(size,position,mass);
+	std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+	std::uniform_real_distribution<> dis(0.0, 1.0);
+	rig.red = dis(gen);
+	rig.green = dis(gen);
+	rig.blue = dis(gen);
 	//create; copy; delete; because of inner function, maybe emplace_back?
 	m_rigidbodysystems.push_back(rig);
 }

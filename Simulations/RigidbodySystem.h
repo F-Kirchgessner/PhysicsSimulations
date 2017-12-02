@@ -52,5 +52,9 @@ public:
 	void calculateInteriaTensor();
 	void clearForce();
 	void collisionDetected(Vec3 collisionPointWorld, Vec3 normal);
+
+	float red;
+	float green;
+	float blue;
 };
 
