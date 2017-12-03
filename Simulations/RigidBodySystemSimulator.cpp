@@ -115,11 +115,11 @@ void RigidBodySystemSimulator::collisionDetected(RigidbodySystem &bodyA, Rigidbo
 
 	//DENOMINATOR
 	Vec3 xaCrossN = GamePhysics::cross(collisionPointA, normalWorld);
-	Vec3 iaInverseTimesXaCrossN = Quat(xaCrossN.x, xaCrossN.y, xaCrossN.z, 1).dot(interiaTensorInvA);
+	Vec3 iaInverseTimesXaCrossN = interiaTensorInvA.transformVector(xaCrossN);
 	Vec3 leftPlus = GamePhysics::cross(iaInverseTimesXaCrossN, collisionPointA);
 
 	Vec3 xbCrossN = GamePhysics::cross(collisionPointB, normalWorld);
-	Vec3 ibInverseTimesXbCrossN = Quat(xaCrossN.x, xaCrossN.y, xaCrossN.z, 1).dot(interiaTensorInvB);
+	Vec3 ibInverseTimesXbCrossN = interiaTensorInvB.transformVector(xbCrossN);
 	Vec3 rightPlus = GamePhysics::cross(ibInverseTimesXbCrossN, collisionPointB);
 
 	float denominator = massInvA+massInvB+ GamePhysics::dot((leftPlus + rightPlus),normalWorld);
