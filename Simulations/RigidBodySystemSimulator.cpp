@@ -91,7 +91,7 @@ void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
 	default:
 		checkForCollisions();
 		for (auto& rigidbodySystem : m_rigidbodysystems) {
-			rigidbodySystem.updateStep(timeStep=0.01);
+			rigidbodySystem.updateStep(timeStep);
 		}
 		break;
 	}
