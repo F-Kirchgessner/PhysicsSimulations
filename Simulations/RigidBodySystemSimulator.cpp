@@ -94,14 +94,12 @@ void RigidBodySystemSimulator::checkForCollisions() {
 }
 
 void RigidBodySystemSimulator::collisionDetected(RigidbodySystem &bodyA, RigidbodySystem &bodyB, Vec3 collisionPointWorld, Vec3 normalWorld) {
-	Mat4 worldInvA = (bodyA.scaleMat * bodyA.rotMat * bodyA.transMat).inverse();
-	Mat4 worldInvB = (bodyB.scaleMat * bodyB.rotMat * bodyB.transMat).inverse();
-	Vec3 collisionPointA = worldInvA.transformVector(collisionPointWorld);
-	Vec3 collisionPointB = worldInvB.transformVector(collisionPointWorld);
+	Vec3 collisionPointA = collisionPointWorld - bodyA.m_position;
+	Vec3 collisionPointB = collisionPointWorld - bodyB.m_position;
 	//------------------------------------------------------------------------------------------------
 	// NUMERATOR
-	Vec3 velA = bodyA.velocity + cross(bodyA.angluarvelocity, collisionPointWorld - bodyA.m_position);
-	Vec3 velB = bodyB.velocity + cross(bodyB.angluarvelocity, collisionPointWorld - bodyB.m_position);
+	Vec3 velA = bodyA.velocity + cross(bodyA.angluarvelocity, collisionPointA);
+	Vec3 velB = bodyB.velocity + cross(bodyB.angluarvelocity, collisionPointB);
 
 	Vec3 vrel = velA - velB;
 	float c = 1.0;
