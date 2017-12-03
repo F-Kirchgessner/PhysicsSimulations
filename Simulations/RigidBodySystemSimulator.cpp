@@ -111,7 +111,9 @@ void RigidBodySystemSimulator::collisionDetected(RigidbodySystem &bodyA, Rigidbo
 	bodyA.angularMomentum += GamePhysics::cross(collisionPointA, result);
 	bodyB.angularMomentum -= GamePhysics::cross(collisionPointB, result);
 
-	GamePhysics::cross(collisionPointA, ((GamePhysics::cross(collisionPointA, normalWorld))*worldInvA.inverse));
+	Vec3 xaCrossN = GamePhysics::cross(collisionPointA, normalWorld);
+	Vec3 iaInverseTimesXaCrossN = xaCrossN * worldInvA.inverse;
+	Vec3 leftPlus = GamePhysics::cross(iaInverseTimesXaCrossN, collisionPointA);
 }
 
 void RigidBodySystemSimulator::onClick(int x, int y) {
