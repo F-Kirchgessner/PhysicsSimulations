@@ -5,6 +5,7 @@
 RigidBodySystemSimulator::RigidBodySystemSimulator() {
 	m_iTestCase = 1;
 	m_elasticity = 0.5;
+	m_gravity = 0.5;
 }
 
 // Functions
@@ -37,7 +38,6 @@ void RigidBodySystemSimulator::initTestScene()
 		addRigidBody(Vec3(-0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0.25f, 0.0f, 0.0f), Vec3(10, 1, 1));
 		addRigidBody(Vec3(-0.3f, 1.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0.0f, -0.6f, 0), Vec3(+10, -5, 0));
 		break;
 	case 3:
 		addRigidBody(Vec3(-0.3f, -0.3f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
@@ -88,6 +88,10 @@ void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
 	// update current setup for each frame
 	switch (m_iTestCase)
 	{
+	case 3:
+		for (auto& rigidbodySystem : m_rigidbodysystems) {
+			rigidbodySystem.applyForce(rigidbodySystem.m_position, Vec3(0, -m_gravity, 0));
+		}
 	default:
 		checkForCollisions();
 		for (auto& rigidbodySystem : m_rigidbodysystems) {
