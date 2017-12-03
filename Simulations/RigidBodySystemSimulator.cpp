@@ -4,30 +4,48 @@
 // Construtors
 RigidBodySystemSimulator::RigidBodySystemSimulator() {
 	m_iTestCase = 1;
-
+	m_elasticity = 0.5;
 }
 
 // Functions
 const char * RigidBodySystemSimulator::getTestCasesStr() {
-	return "Simple One Step Test, Simple Single Body Simulation, Two-Rigid-Body Collision Scene, Complex Simulation";
+	return "Single box, Two boxes, Multiple boxes, Gravity";
 }
 
 void RigidBodySystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 	this->DUC = DUC;
+	TwAddVarRW(DUC->g_pTweakBar, "Elasticity", TW_TYPE_FLOAT, &m_elasticity, "step=0.1 min=0.0");
 }
+
 void RigidBodySystemSimulator::initTestScene()
 {
 	switch (m_iTestCase)
 	{
 	case 0:
 		addRigidBody(Vec3(0.0f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0, 0, 0.125f), Vec3(10, 0, 0));
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0, 0, 0.125f), Vec3(2, 1, 1));
 		break;
 	case 1:
 		addRigidBody(Vec3(-0.6f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		addRigidBody(Vec3(0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(-0.25f, 0.0f, 0), Vec3(-5, 0.5, 0.5));
+		applyForceOnBody(getNumberOfRigidBodies() - 2, Vec3(-0.25f, 0.0f, 0), Vec3(5, 0, 0));
+		break;
+	case 2:
+		addRigidBody(Vec3(-0.6f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
+		addRigidBody(Vec3(0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		addRigidBody(Vec3(-0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(-0.25f, 0.0f, 0), Vec3(10, 0, 0));
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0.25f, 0.0f, 0.0f), Vec3(10, 1, 1));
+		addRigidBody(Vec3(-0.3f, 1.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0.0f, -0.6f, 0), Vec3(+10, -5, 0));
+		break;
+	case 3:
+		addRigidBody(Vec3(-0.3f, -0.3f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
+		addRigidBody(Vec3(0.0f, -0.3f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
+		addRigidBody(Vec3(0.3f, -0.3f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
+		addRigidBody(Vec3(-0.15f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
+		addRigidBody(Vec3(0.15f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
+		addRigidBody(Vec3(0.0f, 0.3f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		break;
 	}
 }
@@ -52,9 +70,17 @@ void RigidBodySystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateConte
 	}
 
 }
-void RigidBodySystemSimulator::notifyCaseChanged(int testCase) {
 
+void RigidBodySystemSimulator::notifyCaseChanged(int testCase) {
+	m_iTestCase = testCase;
+	switch (m_iTestCase)
+	{
+	default:
+		reset();
+		break;
+	}
 }
+
 void RigidBodySystemSimulator::externalForcesCalculations(float timeElapsed) {
 
 }
@@ -62,10 +88,7 @@ void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
 	// update current setup for each frame
 	switch (m_iTestCase)
 	{
-	case 0: 
-	case 1:
-		if (DXUTIsKeyDown(VK_LBUTTON))
-			dragTogether();
+	default:
 		checkForCollisions();
 		for (auto& rigidbodySystem : m_rigidbodysystems) {
 			rigidbodySystem.updateStep(timeStep=0.01);
@@ -77,20 +100,16 @@ void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
 void RigidBodySystemSimulator::checkForCollisions() {
 	for (int a = 0; a < m_rigidbodysystems.size(); a++) {
 		for (int b = a+1; b < m_rigidbodysystems.size(); b++) {
-
-				RigidbodySystem &bodyA = m_rigidbodysystems[a];
-				RigidbodySystem &bodyB = m_rigidbodysystems[b];
-				Mat4 worldA = bodyA.scaleMat * bodyA.rotMat * bodyA.transMat;
-				Mat4 worldB = bodyB.scaleMat * bodyB.rotMat * bodyB.transMat;
-				CollisionInfo simpletest = checkCollisionSAT(worldA, worldB);
-				if (simpletest.isValid) {
-					std::printf("collision detected at normal: %f, %f, %f\n", simpletest.normalWorld.x, simpletest.normalWorld.y, simpletest.normalWorld.z);
-					std::printf("collision point : %f, %f, %f\n", (simpletest.collisionPointWorld).x, (simpletest.collisionPointWorld).y, (simpletest.collisionPointWorld).z);
-					collisionDetected(bodyA, bodyB, simpletest.collisionPointWorld, simpletest.normalWorld);
-
-				}
-			
-
+			RigidbodySystem &bodyA = m_rigidbodysystems[a];
+			RigidbodySystem &bodyB = m_rigidbodysystems[b];
+			Mat4 worldA = bodyA.scaleMat * bodyA.rotMat * bodyA.transMat;
+			Mat4 worldB = bodyB.scaleMat * bodyB.rotMat * bodyB.transMat;
+			CollisionInfo simpletest = checkCollisionSAT(worldA, worldB);
+			if (simpletest.isValid) {
+				//std::printf("collision detected at normal: %f, %f, %f\n", simpletest.normalWorld.x, simpletest.normalWorld.y, simpletest.normalWorld.z);
+				//std::printf("collision point : %f, %f, %f\n", (simpletest.collisionPointWorld).x, (simpletest.collisionPointWorld).y, (simpletest.collisionPointWorld).z);
+				collisionDetected(bodyA, bodyB, simpletest.collisionPointWorld, simpletest.normalWorld);
+			}
 		}
 	}
 }
@@ -104,10 +123,10 @@ void RigidBodySystemSimulator::collisionDetected(RigidbodySystem &bodyA, Rigidbo
 	Vec3 velB = bodyB.velocity + cross(bodyB.angluarvelocity, collisionPointB);
 
 	Vec3 vrel = velA - velB;
-	float c = 0.9;
+	float c = m_elasticity;
 	float numerator = -(1 + c)*dot(vrel, normalWorld);
-	float relVelonNormal = dot(velA - velB, normalWorld);
-	if (relVelonNormal > 0.0f) return;
+	float colCase = dot(velA - velB, normalWorld);
+	if (colCase > 0.0f) return;
 	//-----------------------------------------------------------------------------------------------
 
 	float massInvA = 1.0 / bodyA.mass;
