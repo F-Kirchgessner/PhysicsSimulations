@@ -88,6 +88,7 @@ void RigidBodySystemSimulator::checkForCollisions() {
 
 				}
 			
+
 		}
 	}
 }
@@ -98,14 +99,17 @@ void RigidBodySystemSimulator::collisionDetected(RigidbodySystem &bodyA, Rigidbo
 	Vec3 collisionPointA = worldInvA.transformVector(collisionPointWorld);
 	Vec3 collisionPointB = worldInvB.transformVector(collisionPointWorld);
 
-	// not correct approach
-	bodyA.applyForce(collisionPointA, normalWorld * GamePhysics::norm(bodyB.velocity));
-	bodyB.applyForce(collisionPointB, -normalWorld * GamePhysics::norm(bodyA.velocity));
+	float massInvA = 1.0 / bodyA.mass;
+	float massInvB = 1.0 / bodyB.mass;
+	Mat4 interiaTensorInvA = bodyA.interiatensor.inverse();
+	Mat4 interiaTensorInvB = bodyB.interiatensor.inverse();
 
-	/*bodyA.velocity = -bodyA.velocity;
-	bodyA.angluarvelocity = -bodyA.angluarvelocity;
-	bodyB.velocity = -bodyB.velocity;
-	bodyB.angluarvelocity = -bodyB.angluarvelocity;*/
+	// Update velocity and angular momentum
+	Vec3 result;
+	bodyA.velocity += result * massInvA;
+	bodyB.velocity -= result * massInvB;
+	bodyA.angularMomentum += GamePhysics::cross(collisionPointA, result);
+	bodyB.angularMomentum -= GamePhysics::cross(collisionPointB, result);
 }
 
 void RigidBodySystemSimulator::onClick(int x, int y) {
