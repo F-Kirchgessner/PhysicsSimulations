@@ -16,6 +16,7 @@ const char * RigidBodySystemSimulator::getTestCasesStr() {
 void RigidBodySystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 	this->DUC = DUC;
 	TwAddVarRW(DUC->g_pTweakBar, "Elasticity", TW_TYPE_FLOAT, &m_elasticity, "step=0.1 min=0.0");
+	TwAddVarRW(DUC->g_pTweakBar, "Timefactor", TW_TYPE_FLOAT, &m_timeFactor, "step=0.1 min=1.0");
 }
 
 void RigidBodySystemSimulator::initTestScene()
@@ -78,12 +79,13 @@ void RigidBodySystemSimulator::externalForcesCalculations(float timeElapsed) {
 
 }
 void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
+	timeStep *= m_timeFactor;
 	// update current setup for each frame
 	switch (m_iTestCase)
 	{
 	default:
 		if (DXUTIsKeyDown(VK_LBUTTON))
-			dragTogether();
+			pullTogether();
 		checkForCollisions();
 		for (auto& rigidbodySystem : m_rigidbodysystems) {
 			rigidbodySystem.updateStep(timeStep);
@@ -190,7 +192,7 @@ void RigidBodySystemSimulator::setVelocityOf(int i, Vec3 velocity) {
 	m_rigidbodysystems.at(i).velocity = velocity;
 }
 
-void RigidBodySystemSimulator::dragTogether() {
+void RigidBodySystemSimulator::pullTogether() {
 	for (int i = 0; i < m_rigidbodysystems.size() - 1; ++i)
 	{
 		Vec3 vel = m_rigidbodysystems[i + 1].m_position - m_rigidbodysystems[i].m_position;
