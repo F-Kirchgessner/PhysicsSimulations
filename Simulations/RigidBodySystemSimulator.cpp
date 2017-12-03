@@ -5,6 +5,7 @@
 RigidBodySystemSimulator::RigidBodySystemSimulator() {
 	m_iTestCase = 1;
 	m_elasticity = 0.5;
+	m_timeFactor = 10;
 }
 
 // Functions
