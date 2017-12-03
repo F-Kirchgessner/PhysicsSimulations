@@ -35,6 +35,7 @@ public:
 	void addRigidBody(Vec3 position, Vec3 size, float mass);
 	void setOrientationOf(int i,Quat orientation);
 	void setVelocityOf(int i, Vec3 velocity);
+	void dragTogether();
 
 	void initTestScene();
 
@@ -48,6 +49,7 @@ private:
 	// RigidBodySystem * m_pRigidBodySystem; 
 	Vec3 m_externalForce;
 	float m_elasticity;
+	float m_gravity;
 
 	// UI Attributes
 	Point2D m_mouse;

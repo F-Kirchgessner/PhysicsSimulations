@@ -5,6 +5,7 @@
 RigidBodySystemSimulator::RigidBodySystemSimulator() {
 	m_iTestCase = 1;
 	m_elasticity = 0.5;
+	m_gravity = 0.5;
 }
 
 // Functions
@@ -88,7 +89,15 @@ void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
 	// update current setup for each frame
 	switch (m_iTestCase)
 	{
+	case 3:
+		if (DXUTIsKeyDown(VK_LBUTTON))
+			dragTogether();
+		for (auto& rigidbodySystem : m_rigidbodysystems) {
+			rigidbodySystem.applyForce(rigidbodySystem.m_position, Vec3(0, -m_gravity, 0));
+		}
 	default:
+		if (DXUTIsKeyDown(VK_LBUTTON))
+			dragTogether();
 		checkForCollisions();
 		for (auto& rigidbodySystem : m_rigidbodysystems) {
 			rigidbodySystem.updateStep(timeStep);
@@ -193,4 +202,13 @@ void RigidBodySystemSimulator::setOrientationOf(int i, Quat orientation) {
 }
 void RigidBodySystemSimulator::setVelocityOf(int i, Vec3 velocity) {
 	m_rigidbodysystems.at(i).velocity = velocity;
+}
+
+void RigidBodySystemSimulator::dragTogether() {
+	for (int i = 0; i < m_rigidbodysystems.size() - 1; ++i)
+	{
+		Vec3 vel = m_rigidbodysystems[i + 1].m_position - m_rigidbodysystems[i].m_position;
+		m_rigidbodysystems[i].velocity = vel * 0.1f;
+		m_rigidbodysystems[i + 1].velocity = vel * -0.1f;
+	}
 }
