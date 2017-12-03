@@ -113,23 +113,24 @@ void RigidBodySystemSimulator::collisionDetected(RigidbodySystem &bodyA, Rigidbo
 	Mat4 interiaTensorInvA = bodyA.interiatensor.inverse();
 	Mat4 interiaTensorInvB = bodyB.interiatensor.inverse();
 
+	//DENOMINATOR
+	Vec3 xaCrossN = GamePhysics::cross(collisionPointA, normalWorld);
+	Vec3 iaInverseTimesXaCrossN = Quat(xaCrossN.x, xaCrossN.y, xaCrossN.z, 1).dot(interiaTensorInvA);
+	Vec3 leftPlus = GamePhysics::cross(iaInverseTimesXaCrossN, collisionPointA);
+
+	Vec3 xbCrossN = GamePhysics::cross(collisionPointB, normalWorld);
+	Vec3 ibInverseTimesXbCrossN = Quat(xaCrossN.x, xaCrossN.y, xaCrossN.z, 1).dot(interiaTensorInvB);
+	Vec3 rightPlus = GamePhysics::cross(ibInverseTimesXbCrossN, collisionPointB);
+
+	float denominator = massInvA+massInvB+ GamePhysics::dot((leftPlus + rightPlus),normalWorld);
+
 	// Update velocity and angular momentum
-	Vec3 result;
+	Vec3 result = (numerator / denominator) * normalWorld;
 	bodyA.velocity += result * massInvA;
 	bodyB.velocity -= result * massInvB;
 	bodyA.angularMomentum += GamePhysics::cross(collisionPointA, result);
 	bodyB.angularMomentum -= GamePhysics::cross(collisionPointB, result);
 
-	//DENOMINATOR
-	Vec3 xaCrossN = GamePhysics::cross(collisionPointA, normalWorld);
-	Vec3 iaInverseTimesXaCrossN = xaCrossN * worldInvA.inverse;
-	Vec3 leftPlus = GamePhysics::cross(iaInverseTimesXaCrossN, collisionPointA);
-
-	Vec3 xbCrossN = GamePhysics::cross(collisionPointB, normalWorld);
-	Vec3 ibInverseTimesXbCrossN = xbCrossN * worldInvB.inverse;
-	Vec3 rightPlus = GamePhysics::cross(ibInverseTimesXbCrossN, collisionPointB);
-
-	float denominator = massInvA+massInvB+ GamePhysics::dot((leftPlus + rightPlus),normalWorld);
 }
 
 void RigidBodySystemSimulator::onClick(int x, int y) {
