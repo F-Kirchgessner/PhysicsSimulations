@@ -6,6 +6,8 @@ RigidBodySystemSimulator::RigidBodySystemSimulator() {
 	m_iTestCase = 1;
 	m_elasticity = 0.5;
 	m_gravity = 0.5;
+	m_timeFactor = 10;
+
 }
 
 // Functions
@@ -16,6 +18,7 @@ const char * RigidBodySystemSimulator::getTestCasesStr() {
 void RigidBodySystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 	this->DUC = DUC;
 	TwAddVarRW(DUC->g_pTweakBar, "Elasticity", TW_TYPE_FLOAT, &m_elasticity, "step=0.1 min=0.0");
+	TwAddVarRW(DUC->g_pTweakBar, "Timefactor", TW_TYPE_FLOAT, &m_timeFactor, "step=0.1 min=1.0");
 }
 
 void RigidBodySystemSimulator::initTestScene()
@@ -86,6 +89,7 @@ void RigidBodySystemSimulator::externalForcesCalculations(float timeElapsed) {
 
 }
 void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
+	timeStep *= m_timeFactor;
 	// update current setup for each frame
 	switch (m_iTestCase)
 	{

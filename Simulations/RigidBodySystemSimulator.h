@@ -50,6 +50,7 @@ private:
 	Vec3 m_externalForce;
 	float m_elasticity;
 	float m_gravity;
+	float m_timeFactor=1;
 
 	// UI Attributes
 	Point2D m_mouse;
