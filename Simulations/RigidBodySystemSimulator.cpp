@@ -100,8 +100,8 @@ void RigidBodySystemSimulator::collisionDetected(RigidbodySystem &bodyA, Rigidbo
 	Vec3 collisionPointB = worldInvB.transformVector(collisionPointWorld);
 	//------------------------------------------------------------------------------------------------
 	// NUMERATOR
-	Vec3 velA = bodyA.velocity + cross(bodyA.angluarvelocity, collisionPointWorld - bodyA.m_position);
-	Vec3 velB = bodyB.velocity + cross(bodyB.angluarvelocity, collisionPointWorld - bodyB.m_position);
+	Vec3 velA = bodyA.velocity + cross(bodyA.angluarvelocity, collisionPointA);
+	Vec3 velB = bodyB.velocity + cross(bodyB.angluarvelocity, collisionPointB);
 
 	Vec3 vrel = velA - velB;
 	float c = 1.0;
