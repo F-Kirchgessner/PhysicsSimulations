@@ -27,7 +27,7 @@ void RigidBodySystemSimulator::initTestScene()
 		addRigidBody(Vec3(-0.6f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		addRigidBody(Vec3(0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		addRigidBody(Vec3(-0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(-0.25f, 0.0f, 0), Vec3(10, 1, 1));
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(-0.25f, 0.0f, 0), Vec3(10, 0, 0));
 		break;
 	}
 }
@@ -64,6 +64,8 @@ void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
 	{
 	case 0: 
 	case 1:
+		if (DXUTIsKeyDown(VK_LBUTTON))
+			dragTogether();
 		checkForCollisions();
 		for (auto& rigidbodySystem : m_rigidbodysystems) {
 			rigidbodySystem.updateStep(timeStep=0.01);
@@ -102,7 +104,7 @@ void RigidBodySystemSimulator::collisionDetected(RigidbodySystem &bodyA, Rigidbo
 	Vec3 velB = bodyB.velocity + cross(bodyB.angluarvelocity, collisionPointB);
 
 	Vec3 vrel = velA - velB;
-	float c = 1.0;
+	float c = 0.9;
 	float numerator = -(1 + c)*dot(vrel, normalWorld);
 	float relVelonNormal = dot(velA - velB, normalWorld);
 	if (relVelonNormal > 0.0f) return;
@@ -172,4 +174,13 @@ void RigidBodySystemSimulator::setOrientationOf(int i, Quat orientation) {
 }
 void RigidBodySystemSimulator::setVelocityOf(int i, Vec3 velocity) {
 	m_rigidbodysystems.at(i).velocity = velocity;
+}
+
+void RigidBodySystemSimulator::dragTogether() {
+	for (int i = 0; i < m_rigidbodysystems.size() - 1; ++i)
+	{
+		Vec3 vel = m_rigidbodysystems[i + 1].m_position - m_rigidbodysystems[i].m_position;
+		m_rigidbodysystems[i].velocity = vel * 0.1f;
+		m_rigidbodysystems[i + 1].velocity = vel * -0.1f;
+	}
 }

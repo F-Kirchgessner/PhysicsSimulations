@@ -35,6 +35,7 @@ public:
 	void addRigidBody(Vec3 position, Vec3 size, float mass);
 	void setOrientationOf(int i,Quat orientation);
 	void setVelocityOf(int i, Vec3 velocity);
+	void dragTogether();
 
 	void initTestScene();
 
