@@ -3,7 +3,7 @@
 
 // Construtors
 RigidBodySystemSimulator::RigidBodySystemSimulator() {
-	m_iTestCase = 0;
+	m_iTestCase = 1;
 
 }
 
@@ -21,13 +21,13 @@ void RigidBodySystemSimulator::initTestScene()
 	{
 	case 0:
 		addRigidBody(Vec3(0.0f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0.3f, 0.5f, 0.25f), Vec3(1, 1, 0));
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0, 0, 0.125f), Vec3(10, 0, 0));
 		break;
 	case 1:
 		addRigidBody(Vec3(-0.6f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		addRigidBody(Vec3(0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		addRigidBody(Vec3(-0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0.3f, 0.5f, 0), Vec3(10, 0, 0));
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(-0.25f, 0.0f, 0), Vec3(10, 0, 0));
 		break;
 	}
 }
@@ -66,7 +66,7 @@ void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
 	case 1:
 		checkForCollisions();
 		for (auto& rigidbodySystem : m_rigidbodysystems) {
-			rigidbodySystem.updateStep(timeStep);
+			rigidbodySystem.updateStep(timeStep=0.01);
 		}
 		break;
 	}
@@ -79,7 +79,7 @@ void RigidBodySystemSimulator::checkForCollisions() {
 				RigidbodySystem &bodyA = m_rigidbodysystems[a];
 				RigidbodySystem &bodyB = m_rigidbodysystems[b];
 				Mat4 worldA = bodyA.scaleMat * bodyA.rotMat * bodyA.transMat;
-				Mat4 worldB = bodyB.scaleMat * bodyB.rotMat *bodyB.transMat;
+				Mat4 worldB = bodyB.scaleMat * bodyB.rotMat * bodyB.transMat;
 				CollisionInfo simpletest = checkCollisionSAT(worldA, worldB);
 				if (simpletest.isValid) {
 					std::printf("collision detected at normal: %f, %f, %f\n", simpletest.normalWorld.x, simpletest.normalWorld.y, simpletest.normalWorld.z);
@@ -88,6 +88,7 @@ void RigidBodySystemSimulator::checkForCollisions() {
 
 				}
 			
+
 		}
 	}
 }
@@ -109,11 +110,19 @@ void RigidBodySystemSimulator::collisionDetected(RigidbodySystem &bodyA, Rigidbo
 	// not correct approach
 	bodyA.applyForce(collisionPointWorld, normalWorld * GamePhysics::norm(bodyB.velocity));
 	bodyB.applyForce(collisionPointWorld, -normalWorld * GamePhysics::norm(bodyA.velocity));
+	float massInvA = 1.0 / bodyA.mass;
+	float massInvB = 1.0 / bodyB.mass;
+	Mat4 interiaTensorInvA = bodyA.interiatensor.inverse();
+	Mat4 interiaTensorInvB = bodyB.interiatensor.inverse();
 
-	/*bodyA.velocity = -bodyA.velocity;
-	bodyA.angluarvelocity = -bodyA.angluarvelocity;
-	bodyB.velocity = -bodyB.velocity;
-	bodyB.angluarvelocity = -bodyB.angluarvelocity;*/
+	// Update velocity and angular momentum
+	Vec3 result;
+	bodyA.velocity += result * massInvA;
+	bodyB.velocity -= result * massInvB;
+	bodyA.angularMomentum += GamePhysics::cross(collisionPointA, result);
+	bodyB.angularMomentum -= GamePhysics::cross(collisionPointB, result);
+
+	GamePhysics::cross(collisionPointA, ((GamePhysics::cross(collisionPointA, normalWorld))*worldInvA.inverse));
 }
 
 void RigidBodySystemSimulator::onClick(int x, int y) {
