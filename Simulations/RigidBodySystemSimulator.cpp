@@ -99,7 +99,7 @@ void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
 		}
 	default:
 		if (DXUTIsKeyDown(VK_LBUTTON))
-			dragTogether();
+			pullTogether();
 		checkForCollisions();
 		for (auto& rigidbodySystem : m_rigidbodysystems) {
 			rigidbodySystem.updateStep(timeStep);
@@ -206,7 +206,7 @@ void RigidBodySystemSimulator::setVelocityOf(int i, Vec3 velocity) {
 	m_rigidbodysystems.at(i).velocity = velocity;
 }
 
-void RigidBodySystemSimulator::dragTogether() {
+void RigidBodySystemSimulator::pullTogether() {
 	for (int i = 0; i < m_rigidbodysystems.size() - 1; ++i)
 	{
 		Vec3 vel = m_rigidbodysystems[i + 1].m_position - m_rigidbodysystems[i].m_position;
