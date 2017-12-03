@@ -94,8 +94,6 @@ void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
 	switch (m_iTestCase)
 	{
 	case 3:
-		if (DXUTIsKeyDown(VK_LBUTTON))
-			dragTogether();
 		for (auto& rigidbodySystem : m_rigidbodysystems) {
 			rigidbodySystem.applyForce(rigidbodySystem.m_position, Vec3(0, -m_gravity, 0));
 		}
