@@ -35,6 +35,7 @@ public:
 	float mass;
 	//i
 	Mat4 interiatensor;
+	Mat4 interiatensorInv;
 	//v_cm
 	Vec3 velocity;
 	//F

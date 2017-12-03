@@ -14,12 +14,13 @@ RigidbodySystem::RigidbodySystem(Vec3 size, Vec3 position, float mass) : size(si
 	// ------------------------
 	//orientation = sqrt(2) / 2;
 	// ------------------------
-	orientation = Quat(0, 0.0, 0.0, 1);
-	rotMat.initRotationZ(0);
+	orientation = Quat(0.0f, 0.0f, 0.0f, 1.0f);
+	rotMat = orientation.getRotMat();
 	transMat.initTranslation(position.x, position.y, position.z);
 	scaleMat.initScaling(size.x, size.y, size.z);
 	angluarvelocity = 0;
 	calculateInteriaTensor();
+	interiatensorInv = interiatensor.inverse();
 }
 
 RigidbodySystem::~RigidbodySystem()
@@ -51,12 +52,13 @@ void RigidbodySystem::updateStep(float elapsedTime)
 
 	m_position += h * velocity;
 	velocity += h * (force / mass);
-
-	orientation += h / 2.0f * Quat(angluarvelocity.x, angluarvelocity.y, angluarvelocity.z, 0) * orientation;
-	orientation.unit();
 	angularMomentum += h * torque;
-	Mat4 tempInteriatensor = rotMat * interiatensor * rotMatTranspose;
-	angluarvelocity = tempInteriatensor.transformVector(angularMomentum);
+
+	Mat4 tempInteriatensor = rotation * interiatensorInv * rotMatTranspose;
+	angluarvelocity = tempInteriatensor *angularMomentum;
+
+	orientation += h / 2.0f * Quat(angluarvelocity.x, angluarvelocity.y, angluarvelocity.z,0) * orientation;
+	orientation.unit();
 
 	transMat.initTranslation(m_position.x, m_position.y, m_position.z);
 	rotMat = orientation.getRotMat();
@@ -84,9 +86,9 @@ void RigidbodySystem::calculateInteriaTensor() {
 	float h = size.y;
 	float d = size.z;
 
-	interiatensor = Mat4(12.0f / (mass*(h*h + d*d)), 0.0f, 0.0f, 0.0f,
-						 0.0f, 12.0f / (mass*(w*w + d*d)), 0.0f, 0.0f,
-					     0.0f, 0.0f, 12.0f / (mass*(w*w + h*h)), 0.0f,
+	interiatensor = Mat4((mass*(h*h + d*d))/12.0f, 0.0f, 0.0f, 0.0f,
+						 0.0f, (mass*(w*w + d*d))/12.0f, 0.0f, 0.0f,
+					     0.0f, 0.0f, (mass*(w*w + h*h))/12.0f, 0.0f,
 						 0.0f, 0.0f, 0.0f, 1.0f);
 };
 
