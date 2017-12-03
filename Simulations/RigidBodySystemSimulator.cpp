@@ -27,7 +27,7 @@ void RigidBodySystemSimulator::initTestScene()
 		addRigidBody(Vec3(-0.6f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		addRigidBody(Vec3(0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		addRigidBody(Vec3(-0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(-0.25f, 0.0f, 0), Vec3(10, 0, 0));
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(-0.25f, 0.0f, 0), Vec3(10, 1, 1));
 		break;
 	}
 }
@@ -100,8 +100,8 @@ void RigidBodySystemSimulator::collisionDetected(RigidbodySystem &bodyA, Rigidbo
 	Vec3 collisionPointB = worldInvB.transformVector(collisionPointWorld);
 	//------------------------------------------------------------------------------------------------
 	// NUMERATOR
-	Vec3 velA = bodyA.velocity + cross(bodyA.angluarvelocity, collisionPointA);
-	Vec3 velB = bodyB.velocity + cross(bodyB.angluarvelocity, collisionPointB);
+	Vec3 velA = bodyA.velocity + cross(bodyA.angluarvelocity, collisionPointWorld - bodyA.m_position);
+	Vec3 velB = bodyB.velocity + cross(bodyB.angluarvelocity, collisionPointWorld - bodyB.m_position);
 
 	Vec3 vrel = velA - velB;
 	float c = 1.0;
