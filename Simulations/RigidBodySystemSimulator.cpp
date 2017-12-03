@@ -106,6 +106,8 @@ void RigidBodySystemSimulator::collisionDetected(RigidbodySystem &bodyA, Rigidbo
 	Vec3 vrel = velA - velB;
 	float c = 1.0;
 	float numerator = -(1 + c)*dot(vrel, normalWorld);
+	float relVelonNormal = dot(velA - velB, normalWorld);
+	if (relVelonNormal > 0.0f) return;
 	//-----------------------------------------------------------------------------------------------
 
 	float massInvA = 1.0 / bodyA.mass;
