@@ -5,12 +5,11 @@
 RigidBodySystemSimulator::RigidBodySystemSimulator() {
 	m_iTestCase = 1;
 	m_elasticity = 0.5;
-	m_gravity = 0.5;
 }
 
 // Functions
 const char * RigidBodySystemSimulator::getTestCasesStr() {
-	return "Single box, Two boxes, Multiple boxes, Gravity";
+	return "Single box, Two boxes, Multiple boxes";
 }
 
 void RigidBodySystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
@@ -39,14 +38,6 @@ void RigidBodySystemSimulator::initTestScene()
 		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0.25f, 0.0f, 0.0f), Vec3(10, 1, 1));
 		addRigidBody(Vec3(-0.3f, 1.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0.0f, 0.1f, 0), Vec3(+1, -5.6, 0));
-		break;
-	case 3:
-		addRigidBody(Vec3(-0.3f, -0.3f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		addRigidBody(Vec3(0.0f, -0.3f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		addRigidBody(Vec3(0.3f, -0.3f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		addRigidBody(Vec3(-0.15f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		addRigidBody(Vec3(0.15f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		addRigidBody(Vec3(0.0f, 0.3f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		break;
 	}
 }
@@ -89,10 +80,6 @@ void RigidBodySystemSimulator::simulateTimestep(float timeStep) {
 	// update current setup for each frame
 	switch (m_iTestCase)
 	{
-	case 3:
-		for (auto& rigidbodySystem : m_rigidbodysystems) {
-			rigidbodySystem.applyForce(rigidbodySystem.m_position, Vec3(0, -m_gravity, 0));
-		}
 	default:
 		if (DXUTIsKeyDown(VK_LBUTTON))
 			dragTogether();

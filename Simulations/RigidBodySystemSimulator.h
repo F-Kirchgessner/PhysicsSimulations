@@ -49,7 +49,6 @@ private:
 	// RigidBodySystem * m_pRigidBodySystem; 
 	Vec3 m_externalForce;
 	float m_elasticity;
-	float m_gravity;
 
 	// UI Attributes
 	Point2D m_mouse;
