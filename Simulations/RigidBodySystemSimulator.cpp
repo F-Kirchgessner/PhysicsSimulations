@@ -35,7 +35,9 @@ void RigidBodySystemSimulator::initTestScene()
 		addRigidBody(Vec3(-0.6f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		addRigidBody(Vec3(0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		addRigidBody(Vec3(-0.3f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
-		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(-0.25f, 0.0f, 0), Vec3(10, 1, 1));
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0.25f, 0.0f, 0.0f), Vec3(10, 1, 1));
+		addRigidBody(Vec3(-0.3f, 1.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
+		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0.0f, -0.6f, 0), Vec3(+10, -5, 0));
 		break;
 	case 3:
 		addRigidBody(Vec3(-0.3f, -0.3f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
@@ -123,8 +125,8 @@ void RigidBodySystemSimulator::collisionDetected(RigidbodySystem &bodyA, Rigidbo
 	Vec3 vrel = velA - velB;
 	float c = m_elasticity;
 	float numerator = -(1 + c)*dot(vrel, normalWorld);
-	float relVelonNormal = dot(velA - velB, normalWorld);
-	if (relVelonNormal > 0.0f) return;
+	float colCase = dot(velA - velB, normalWorld);
+	if (colCase > 0.0f) return;
 	//-----------------------------------------------------------------------------------------------
 
 	float massInvA = 1.0 / bodyA.mass;
