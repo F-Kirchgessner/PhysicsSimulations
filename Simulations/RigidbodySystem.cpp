@@ -58,7 +58,7 @@ void RigidbodySystem::updateStep(float elapsedTime)
 	angluarvelocity = tempInteriatensor *angularMomentum;
 
 	orientation += h / 2.0f * Quat(angluarvelocity.x, angluarvelocity.y, angluarvelocity.z,0) * orientation;
-	orientation.unit();
+	orientation = orientation.unit();
 
 	transMat.initTranslation(m_position.x, m_position.y, m_position.z);
 	rotMat = orientation.getRotMat();
