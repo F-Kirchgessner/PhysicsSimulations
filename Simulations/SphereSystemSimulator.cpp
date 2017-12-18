@@ -14,7 +14,7 @@ SphereSystemSimulator::SphereSystemSimulator() {
 	m_pSphereSystem = new SphereSystem();
 	m_iNumSpheres = 2;
 	m_fRadius = m_fOldRadius = 0.08f;
-	m_fMass = m_fOldMass = 0.10f;
+	m_fMass = m_fOldMass = 0.80f;
 	m_fDamping = 0.70f;
 }
 
