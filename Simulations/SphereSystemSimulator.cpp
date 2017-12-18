@@ -13,6 +13,8 @@ std::function<float(float)> SphereSystemSimulator::m_Kernels[5] = {
 SphereSystemSimulator::SphereSystemSimulator() {
 	m_pSphereSystem = new SphereSystem();
 	m_iNumSpheres = 0;
+	m_fRadius = 0.08f;
+	m_fMass = 1.0f;
 }
 
 const char * SphereSystemSimulator::getTestCasesStr() {
@@ -21,7 +23,7 @@ const char * SphereSystemSimulator::getTestCasesStr() {
 
 void SphereSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 	this->DUC = DUC;
-	TwAddVarRW(DUC->g_pTweakBar, "NumberOfSpheres", TW_TYPE_FLOAT, &m_iNumSpheres, "step=1 min=0");
+	TwAddVarRW(DUC->g_pTweakBar, "NumberOfSpheres", TW_TYPE_INT32, &m_iNumSpheres, "step=1 min=0");
 }
 
 void SphereSystemSimulator::initTestScene()
@@ -48,10 +50,9 @@ void SphereSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext)
 	{
 		if (m_iNumSpheres > m_pSphereSystem->spheres.size())
 		{
-			std::mt19937 eng;
-			std::uniform_real_distribution<float> randCol(0.0f, 1.0f);
+			std::mt19937 gen(m_pSphereSystem->rd()); //Standard mersenne_twister_engine seeded with rd()
 			std::uniform_real_distribution<float> randPos(-0.5f, 0.5f);
-			m_pSphereSystem->addSphere(m_fRadius,m_fMass,Vec3(randPos(eng),randPos(eng),randPos(eng)));
+			m_pSphereSystem->addSphere(m_fRadius,m_fMass,Vec3(randPos(gen),randPos(gen),randPos(gen)));
 		}
 		else
 		{
