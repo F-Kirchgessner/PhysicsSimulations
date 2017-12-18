@@ -4,7 +4,7 @@
 
 SphereSystem::SphereSystem()
 {
-	boxSize = 5.0f;
+	boxSize = 0.5f * 2;
 }
 
 
@@ -66,29 +66,45 @@ void SphereSystem::updateStep(float elapsedTime, float damping)
 	checkBox();
 }
 
+
+void SphereSystem::uniformGridCollision() {
+	Sphere *spheres[numCells * numCells * numCells][10];
+	float cellSize = boxSize / numCells;
+
+	for (int x = 0; x < numCells; x++) {
+		for (int y = 0; y < numCells; y++) {
+			for (int z = 0; z < numCells; z++) {
+				
+			}
+		}
+	}
+}
+
+
 void SphereSystem::checkBox() {
+	float boxSizeHalf = boxSize / 2;
 	for (auto& sphere : spheres) {
 		float radius = sphere.r;
 
-		if (sphere.pos.x - radius < -boxSize) {
-			sphere.pos.x = -boxSize + radius;
+		if (sphere.pos.x - radius < -boxSizeHalf) {
+			sphere.pos.x = -boxSizeHalf + radius;
 			sphere.v.x = -sphere.v.x;
 		}
 		if (sphere.pos.y - radius < -0.5) {
 			sphere.pos.y = -0.5 + radius;
 			sphere.v.y = -sphere.v.y;
 		}
-		if (sphere.pos.z - radius < -boxSize) {
-			sphere.pos.z = -boxSize + radius;
+		if (sphere.pos.z - radius < -boxSizeHalf) {
+			sphere.pos.z = -boxSizeHalf + radius;
 			sphere.v.z = -sphere.v.z;
 		}
 
-		if (sphere.pos.x + radius > boxSize) {
-			sphere.pos.x = boxSize - radius;
+		if (sphere.pos.x + radius > boxSizeHalf) {
+			sphere.pos.x = boxSizeHalf - radius;
 			sphere.v.x = -sphere.v.x;
 		}
-		if (sphere.pos.z + radius > boxSize) {
-			sphere.pos.z = boxSize - radius;
+		if (sphere.pos.z + radius > boxSizeHalf) {
+			sphere.pos.z = boxSizeHalf - radius;
 			sphere.v.z = -sphere.v.z;
 		}
 	}
