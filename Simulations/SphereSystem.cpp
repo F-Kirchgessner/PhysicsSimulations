@@ -23,7 +23,7 @@ void SphereSystem::addSphere(float radius, float mass, Vec3 position)
 
 }
 
-void SphereSystem::updateStep(float elapsedTime)
+void SphereSystem::updateStep(float elapsedTime, float damping)
 {
 	float h = elapsedTime;
 
@@ -31,7 +31,7 @@ void SphereSystem::updateStep(float elapsedTime)
 	//add damping force
 	for (auto& sphere : spheres) {
 		sphere.addGravity(9.81f);
-		sphere.addDamping(0.75f);
+		sphere.addDamping(damping);
 	}
 
 	//check for collision and add penalty-force

@@ -8,7 +8,7 @@ public:
 	~SphereSystem();
 
 	void addSphere(float radius, float mass, Vec3 position);
-	void updateStep(float elapsedTime);
+	void updateStep(float elapsedTime, float damping);
 
 	std::random_device rd;  //Will be used to obtain a seed for the random number engine
 	std::vector<Sphere> spheres;

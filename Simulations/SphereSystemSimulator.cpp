@@ -15,6 +15,7 @@ SphereSystemSimulator::SphereSystemSimulator() {
 	m_iNumSpheres = 0;
 	m_fRadius = m_fOldRadius = 0.08f;
 	m_fMass = m_fOldMass = 1.0f;
+	m_fDamping = 0.75f;
 }
 
 SphereSystemSimulator::~SphereSystemSimulator()
@@ -31,6 +32,7 @@ void SphereSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 	TwAddVarRW(DUC->g_pTweakBar, "NumberOfSpheres", TW_TYPE_INT32, &m_iNumSpheres, "step=1 min=0");
 	TwAddVarRW(DUC->g_pTweakBar, "Radius", TW_TYPE_FLOAT, &m_fRadius, "step=0.01 min=0.01");
 	TwAddVarRW(DUC->g_pTweakBar, "Mass", TW_TYPE_FLOAT, &m_fMass, "step=0.1 min=0.1");
+	TwAddVarRW(DUC->g_pTweakBar, "Damping", TW_TYPE_FLOAT, &m_fDamping, "step=0.01 min=0.00");
 }
 
 void SphereSystemSimulator::initTestScene()
@@ -110,7 +112,7 @@ void SphereSystemSimulator::simulateTimestep(float timeStep) {
 	switch (m_iTestCase)
 	{
 	default:
-		m_pSphereSystem->updateStep(timeStep);
+		m_pSphereSystem->updateStep(timeStep, m_fDamping);
 		break;
 	}
 }
