@@ -3,6 +3,7 @@
 Sphere::Sphere(float radius=0.05, float mass=1, Vec3 position=Vec3(0,0,0)) : r(radius), m(mass), pos(position)
 {
 	f = (0, 0, 0);
+	v = (0, 0, 0);
 }
 
 Sphere::~Sphere()
