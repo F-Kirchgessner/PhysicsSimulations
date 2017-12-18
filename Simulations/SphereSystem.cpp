@@ -4,6 +4,7 @@
 
 SphereSystem::SphereSystem()
 {
+	boxSize = 5.0f;
 }
 
 
@@ -61,6 +62,35 @@ void SphereSystem::updateStep(float elapsedTime, float damping)
 	for (auto& sphere : spheres) {
 		sphere.clearForce();
 	}
+
+	checkBox();
 }
 
+void SphereSystem::checkBox() {
+	for (auto& sphere : spheres) {
+		float radius = sphere.r;
+
+		if (sphere.pos.x - radius < -boxSize) {
+			sphere.pos.x = -boxSize + radius;
+			sphere.v.x = -sphere.v.x;
+		}
+		if (sphere.pos.y - radius < -0.5) {
+			sphere.pos.y = -0.5 + radius;
+			sphere.v.y = -sphere.v.y;
+		}
+		if (sphere.pos.z - radius < -boxSize) {
+			sphere.pos.z = -boxSize + radius;
+			sphere.v.z = -sphere.v.z;
+		}
+
+		if (sphere.pos.x + radius > boxSize) {
+			sphere.pos.x = boxSize - radius;
+			sphere.v.x = -sphere.v.x;
+		}
+		if (sphere.pos.z + radius > boxSize) {
+			sphere.pos.z = boxSize - radius;
+			sphere.v.z = -sphere.v.z;
+		}
+	}
+}
 
