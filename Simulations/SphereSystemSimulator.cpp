@@ -12,7 +12,7 @@ std::function<float(float)> SphereSystemSimulator::m_Kernels[5] = {
 
 SphereSystemSimulator::SphereSystemSimulator() {
 	m_pSphereSystem = new SphereSystem();
-	m_pSphereSystem->addSphere(0.08, 1, Vec3(0, 0, 0));
+	m_iNumSpheres = 0;
 }
 
 const char * SphereSystemSimulator::getTestCasesStr() {
@@ -21,7 +21,7 @@ const char * SphereSystemSimulator::getTestCasesStr() {
 
 void SphereSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 	this->DUC = DUC;
-	//TwAddVarRW(DUC->g_pTweakBar, "test", TW_TYPE_FLOAT, &m_test, "step=0.1 min=0.0");
+	TwAddVarRW(DUC->g_pTweakBar, "NumberOfSpheres", TW_TYPE_FLOAT, &m_iNumSpheres, "step=1 min=0");
 }
 
 void SphereSystemSimulator::initTestScene()
@@ -29,6 +29,7 @@ void SphereSystemSimulator::initTestScene()
 	switch (m_iTestCase)
 	{
 	case 0:
+		m_pSphereSystem->addSphere(m_fRadius, m_fMass, Vec3(0,0,0));
 		break;
 	}
 }
@@ -42,6 +43,26 @@ void SphereSystemSimulator::reset() {
 }
 
 void SphereSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext) {
+	//check for changes
+	if (m_iNumSpheres != m_pSphereSystem->spheres.size())
+	{
+		if (m_iNumSpheres > m_pSphereSystem->spheres.size())
+		{
+			std::mt19937 eng;
+			std::uniform_real_distribution<float> randCol(0.0f, 1.0f);
+			std::uniform_real_distribution<float> randPos(-0.5f, 0.5f);
+			m_pSphereSystem->addSphere(m_fRadius,m_fMass,Vec3(randPos(eng),randPos(eng),randPos(eng)));
+		}
+		else
+		{
+			int delN = m_pSphereSystem->spheres.size()-m_iNumSpheres;
+			//not sure
+			for (int i = 0; i < delN; i++)
+				m_pSphereSystem->spheres.pop_back();
+		}
+
+	}
+
 	// Draw spheres
 	for (auto& sphere : m_pSphereSystem->spheres) {
 		DUC->setUpLighting(Vec3(sphere.red, sphere.green, sphere.blue), 0.4*Vec3(1, 1, 1), 2000.0, Vec3(sphere.red, sphere.green, sphere.blue));
