@@ -13,6 +13,7 @@ public:
 	void uniformGridCollision();
 	void checkCell(Sphere *grid[][10], int cell);
 	void resolveCollision(Sphere &a, Sphere &b);
+	void checkForCollision(Sphere &a, Sphere &b);
 
 	std::random_device rd;  //Will be used to obtain a seed for the random number engine
 	std::vector<Sphere> spheres;

@@ -42,15 +42,7 @@ void SphereSystem::updateStep(float elapsedTime, float damping)
 				//sphere = sphere2
 			}
 			else {
-				float distance = FLT_MAX;
-				float dx = sphere.pos.x - sphere2.pos.x;
-				float dy = sphere.pos.y - sphere2.pos.y;
-				float dz = sphere.pos.z - sphere2.pos.z;
-				distance = sqrt(dx*dx + dy*dy + dz*dz);
-				if (distance <= (sphere.r + sphere2.r)) {
-					printf("collision detected");
-					resolveCollision(sphere, sphere2);
-				}
+				checkForCollision(sphere, sphere2);
 			}
 		}
 	}
@@ -158,4 +150,16 @@ void SphereSystem::resolveCollision(Sphere &a, Sphere &b) {
 	Vec3 penForce = lam*(1 - (b.pos.value - a.pos.value) / (2 * a.r));
 	a.addPenaltyForce(-penForce);
 	b.addPenaltyForce(-penForce);
+}
+
+void SphereSystem::checkForCollision(Sphere &a, Sphere &b) {
+	float distance = FLT_MAX;
+	float dx = a.pos.x - b.pos.x;
+	float dy = a.pos.y - b.pos.y;
+	float dz = a.pos.z - b.pos.z;
+	distance = dx*dx + dy * dy + dz * dz;
+	if (distance <= (a.r + b.r) * (a.r + b.r)) {
+		printf("collision detected");
+		resolveCollision(a, b);
+	}
 }
