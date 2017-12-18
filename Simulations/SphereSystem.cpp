@@ -35,7 +35,23 @@ void SphereSystem::updateStep(float elapsedTime, float damping)
 	}
 
 	//check for collision and add penalty-force
-	//...
+	for (auto& sphere : spheres) {
+		for (auto& sphere2 : spheres) {
+			float distance;
+			float dx = sphere.pos.x - sphere2.pos.x;
+			float dy = sphere.pos.y - sphere2.pos.y;
+			float dz = sphere.pos.z - sphere2.pos.z;
+			if (dx == 0 && dy == 0 && dz == 0) {
+				//sphere = sphere2
+			}
+			else {
+				distance = sqrt(dx*dx + dy*dy + dz*dz);
+			}
+			if (distance <= (sphere.r + sphere2.r)) {
+
+			}
+		}
+	}
 
 	//LeapFrog
 	for (auto& sphere : spheres) {
