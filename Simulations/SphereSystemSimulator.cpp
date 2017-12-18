@@ -50,7 +50,7 @@ void SphereSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext)
 	{
 		if (m_iNumSpheres > m_pSphereSystem->spheres.size())
 		{
-			std::mt19937 gen(m_pSphereSystem->rd()); //Standard mersenne_twister_engine seeded with rd()
+			std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 			std::uniform_real_distribution<float> randPos(-0.5f, 0.5f);
 			m_pSphereSystem->addSphere(m_fRadius,m_fMass,Vec3(randPos(gen),randPos(gen),randPos(gen)));
 		}
