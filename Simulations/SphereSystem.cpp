@@ -85,7 +85,8 @@ void SphereSystem::updateStep(float elapsedTime, float damping)
 
 
 void SphereSystem::uniformGridCollision() {
-	Sphere *grid[numCells * numCells * numCells][10];
+	
+	Sphere *grid[numCells * numCells * numCells][maxSpheres];
 	std::vector<int> validCells;
 	float cellSize = boxSize / numCells;
 
@@ -95,9 +96,23 @@ void SphereSystem::uniformGridCollision() {
 		int z = int((sphere.pos.z + (boxSize / 2)) / numCells);
 		int gridPos = x + y * numCells + z * numCells * numCells;
 		int i = 0;
-		for (; grid[gridPos][i] == NULL && i < 10; i++) {}
+		for (; i < maxSpheres && grid[gridPos][i] == NULL; i++) {}
 
 		grid[gridPos][i] = &sphere;
+		validCells.push_back(gridPos);
+	}
+
+	for (int cell : validCells) {
+		checkCell(grid, cell);
+	}
+}
+
+
+void SphereSystem::checkCell(Sphere *grid[][10], int cell) {
+	for (int i = 0; i < maxSpheres && grid[cell][i] != NULL; i++) {
+		for (int j = i + 1; j < maxSpheres && grid[cell][j] != NULL; i++) {
+
+		}
 	}
 }
 

@@ -11,7 +11,7 @@ public:
 	void updateStep(float elapsedTime, float damping);
 	void checkBox();
 	void uniformGridCollision();
-
+	void checkCell(Sphere *grid[][10], int cell);
 	void resolveCollision(Sphere &a, Sphere &b);
 
 	std::random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -19,5 +19,6 @@ public:
 	float boxSize;
 
 	static const int numCells = 5;
+	static const int maxSpheres = 10;
 };
 
