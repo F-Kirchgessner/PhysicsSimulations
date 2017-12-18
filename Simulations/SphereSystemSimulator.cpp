@@ -13,8 +13,8 @@ std::function<float(float)> SphereSystemSimulator::m_Kernels[5] = {
 SphereSystemSimulator::SphereSystemSimulator() {
 	m_pSphereSystem = new SphereSystem();
 	m_iNumSpheres = 0;
-	m_fRadius = 0.08f;
-	m_fMass = 1.0f;
+	m_fRadius = m_fOldRadius = 0.08f;
+	m_fMass = m_fOldMass = 1.0f;
 }
 
 SphereSystemSimulator::~SphereSystemSimulator()
@@ -29,6 +29,8 @@ const char * SphereSystemSimulator::getTestCasesStr() {
 void SphereSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 	this->DUC = DUC;
 	TwAddVarRW(DUC->g_pTweakBar, "NumberOfSpheres", TW_TYPE_INT32, &m_iNumSpheres, "step=1 min=0");
+	TwAddVarRW(DUC->g_pTweakBar, "Radius", TW_TYPE_FLOAT, &m_fRadius, "step=0.01 min=0.01");
+	TwAddVarRW(DUC->g_pTweakBar, "Mass", TW_TYPE_FLOAT, &m_fMass, "step=0.1 min=0.1");
 }
 
 void SphereSystemSimulator::initTestScene()
@@ -64,6 +66,22 @@ void SphereSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext)
 			//not sure
 			for (int i = 0; i < delN; i++)
 				m_pSphereSystem->spheres.pop_back();
+		}
+	}
+
+	if (m_fRadius != m_fOldRadius)
+	{
+		for (auto& sphere : m_pSphereSystem->spheres) {
+			sphere.r = m_fRadius;
+			m_fOldRadius = m_fRadius;
+		}
+	}
+
+	if (m_fMass != m_fOldMass)
+	{
+		for (auto& sphere : m_pSphereSystem->spheres) {
+			sphere.m = m_fMass;
+			m_fOldMass = m_fMass;
 		}
 
 	}

@@ -36,6 +36,9 @@ protected:
 	float m_fForceScaling;
 	float m_fDamping;
 	int   m_iNumSpheres;
+
+	float m_fOldRadius;
+	float m_fOldMass;
 	
 	int   m_iKernel; // index of the m_Kernels[5], more detials in SphereSystemSimulator.cpp
 	static std::function<float(float)> m_Kernels[5];
