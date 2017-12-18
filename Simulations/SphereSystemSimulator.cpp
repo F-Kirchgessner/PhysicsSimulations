@@ -11,6 +11,8 @@ std::function<float(float)> SphereSystemSimulator::m_Kernels[5] = {
 // SphereSystemSimulator member functions
 
 SphereSystemSimulator::SphereSystemSimulator() {
+	m_pSphereSystem = new SphereSystem();
+	m_pSphereSystem->addSphere(0.08, 1, Vec3(0, 0, 0));
 }
 
 const char * SphereSystemSimulator::getTestCasesStr() {
@@ -18,7 +20,7 @@ const char * SphereSystemSimulator::getTestCasesStr() {
 }
 
 void SphereSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
-	//this->DUC = DUC;
+	this->DUC = DUC;
 	//TwAddVarRW(DUC->g_pTweakBar, "test", TW_TYPE_FLOAT, &m_test, "step=0.1 min=0.0");
 }
 
@@ -41,11 +43,10 @@ void SphereSystemSimulator::reset() {
 
 void SphereSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext) {
 	// Draw spheres
-	/*for (auto& rigidbodySystem : m_rigidbodysystems) {
-		DUC->setUpLighting(Vec3(rigidbodySystem.red, rigidbodySystem.green, rigidbodySystem.blue), 0.4*Vec3(1, 1, 1), 2000.0, Vec3(rigidbodySystem.red, rigidbodySystem.green, rigidbodySystem.blue));
-		rigidbodySystem.Obj2WorldMatrix = rigidbodySystem.scaleMat * rigidbodySystem.rotMat * rigidbodySystem.transMat;
-		DUC->drawRigidBody(rigidbodySystem.Obj2WorldMatrix);
-	}*/
+	for (auto& sphere : m_pSphereSystem->spheres) {
+		DUC->setUpLighting(Vec3(sphere.red, sphere.green, sphere.blue), 0.4*Vec3(1, 1, 1), 2000.0, Vec3(sphere.red, sphere.green, sphere.blue));
+		DUC->drawSphere(sphere.pos, Vec3(sphere.r, sphere.r, sphere.r));
+	}
 }
 
 void SphereSystemSimulator::notifyCaseChanged(int testCase) {
