@@ -49,6 +49,7 @@ void SphereSystem::updateStep(float elapsedTime, float damping)
 				distance = sqrt(dx*dx + dy*dy + dz*dz);
 			}
 			if (distance <= (sphere.r + sphere2.r)) {
+				printf("collision detected");
 				resolveCollision(sphere, sphere2);
 			}
 		}
@@ -126,7 +127,7 @@ void SphereSystem::checkBox() {
 	}
 }
 
-void SphereSystem::resolveCollision(Sphere a, Sphere b) {
+void SphereSystem::resolveCollision(Sphere &a, Sphere &b) {
 	a.v = (a.v * (a.m - b.m) + 2 * b.m*b.v) / (a.m+b.m);
 	b.v = (b.v * (b.m - a.m) + 2 * a.m*a.v) / (b.m + a.m);
 
