@@ -28,18 +28,16 @@ void SphereSystem::updateStep(float elapsedTime)
 	float h = elapsedTime;
 
 	//add Gravity
+	//add damping force
 	for (auto& sphere : spheres) {
 		sphere.addGravity(9.81f);
+		sphere.addDamping(0.3f);
 	}
 
 	//check for collision and add penalty-force
 	//...
 
-	//add damping force
-	//...
-
-	// init for every sphere???
-
+	//LeapFrog
 	for (auto& sphere : spheres) {
 		if (sphere.init) {
 			sphere.v.x += (sphere.f.x / sphere.m) * h / 2.0f;
@@ -50,7 +48,6 @@ void SphereSystem::updateStep(float elapsedTime)
 		sphere.init = false;
 	}
 	
-
 	for (auto& sphere : spheres) {
 		sphere.v.x += (sphere.f.x / sphere.m) * h;
 		sphere.v.y += (sphere.f.y / sphere.m) * h;
