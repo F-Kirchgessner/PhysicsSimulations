@@ -38,7 +38,7 @@ void SphereSystem::updateStep(float elapsedTime, float damping)
 	//check for collision and add penalty-force
 	for (auto& sphere : spheres) {
 		for (auto& sphere2 : spheres) {
-			float distance;
+			float distance = FLT_MAX;
 			float dx = sphere.pos.x - sphere2.pos.x;
 			float dy = sphere.pos.y - sphere2.pos.y;
 			float dz = sphere.pos.z - sphere2.pos.z;
@@ -50,10 +50,6 @@ void SphereSystem::updateStep(float elapsedTime, float damping)
 			}
 			if (distance <= (sphere.r + sphere2.r)) {
 				resolveCollision(sphere, sphere2);
-				float lam = 1;
-				Vec3 penForce = lam*(1 - (sphere.pos.value - sphere2.pos.value) / (2 * sphere.r));
-				sphere.addPenaltyForce(penForce);
-				sphere2.addPenaltyForce(penForce);
 			}
 		}
 	}
@@ -117,4 +113,9 @@ void SphereSystem::checkBox() {
 void SphereSystem::resolveCollision(Sphere a, Sphere b) {
 	a.v = (a.v * (a.m - b.m) + 2 * b.m*b.v) / (a.m+b.m);
 	b.v = (b.v * (b.m - a.m) + 2 * a.m*a.v) / (b.m + a.m);
+
+	float lam = 1;
+	Vec3 penForce = lam*(1 - (a.pos.value - b.pos.value) / (2 * a.r));
+	a.addPenaltyForce(penForce);
+	b.addPenaltyForce(penForce);
 }
