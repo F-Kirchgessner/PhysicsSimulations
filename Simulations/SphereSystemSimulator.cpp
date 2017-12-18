@@ -17,6 +17,11 @@ SphereSystemSimulator::SphereSystemSimulator() {
 	m_fMass = 1.0f;
 }
 
+SphereSystemSimulator::~SphereSystemSimulator()
+{
+	delete m_pSphereSystem;
+}
+
 const char * SphereSystemSimulator::getTestCasesStr() {
 	return "Spheres";
 }
