@@ -12,7 +12,7 @@ std::function<float(float)> SphereSystemSimulator::m_Kernels[5] = {
 
 SphereSystemSimulator::SphereSystemSimulator() {
 	m_pSphereSystem = new SphereSystem();
-	m_iNumSpheres = 0;
+	m_iNumSpheres = 2;
 	m_fRadius = m_fOldRadius = 0.08f;
 	m_fMass = m_fOldMass = 1.0f;
 	m_fDamping = 0.75f;
