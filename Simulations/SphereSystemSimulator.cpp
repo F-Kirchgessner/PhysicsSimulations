@@ -36,7 +36,6 @@ void SphereSystemSimulator::initTestScene()
 	switch (m_iTestCase)
 	{
 	case 0:
-		m_pSphereSystem->addSphere(m_fRadius, m_fMass, Vec3(0,0,0));
 		break;
 	}
 }
