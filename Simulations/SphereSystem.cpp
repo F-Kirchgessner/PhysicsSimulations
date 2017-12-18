@@ -40,15 +40,16 @@ void SphereSystem::updateStep(float elapsedTime)
 
 	// init for every sphere???
 
-	if (init) {
-		for (auto& sphere : spheres) {
+	for (auto& sphere : spheres) {
+		if (sphere.init) {
 			sphere.v.x += (sphere.f.x / sphere.m) * h / 2.0f;
 			sphere.v.y += (sphere.f.y / sphere.m) * h / 2.0f;
 			sphere.v.z += (sphere.f.z / sphere.m) * h / 2.0f;
 			
 		}
+		sphere.init = false;
 	}
-	init = false;
+	
 
 	for (auto& sphere : spheres) {
 		sphere.v.x += (sphere.f.x / sphere.m) * h;

@@ -27,5 +27,6 @@ public:
 	//velocity
 	Vec3 v;
 
+	bool init = true;
 };
 
