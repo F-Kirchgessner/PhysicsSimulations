@@ -49,7 +49,11 @@ void SphereSystem::updateStep(float elapsedTime, float damping)
 				distance = sqrt(dx*dx + dy*dy + dz*dz);
 			}
 			if (distance <= (sphere.r + sphere2.r)) {
-
+				resolveCollision(sphere, sphere2);
+				float lam = 1;
+				Vec3 penForce = lam*(1 - (sphere.pos.value - sphere2.pos.value) / (2 * sphere.r));
+				sphere.addPenaltyForce(penForce);
+				sphere2.addPenaltyForce(penForce);
 			}
 		}
 	}
@@ -110,3 +114,7 @@ void SphereSystem::checkBox() {
 	}
 }
 
+void SphereSystem::resolveCollision(Sphere a, Sphere b) {
+	a.v = (a.v * (a.m - b.m) + 2 * b.m*b.v) / (a.m+b.m);
+	b.v = (b.v * (b.m - a.m) + 2 * a.m*a.v) / (b.m + a.m);
+}
