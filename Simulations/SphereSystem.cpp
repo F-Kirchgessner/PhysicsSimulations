@@ -36,13 +36,13 @@ void SphereSystem::updateStep(float elapsedTime, float damping)
 	}
 
 	//check for collision and add penalty-force
-	for (auto& sphere : spheres) {
-		for (auto& sphere2 : spheres) {
-			if (&sphere == &sphere2) {
+	for (int i = 0; i < spheres.size();i++) {
+		for (int j = i+1; j < spheres.size(); j++) {
+			if (&spheres[i] == &spheres[j]) {
 				//sphere = sphere2
 			}
 			else {
-				checkForCollision(sphere, sphere2);
+				checkForCollision(spheres[i], spheres[j]);
 			}
 		}
 	}
@@ -148,8 +148,8 @@ void SphereSystem::resolveCollision(Sphere &a, Sphere &b) {
 
 	float lam = 0.3;
 	Vec3 penForce = lam*(1 - (b.pos.value - a.pos.value) / (2 * a.r));
-	a.addPenaltyForce(-penForce);
-	b.addPenaltyForce(-penForce);
+	a.addPenaltyForce(penForce);
+	b.addPenaltyForce(penForce);
 }
 
 void SphereSystem::checkForCollision(Sphere &a, Sphere &b) {
