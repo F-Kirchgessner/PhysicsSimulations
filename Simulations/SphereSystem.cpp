@@ -31,7 +31,7 @@ void SphereSystem::updateStep(float elapsedTime)
 	//add damping force
 	for (auto& sphere : spheres) {
 		sphere.addGravity(9.81f);
-		sphere.addDamping(0.3f);
+		sphere.addDamping(0.75f);
 	}
 
 	//check for collision and add penalty-force
