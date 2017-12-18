@@ -15,17 +15,19 @@ void Sphere::clearForce()
 	f.z = 0;
 }
 
-void Sphere::addGravity()
+void Sphere::addGravity(float gForce)
 {
+	f.y -= m * gForce;
 }
 
-void Sphere::addDamping()
+void Sphere::addDamping(float gamma)
 {
+	f.x -= gamma * v.x;
+	f.y -= gamma * v.y;
+	f.z -= gamma * v.z;
 }
 
-void Sphere::applyForce(Vec3& force)
+void Sphere::addPenaltyForce(Vec3& force)
 {
 	f += force;
-	addDamping();
-	addGravity();
 }

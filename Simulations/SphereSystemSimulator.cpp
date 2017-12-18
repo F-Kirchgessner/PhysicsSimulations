@@ -110,6 +110,7 @@ void SphereSystemSimulator::simulateTimestep(float timeStep) {
 	switch (m_iTestCase)
 	{
 	default:
+		m_pSphereSystem->updateStep(timeStep);
 		break;
 	}
 }

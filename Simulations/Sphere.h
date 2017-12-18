@@ -18,11 +18,10 @@ public:
 	float blue;
 
 	void clearForce();
-	void addGravity();
-	void addDamping();
-	void applyForce(Vec3& force);
+	void addGravity(float gForce);
+	void addDamping(float gamma);
+	void addPenaltyForce(Vec3& force);
 
-private:
 	//force
 	Vec3 f;
 	//velocity
