@@ -7,7 +7,7 @@ public:
 	SphereSystem();
 	~SphereSystem();
 
-	void addSphere(float radius, float mass, Vec3 position);
+	void addSphere(float radius, float mass, Vec3 position, Vec3 color);
 	void updateStep(float elapsedTime, float damping, int accelerator);
 	void checkBox();
 	void naiveCollision();

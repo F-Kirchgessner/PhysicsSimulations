@@ -12,16 +12,13 @@ SphereSystem::~SphereSystem()
 {
 }
 
-void SphereSystem::addSphere(float radius, float mass, Vec3 position)
+void SphereSystem::addSphere(float radius, float mass, Vec3 position, Vec3 color)
 {
-	Sphere s(radius,mass,position);
-	std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-	std::uniform_real_distribution<> dis(0.0, 1.0);
-	s.red = dis(gen);
-	s.green = dis(gen);
-	s.blue = dis(gen);
+	Sphere s(radius, mass, position);
+	s.red = color.x;
+	s.green = color.y;
+	s.blue = color.z;
 	spheres.push_back(s);
-
 }
 
 void SphereSystem::updateStep(float elapsedTime, float damping, int accelerator)
@@ -144,7 +141,7 @@ void SphereSystem::checkBox() {
 			sphere.v.x = -sphere.v.x;
 		}
 		if (sphere.pos.y - radius < -0.5) {
-			sphere.pos.y = -0.5 + radius;
+			sphere.pos.y = -boxSizeHalf + radius;
 			sphere.v.y = -sphere.v.y;
 		}
 		if (sphere.pos.z - radius < -boxSizeHalf) {
@@ -155,6 +152,10 @@ void SphereSystem::checkBox() {
 		if (sphere.pos.x + radius > boxSizeHalf) {
 			sphere.pos.x = boxSizeHalf - radius;
 			sphere.v.x = -sphere.v.x;
+		}
+		if (sphere.pos.y + radius > boxSizeHalf) {
+			sphere.pos.y = boxSizeHalf - radius;
+			sphere.v.y = -sphere.v.y;
 		}
 		if (sphere.pos.z + radius > boxSizeHalf) {
 			sphere.pos.z = boxSizeHalf - radius;

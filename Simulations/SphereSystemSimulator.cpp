@@ -73,10 +73,16 @@ void SphereSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext)
 			float randX = randPos(gen);
 			float randY = randPos(gen);
 			float randZ = randPos(gen);
-			m_pSphereSystem->addSphere(m_fRadius,m_fMass,Vec3(randX, randY, randZ));
 
-			if (m_iTestCase == 3)
-				m_pSphereSystemGrid->addSphere(m_fRadius, m_fMass, Vec3(randX, randY, randZ));
+			if (m_iTestCase == 2) {
+				m_pSphereSystem->addSphere(m_fRadius, m_fMass, Vec3(randX, randY, randZ), Vec3(1, 0, 0));
+				m_pSphereSystemGrid->addSphere(m_fRadius, m_fMass, Vec3(randX, randY, randZ), Vec3(0, 1, 0));
+			}
+			else {
+				std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+				std::uniform_real_distribution<> dis(0.0, 1.0);
+				m_pSphereSystem->addSphere(m_fRadius, m_fMass, Vec3(randX, randY, randZ), Vec3(dis(gen), dis(gen), dis(gen)));
+			}
 		}
 		else
 		{
@@ -109,6 +115,12 @@ void SphereSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext)
 		DUC->setUpLighting(Vec3(sphere.red, sphere.green, sphere.blue), 0.4*Vec3(1, 1, 1), 2000.0, Vec3(sphere.red, sphere.green, sphere.blue));
 		DUC->drawSphere(sphere.pos, Vec3(sphere.r, sphere.r, sphere.r));
 	}
+	if (m_iTestCase == 2) {
+		for (auto& sphere : m_pSphereSystemGrid->spheres) {
+			DUC->setUpLighting(Vec3(sphere.red, sphere.green, sphere.blue), 0.4*Vec3(1, 1, 1), 2000.0, Vec3(sphere.red, sphere.green, sphere.blue));
+			DUC->drawSphere(sphere.pos, Vec3(sphere.r, sphere.r, sphere.r));
+		}
+	}
 }
 
 void SphereSystemSimulator::notifyCaseChanged(int testCase) {
@@ -127,7 +139,7 @@ void SphereSystemSimulator::externalForcesCalculations(float timeElapsed) {
 void SphereSystemSimulator::simulateTimestep(float timeStep) {
 	switch (m_iTestCase)
 	{
-	case 3:
+	case 2:
 		m_pSphereSystem->updateStep(timeStep, m_fDamping, 0);
 		m_pSphereSystemGrid->updateStep(timeStep, m_fDamping, 1);
 		break;
