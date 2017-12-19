@@ -14,6 +14,7 @@ SphereSystemSimulator::SphereSystemSimulator() {
 	m_iNumSpheres = 2;
 	m_fRadius = m_fOldRadius = 0.08f;
 	m_fMass = m_fOldMass = 0.80f;
+	m_fInputScale = 0.001f;
 	m_fDamping = 0.70f;
 }
 
@@ -32,6 +33,7 @@ void SphereSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
 	TwAddVarRW(DUC->g_pTweakBar, "Radius", TW_TYPE_FLOAT, &m_fRadius, "step=0.01 min=0.01");
 	TwAddVarRW(DUC->g_pTweakBar, "Mass", TW_TYPE_FLOAT, &m_fMass, "step=0.1 min=0.1");
 	TwAddVarRW(DUC->g_pTweakBar, "Damping", TW_TYPE_FLOAT, &m_fDamping, "step=0.01 min=0.00");
+	TwAddVarRW(DUC->g_pTweakBar, "InputScale", TW_TYPE_FLOAT, &m_fInputScale, "step=0.001 min=0");
 }
 
 void SphereSystemSimulator::initTestScene()
@@ -124,6 +126,23 @@ void SphereSystemSimulator::notifyCaseChanged(int testCase) {
 }
 
 void SphereSystemSimulator::externalForcesCalculations(float timeElapsed) {
+	// Apply the mouse deltas to g_vfMovableObjectPos (move along cameras view plane)
+	Point2D mouseDiff;
+	mouseDiff.x = m_trackmouse.x - m_oldtrackmouse.x;
+	mouseDiff.y = m_trackmouse.y - m_oldtrackmouse.y;
+	if (mouseDiff.x != 0 || mouseDiff.y != 0)
+	{
+		Mat4 worldViewInv = Mat4(DUC->g_camera.GetWorldMatrix() * DUC->g_camera.GetViewMatrix());
+		worldViewInv = worldViewInv.inverse();
+		Vec3 inputView = Vec3((float)mouseDiff.x, (float)-mouseDiff.y, 0);
+		Vec3 inputWorld = worldViewInv.transformVectorNormal(inputView);
+		inputWorld = inputWorld * m_fInputScale;
+
+		// Apply to mass points
+		for (auto& sphere : m_pSphereSystem->spheres) {
+			sphere.addPenaltyForce(inputWorld);
+		}
+	}
 }
 
 void SphereSystemSimulator::simulateTimestep(float timeStep) {
@@ -140,7 +159,13 @@ void SphereSystemSimulator::simulateTimestep(float timeStep) {
 }
 
 void SphereSystemSimulator::onClick(int x, int y) {
+	m_trackmouse.x = x;
+	m_trackmouse.y = y;
 }
 
 void SphereSystemSimulator::onMouse(int x, int y) {
+	m_oldtrackmouse.x = x;
+	m_oldtrackmouse.y = y;
+	m_trackmouse.x = x;
+	m_trackmouse.y = y;
 }
