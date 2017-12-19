@@ -31,7 +31,7 @@ void SphereSystem::updateStep(float elapsedTime, float damping, int accelerator)
 	//add Gravity
 	//add damping force
 	for (auto& sphere : spheres) {
-		sphere.addGravity(0.10f);
+		sphere.addGravity(0.50f);
 		sphere.addDamping(damping);
 	}
 

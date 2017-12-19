@@ -14,7 +14,7 @@ SphereSystemSimulator::SphereSystemSimulator() {
 	m_iNumSpheres = 2;
 	m_fRadius = m_fOldRadius = 0.08f;
 	m_fMass = m_fOldMass = 0.80f;
-	m_fInputScale = 0.005f;
+	m_fInputScale = 0.01f;
 	m_fDamping = 0.70f;
 }
 
@@ -151,6 +151,11 @@ void SphereSystemSimulator::externalForcesCalculations(float timeElapsed) {
 		// Apply to mass points
 		for (auto& sphere : m_pSphereSystem->spheres) {
 			sphere.addPenaltyForce(inputWorld);
+		}
+		if (m_iTestCase == 2) {
+			for (auto& sphere : m_pSphereSystemGrid->spheres) {
+				sphere.addPenaltyForce(inputWorld);
+			}
 		}
 	}
 }
