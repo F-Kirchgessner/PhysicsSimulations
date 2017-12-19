@@ -164,16 +164,14 @@ void SphereSystem::checkBox() {
 }
 
 void SphereSystem::resolveCollision(Sphere &a, Sphere &b) {
-	Vec3 n1 = a.v * (a.m - b.m) + 2 * b.m*b.v;
-	float z1 = a.m + b.m;
-	a.v = n1 / z1;
-	Vec3 n2 = b.v * (b.m - a.m) + 2 * a.m*a.v;
-	float z2 = b.m + a.m;
-	b.v = n2 / z2;
+	float lam = 10;
+	Vec3 penForce;
+	penForce.x = lam*(1 - (b.pos.x - a.pos.x) / (2 * a.r));
+	penForce.y = lam*(1 - (b.pos.y - a.pos.y) / (2 * a.r));
+	penForce.z = lam*(1 - (b.pos.z - a.pos.z) / (2 * a.r));
+	std::cout << penForce.x << ' ' << penForce.y << ' ' << penForce.z << '\n';
 
-	float lam = 0.3;
-	Vec3 penForce = lam*(1 - (b.pos.value - a.pos.value) / (2 * a.r));
-	a.addPenaltyForce(-penForce);
+	a.addPenaltyForce(penForce);
 	b.addPenaltyForce(-penForce);
 }
 
@@ -184,7 +182,12 @@ void SphereSystem::checkForCollision(Sphere &a, Sphere &b) {
 	float dz = a.pos.z - b.pos.z;
 	distance = dx*dx + dy * dy + dz * dz;
 	if (distance <= (a.r + b.r) * (a.r + b.r)) {
-		printf("collision detected");
+		//printf("collision detected");
 		resolveCollision(a, b);
+	}
+	else {
+		Vec3 force = Vec3(0.0f, 0.0f, 0.0f);
+		a.addPenaltyForce(force);
+		b.addPenaltyForce(force);
 	}
 }
