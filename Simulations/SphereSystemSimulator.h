@@ -35,6 +35,7 @@ protected:
 	float m_fRadius;
 	float m_fForceScaling;
 	float m_fDamping;
+	float m_fInputScale;
 	int   m_iNumSpheres;
 
 	float m_fOldRadius;
