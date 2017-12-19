@@ -51,6 +51,17 @@ void SphereSystemSimulator::initTestScene()
 	case 2:
 		m_pSphereSystem = new SphereSystem();
 		m_pSphereSystemGrid = new SphereSystem();
+
+		m_pSphereSystem->addSphere(m_fRadius, m_fMass, Vec3(0.2f, 0, 0.07f), Vec3(1, 0, 0));
+		m_pSphereSystemGrid->addSphere(m_fRadius, m_fMass, Vec3(0.2f, 0, 0.07f), Vec3(0, 1, 0));
+		m_pSphereSystem->addSphere(m_fRadius, m_fMass, Vec3(0.2f, 0.4f, 0), Vec3(1, 0, 0));
+		m_pSphereSystemGrid->addSphere(m_fRadius, m_fMass, Vec3(0.2f, 0.4f, 0), Vec3(0, 1, 0));
+
+		m_pSphereSystem->addSphere(m_fRadius, m_fMass, Vec3(-0.2f, 0, 0.07f), Vec3(1, 0, 0));
+		m_pSphereSystemGrid->addSphere(m_fRadius, m_fMass, Vec3(-0.2f, 0, 0.07f), Vec3(0, 1, 0));
+		m_pSphereSystem->addSphere(m_fRadius, m_fMass, Vec3(-0.2f, 0.4f, 0), Vec3(1, 0, 0));
+		m_pSphereSystemGrid->addSphere(m_fRadius, m_fMass, Vec3(-0.2f, 0.4f, 0), Vec3(0, 1, 0));
+		m_iNumSpheres = 4;
 		break;
 	}
 }

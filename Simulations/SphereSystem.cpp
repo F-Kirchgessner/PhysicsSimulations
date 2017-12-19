@@ -73,14 +73,9 @@ void SphereSystem::updateStep(float elapsedTime, float damping, int accelerator)
 
 
 void SphereSystem::naiveCollision() {
-	for (auto& sphere : spheres) {
-		for (auto& sphere2 : spheres) {
-			if (&sphere == &sphere2) {
-				//sphere = sphere2
-			}
-			else {
-				checkForCollision(sphere, sphere2);
-			}
+	for (int i = 0; i < spheres.size(); i++) {
+		for (int j = i + 1; j < spheres.size(); j++) {
+			checkForCollision(spheres[i], spheres[j]);
 		}
 	}
 }
@@ -106,14 +101,24 @@ void SphereSystem::uniformGridCollision() {
 		for (int y = 0; y < numCells; y++) {
 			for (int z = 0; z < numCells; z++) {
 				int cell = x + y * numCells + z * numCells * numCells;
+				if (grid[cell] == NULL ||grid[cell][0] == NULL)
+					continue;
+
 				checkCells(grid[cell], grid[cell]);
-				if (y < numCells - 1) checkCells(grid[cell], grid[cell + numCells]);
-				if (x < numCells - 1) checkCells(grid[cell], grid[cell + 1]);
-				if (x < numCells - 1 && y < numCells - 1) checkCells(grid[cell], grid[cell + 1 + numCells]);
-				if (z < numCells - 1) checkCells(grid[cell], grid[cell + numCells * numCells]);
-				if (x < numCells - 1 && z < numCells - 1) checkCells(grid[cell], grid[cell + 1 + numCells * numCells]);
-				if (y < numCells - 1 && z < numCells - 1) checkCells(grid[cell], grid[cell + numCells + numCells * numCells]);
-				if (x < numCells - 1 && y < numCells - 1 && z < numCells - 1) checkCells(grid[cell], grid[cell + 1 + numCells + numCells * numCells]);
+				if (y < numCells - 1) 
+					checkCells(grid[cell], grid[cell + numCells]);
+				if (x < numCells - 1) 
+					checkCells(grid[cell], grid[cell + 1]);
+				if (x < numCells - 1 && y < numCells - 1) 
+					checkCells(grid[cell], grid[cell + 1 + numCells]);
+				if (z < numCells - 1) 
+					checkCells(grid[cell], grid[cell + numCells * numCells]);
+				if (x < numCells - 1 && z < numCells - 1) 
+					checkCells(grid[cell], grid[cell + 1 + numCells * numCells]);
+				if (y < numCells - 1 && z < numCells - 1) 
+					checkCells(grid[cell], grid[cell + numCells + numCells * numCells]);
+				if (x < numCells - 1 && y < numCells - 1 && z < numCells - 1) 
+					checkCells(grid[cell], grid[cell + 1 + numCells + numCells * numCells]);
 			}
 		}
 	}
@@ -124,7 +129,10 @@ void SphereSystem::checkCells(Sphere **cell1, Sphere **cell2) {
 	if (cell1 == NULL || cell2 == NULL)
 		return;
 	for (int i = 0; i < maxSpheres && cell1[i] != NULL; i++) {
-		for (int j = i + 1; j < maxSpheres && cell2[j] != NULL; j++) {
+		int j = 0;
+		if (cell1 == cell2)
+			j = i + 1;
+		for (; j < maxSpheres && cell2[j] != NULL; j++) {
 			checkForCollision(*cell1[i], *cell2[j]);
 		}
 	}
@@ -183,12 +191,14 @@ void SphereSystem::checkForCollision(Sphere &a, Sphere &b) {
 	float dz = a.pos.z - b.pos.z;
 	distance = dx*dx + dy * dy + dz * dz;
 	if (distance <= (a.r + b.r) * (a.r + b.r)) {
-		//printf("collision detected");
 		resolveCollision(a, b);
-	}
-	else {
-		Vec3 force = Vec3(0.0f, 0.0f, 0.0f);
-		a.addPenaltyForce(force);
-		b.addPenaltyForce(force);
+
+		Vec3 penForce = Vec3(0.0f, 0.0f, 0.0f);
+		float lam = 0.5f;
+		penForce.x = lam*(1 - (b.pos.x - a.pos.x) / (2 * a.r));
+		penForce.y = lam*(1 - (b.pos.y - a.pos.y) / (2 * a.r));
+		penForce.z = lam*(1 - (b.pos.z - a.pos.z) / (2 * a.r));
+		a.addPenaltyForce(penForce);
+		b.addPenaltyForce(-penForce);
 	}
 }
