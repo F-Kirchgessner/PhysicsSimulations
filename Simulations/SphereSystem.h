@@ -20,7 +20,7 @@ public:
 	std::vector<Sphere> spheres;
 	float boxSize;
 
-	static const int numCells = 2;
+	static const int numCells = 5;
 	static const int maxSpheres = 10;
 };
 

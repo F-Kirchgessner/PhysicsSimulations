@@ -47,8 +47,6 @@ void SphereSystemSimulator::initTestScene()
 	case 1:
 		m_iAccelerator = GRIDACC;
 		m_pSphereSystem = new SphereSystem();
-		m_pSphereSystem->addSphere(m_fRadius, m_fMass, Vec3(0.2, 0.2, 0.2));
-		m_pSphereSystem->addSphere(m_fRadius, m_fMass, Vec3(0.3, 0.2, 0.2));
 		break;
 	case 2:
 		m_pSphereSystem = new SphereSystem();
