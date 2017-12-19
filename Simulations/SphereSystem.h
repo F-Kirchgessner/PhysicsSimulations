@@ -8,10 +8,11 @@ public:
 	~SphereSystem();
 
 	void addSphere(float radius, float mass, Vec3 position);
-	void updateStep(float elapsedTime, float damping);
+	void updateStep(float elapsedTime, float damping, int accelerator);
 	void checkBox();
+	void naiveCollision();
 	void uniformGridCollision();
-	void checkCell(Sphere *grid[][10], int cell);
+	void checkCells(Sphere **cell1, Sphere **cell2);
 	void resolveCollision(Sphere &a, Sphere &b);
 	void checkForCollision(Sphere &a, Sphere &b);
 

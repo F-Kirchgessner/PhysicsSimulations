@@ -11,7 +11,6 @@ std::function<float(float)> SphereSystemSimulator::m_Kernels[5] = {
 // SphereSystemSimulator member functions
 
 SphereSystemSimulator::SphereSystemSimulator() {
-	m_pSphereSystem = new SphereSystem();
 	m_iNumSpheres = 2;
 	m_fRadius = m_fOldRadius = 0.08f;
 	m_fMass = m_fOldMass = 0.80f;
@@ -24,7 +23,7 @@ SphereSystemSimulator::~SphereSystemSimulator()
 }
 
 const char * SphereSystemSimulator::getTestCasesStr() {
-	return "Spheres";
+	return "Naive,Uniform Grid,Both";
 }
 
 void SphereSystemSimulator::initUI(DrawingUtilitiesClass * DUC) {
@@ -40,6 +39,16 @@ void SphereSystemSimulator::initTestScene()
 	switch (m_iTestCase)
 	{
 	case 0:
+		m_iAccelerator = NAIVEACC;
+		m_pSphereSystem = new SphereSystem();
+		break;
+	case 1:
+		m_iAccelerator = GRIDACC;
+		m_pSphereSystem = new SphereSystem();
+		break;
+	case 2:
+		m_pSphereSystem = new SphereSystem();
+		m_pSphereSystemGrid = new SphereSystem();
 		break;
 	}
 }
@@ -60,7 +69,14 @@ void SphereSystemSimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext)
 		{
 			std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 			std::uniform_real_distribution<float> randPos(-0.5f + m_fRadius, 0.5f - m_fRadius);
-			m_pSphereSystem->addSphere(m_fRadius,m_fMass,Vec3(randPos(gen),randPos(gen),randPos(gen)));
+
+			float randX = randPos(gen);
+			float randY = randPos(gen);
+			float randZ = randPos(gen);
+			m_pSphereSystem->addSphere(m_fRadius,m_fMass,Vec3(randX, randY, randZ));
+
+			if (m_iTestCase == 3)
+				m_pSphereSystemGrid->addSphere(m_fRadius, m_fMass, Vec3(randX, randY, randZ));
 		}
 		else
 		{
@@ -111,8 +127,12 @@ void SphereSystemSimulator::externalForcesCalculations(float timeElapsed) {
 void SphereSystemSimulator::simulateTimestep(float timeStep) {
 	switch (m_iTestCase)
 	{
+	case 3:
+		m_pSphereSystem->updateStep(timeStep, m_fDamping, 0);
+		m_pSphereSystemGrid->updateStep(timeStep, m_fDamping, 1);
+		break;
 	default:
-		m_pSphereSystem->updateStep(timeStep, m_fDamping);
+		m_pSphereSystem->updateStep(timeStep, m_fDamping, m_iAccelerator);
 		break;
 	}
 }

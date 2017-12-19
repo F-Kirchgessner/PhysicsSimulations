@@ -24,8 +24,11 @@ void SphereSystem::addSphere(float radius, float mass, Vec3 position)
 
 }
 
-void SphereSystem::updateStep(float elapsedTime, float damping)
+void SphereSystem::updateStep(float elapsedTime, float damping, int accelerator)
 {
+	if (spheres.size() == 0)
+		return;
+
 	float h = elapsedTime;
 
 	//add Gravity
@@ -36,15 +39,11 @@ void SphereSystem::updateStep(float elapsedTime, float damping)
 	}
 
 	//check for collision and add penalty-force
-	for (auto& sphere : spheres) {
-		for (auto& sphere2 : spheres) {
-			if (&sphere == &sphere2) {
-				//sphere = sphere2
-			}
-			else {
-				checkForCollision(sphere, sphere2);
-			}
-		}
+	if (accelerator == 0) {
+		naiveCollision();
+	}
+	else {
+		uniformGridCollision();
 	}
 
 	//LeapFrog
@@ -76,34 +75,60 @@ void SphereSystem::updateStep(float elapsedTime, float damping)
 }
 
 
-void SphereSystem::uniformGridCollision() {
-	
-	Sphere *grid[numCells * numCells * numCells][maxSpheres];
-	std::vector<int> validCells;
-	float cellSize = boxSize / numCells;
-
+void SphereSystem::naiveCollision() {
 	for (auto& sphere : spheres) {
-		int x = int((sphere.pos.x + (boxSize / 2)) / numCells);
-		int y = int((sphere.pos.y + (boxSize / 2)) / numCells);
-		int z = int((sphere.pos.z + (boxSize / 2)) / numCells);
-		int gridPos = x + y * numCells + z * numCells * numCells;
-		int i = 0;
-		for (; i < maxSpheres && grid[gridPos][i] == NULL; i++) {}
-
-		grid[gridPos][i] = &sphere;
-		validCells.push_back(gridPos);
-	}
-
-	for (int cell : validCells) {
-		checkCell(grid, cell);
+		for (auto& sphere2 : spheres) {
+			if (&sphere == &sphere2) {
+				//sphere = sphere2
+			}
+			else {
+				checkForCollision(sphere, sphere2);
+			}
+		}
 	}
 }
 
 
-void SphereSystem::checkCell(Sphere *grid[][10], int cell) {
-	for (int i = 0; i < maxSpheres && grid[cell][i] != NULL; i++) {
-		for (int j = i + 1; j < maxSpheres && grid[cell][j] != NULL; i++) {
+void SphereSystem::uniformGridCollision() {
+	
+	Sphere *grid[numCells * numCells * numCells][maxSpheres] = {{ NULL }};
+	float cellSize = boxSize / numCells;
 
+	for (auto& sphere : spheres) {
+		int x = int((sphere.pos.x + (boxSize / 2)) / float(numCells));
+		int y = int((sphere.pos.y + (boxSize / 2)) / float(numCells));
+		int z = int((sphere.pos.z + (boxSize / 2)) / float(numCells));
+		int gridPos = x + y * numCells + z * numCells * numCells;
+		int i = 0;
+		for (; i < maxSpheres - 1 && grid[gridPos][i] != NULL; i++) {}
+
+		grid[gridPos][i] = &sphere;
+	}
+
+	for (int x = 0; x < numCells; x++) {
+		for (int y = 0; y < numCells; y++) {
+			for (int z = 0; z < numCells; z++) {
+				int cell = x + y * numCells + z * numCells * numCells;
+				checkCells(grid[cell], grid[cell]);
+				if (y < numCells - 1) checkCells(grid[cell], grid[cell + numCells]);
+				if (x < numCells - 1) checkCells(grid[cell], grid[cell + 1]);
+				if (x < numCells - 1 && y < numCells - 1) checkCells(grid[cell], grid[cell + 1 + numCells]);
+				if (z < numCells - 1) checkCells(grid[cell], grid[cell + numCells * numCells]);
+				if (x < numCells - 1 && z < numCells - 1) checkCells(grid[cell], grid[cell + 1 + numCells * numCells]);
+				if (y < numCells - 1 && z < numCells - 1) checkCells(grid[cell], grid[cell + numCells + numCells * numCells]);
+				if (x < numCells - 1 && y < numCells - 1 && z < numCells - 1) checkCells(grid[cell], grid[cell + 1 + numCells + numCells * numCells]);
+			}
+		}
+	}
+}
+
+
+void SphereSystem::checkCells(Sphere **cell1, Sphere **cell2) {
+	if (cell1 == NULL || cell2 == NULL)
+		return;
+	for (int i = 0; i < maxSpheres && cell1[i] != NULL; i++) {
+		for (int j = i + 1; j < maxSpheres && cell2[j] != NULL; j++) {
+			checkForCollision(*cell1[i], *cell2[j]);
 		}
 	}
 }
