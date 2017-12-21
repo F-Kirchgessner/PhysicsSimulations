@@ -82,8 +82,7 @@ void SphereSystem::naiveCollision() {
 
 
 void SphereSystem::uniformGridCollision() {
-	
-	Sphere *grid[numCells * numCells * numCells][maxSpheres] = {{ NULL }};
+	Sphere *grid[numCells * numCells * numCells][maxSpheres] = { { NULL } };
 	float cellSize = boxSize / numCells;
 
 	for (auto& sphere : spheres) {
@@ -100,25 +99,25 @@ void SphereSystem::uniformGridCollision() {
 	for (int x = 0; x < numCells; x++) {
 		for (int y = 0; y < numCells; y++) {
 			for (int z = 0; z < numCells; z++) {
-				int cell = x + y * numCells + z * numCells * numCells;
-				if (grid[cell] == NULL ||grid[cell][0] == NULL)
+
+				if (grid[IDX(x,y,z,numCells)] == NULL ||grid[IDX(x, y, z, numCells)][0] == NULL)
 					continue;
 
-				checkCells(grid[cell], grid[cell]);
-				if (y < numCells - 1) 
-					checkCells(grid[cell], grid[cell + numCells]);
-				if (x < numCells - 1) 
-					checkCells(grid[cell], grid[cell + 1]);
-				if (x < numCells - 1 && y < numCells - 1) 
-					checkCells(grid[cell], grid[cell + 1 + numCells]);
-				if (z < numCells - 1) 
-					checkCells(grid[cell], grid[cell + numCells * numCells]);
-				if (x < numCells - 1 && z < numCells - 1) 
-					checkCells(grid[cell], grid[cell + 1 + numCells * numCells]);
-				if (y < numCells - 1 && z < numCells - 1) 
-					checkCells(grid[cell], grid[cell + numCells + numCells * numCells]);
-				if (x < numCells - 1 && y < numCells - 1 && z < numCells - 1) 
-					checkCells(grid[cell], grid[cell + 1 + numCells + numCells * numCells]);
+				checkCells(grid[IDX(x, y, z, numCells)], grid[IDX(x, y, z, numCells)]);
+
+				for (int i = -1; i <= 1; i++)
+				{
+					for (int j = -1; j <= 1; j++)
+					{
+						for (int k = -1; k <= 1; k++)
+						{
+							if ((x + i)<0 || (y + j)<0 || (z + k)<0 || (x + i)>=numCells || (y + j)>=numCells || (z + k)>=numCells)
+								continue;
+
+							checkCells(grid[IDX(x,y,z,numCells)], grid[IDX(x+i,y+j,z+k,numCells)]);
+						}
+					}
+				}
 			}
 		}
 	}

@@ -1,3 +1,5 @@
+#define IDX(x, y, z, w) (x + w * (y + w * z))
+
 #pragma once
 #include "Sphere.h"
 
@@ -22,5 +24,6 @@ public:
 
 	static const int numCells = 5;
 	static const int maxSpheres = 10;
+
 };
 
