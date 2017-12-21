@@ -1,6 +1,7 @@
 #include "SphereSystem.h"
 
-
+#include <set>
+#include <tuple>
 
 SphereSystem::SphereSystem()
 {
@@ -83,6 +84,8 @@ void SphereSystem::naiveCollision() {
 
 void SphereSystem::uniformGridCollision() {
 	Sphere *grid[numCells * numCells * numCells][maxSpheres] = { { NULL } };
+	std::set<std::tuple<int, int, int>> occCells;
+	
 	float cellSize = boxSize / numCells;
 
 	for (auto& sphere : spheres) {
@@ -94,32 +97,37 @@ void SphereSystem::uniformGridCollision() {
 		for (; grid[gridPos] != NULL && i < maxSpheres - 1 && grid[gridPos][i] != NULL; i++) {}
 
 		grid[gridPos][i] = &sphere;
+		occCells.insert(std::tuple<int, int, int>(x,y,z));
+		
 	}
 
-	for (int x = 0; x < numCells; x++) {
-		for (int y = 0; y < numCells; y++) {
-			for (int z = 0; z < numCells; z++) {
+	for(auto & occCell : occCells){
 
-				if (grid[IDX(x,y,z,numCells)] == NULL ||grid[IDX(x, y, z, numCells)][0] == NULL)
+		if (grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell),numCells)] == NULL ||grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)][0] == NULL)
+			continue;
+
+		checkCells(grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)], grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)]);
+
+		for (int i = -1; i <= 1; i++)
+		{
+			if ((std::get<0>(occCell) + i) < 0 || (std::get<0>(occCell) + i) >= numCells)
+				continue;
+
+			for (int j = -1; j <= 1; j++)
+			{
+				if ((std::get<1>(occCell) + j) < 0 || (std::get<1>(occCell) + j) >= numCells)
 					continue;
 
-				checkCells(grid[IDX(x, y, z, numCells)], grid[IDX(x, y, z, numCells)]);
-
-				for (int i = -1; i <= 1; i++)
+				for (int k = -1; k <=1;  k++)
 				{
-					for (int j = -1; j <= 1; j++)
-					{
-						for (int k = -1; k <= 1; k++)
-						{
-							if ((x + i)<0 || (y + j)<0 || (z + k)<0 || (x + i)>=numCells || (y + j)>=numCells || (z + k)>=numCells)
-								continue;
+					if ((std::get<2>(occCell) + k)<0 || (std::get<2>(occCell) + k)>=numCells)
+						continue;
 
-							checkCells(grid[IDX(x,y,z,numCells)], grid[IDX(x+i,y+j,z+k,numCells)]);
-						}
-					}
+					checkCells(grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)], grid[IDX(std::get<0>(occCell)+i, std::get<1>(occCell)+j, std::get<2>(occCell)+k, numCells)]);
 				}
 			}
 		}
+
 	}
 }
 
@@ -189,7 +197,7 @@ void SphereSystem::checkForCollision(Sphere &a, Sphere &b) {
 	float dy = a.pos.y - b.pos.y;
 	float dz = a.pos.z - b.pos.z;
 	distance = dx*dx + dy * dy + dz * dz;
-	if (distance <= (a.r + b.r) * (a.r + b.r)) {
+	if (sqrt(distance) <= 2*a.r) {
 		resolveCollision(a, b);
 
 		Vec3 penForce = Vec3(0.0f, 0.0f, 0.0f);
