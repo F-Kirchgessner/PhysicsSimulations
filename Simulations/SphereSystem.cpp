@@ -202,18 +202,7 @@ void SphereSystem::checkForCollision(Sphere& a, Sphere& b) {
 
 	//std::cout << a.pos.z << " " << b.pos.z << std::endl;
 
-	if (distance <= 4*a.r*a.r) {
-
+	if (distance <= 4*a.r*a.r){
 		resolveCollision(a, b);
-
-		/*
-		Vec3 penForce = Vec3(0.0f, 0.0f, 0.0f);
-		float lam = 0.5f;
-		penForce.x = lam*(1 - (b.pos.x - a.pos.x) / (2 * a.r));
-		penForce.y = lam*(1 - (b.pos.y - a.pos.y) / (2 * a.r));
-		penForce.z = lam*(1 - (b.pos.z - a.pos.z) / (2 * a.r));
-		a.addPenaltyForce(penForce);
-		b.addPenaltyForce(-penForce);
-		*/
 	}
 }

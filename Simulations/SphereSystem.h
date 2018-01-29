@@ -29,7 +29,7 @@ public:
 
 	std::map<int, std::vector<std::reference_wrapper<Sphere>>> grid_map;
 
-	static const int numCells = 12;
+	static const int numCells = 6;
 	static const int maxSpheres = 10;
 
 };
