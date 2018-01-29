@@ -39,9 +39,11 @@ void SphereSystem::updateStep(float elapsedTime, float damping, int accelerator)
 
 	//check for collision and add penalty-force
 	if (accelerator == 0) {
+		acc = 0;
 		naiveCollision();
 	}
 	else {
+		acc = 1;
 		uniformGridCollision();
 	}
 
@@ -93,56 +95,16 @@ void SphereSystem::uniformGridCollision() {
 		int x = int((sphere.pos.x + (boxSize / 2)) / (boxSize / numCells));
 		int y = int((sphere.pos.y + (boxSize / 2)) / (boxSize / numCells));
 		int z = int((sphere.pos.z + (boxSize / 2)) / (boxSize / numCells));
-		int gridPos = x + y * numCells + z * numCells * numCells;
+		int gridPos = x + numCells * (y + z * numCells);
 		
 		int i = 0;
 		for (; grid[gridPos] != NULL && i < maxSpheres - 1 && grid[gridPos][i] != NULL; i++) {}
 		grid[gridPos][i] = &sphere;
-	/*
-		if (grid_map.find(gridPos) == grid_map.end())
-		{
-			//time consumer
-			std::vector<std::reference_wrapper<Sphere>> val;
-			val.emplace_back(sphere);
-			int key = gridPos;
-			std::pair<int, std::vector<std::reference_wrapper<Sphere>>> pair_tmp(key,val);
-			grid_map.insert(pair_tmp);
-		}
-		else
-		{
-			grid_map.at(gridPos).emplace_back(sphere);
-		}
-		
-	*/
+
 		occCells.insert(std::tuple<int, int, int>(x,y,z));	
 	}
 
-	/*
-	for (auto& occCell : occCells)
-	{
-		checkCells(grid_map.at(IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)), grid_map.at(IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)), true);
-
-		for (int i = -1; i <= 1; i++)
-		{
-			for (int j = -1; j <= 1; j++)
-			{
-				for (int k = -1; k <= 1; k++)
-				{
-					if (grid_map.find(IDX(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k, numCells)) != grid_map.end())
-					{
-						checkCells(grid_map.at(IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)), grid_map.at(IDX(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k, numCells)), false);
-					}
-				}
-			}
-		}
-	}
-	grid_map.clear();
-	*/
-	
-
 	for(auto & occCell : occCells){
-
-		checkCells(grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)], grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)]);
 
 		for (int i = -1; i <= 1; i++)
 		{
@@ -150,7 +112,7 @@ void SphereSystem::uniformGridCollision() {
 			{
 				for (int k = -1; k <=1;  k++)
 				{
-					if (!((std::get<1>(occCell) + j) < 0 || (std::get<1>(occCell) + j) >= numCells || (std::get<0>(occCell) + i) < 0 || (std::get<0>(occCell) + i) >= numCells || (std::get<2>(occCell) + k)<0 || (std::get<2>(occCell) + k)>=numCells))
+					if (!((std::get<1>(occCell) + j) <= -1 || (std::get<1>(occCell) + j) >= numCells || (std::get<0>(occCell) + i) <= -1 || (std::get<0>(occCell) + i) >= numCells || (std::get<2>(occCell) + k) <= -1 || (std::get<2>(occCell) + k) >=numCells))
 						checkCells(grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)], grid[IDX(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k, numCells)]);
 					/*
 					std::tuple<int, int, int> tmp(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k);
@@ -166,33 +128,25 @@ void SphereSystem::uniformGridCollision() {
 }
 
 void SphereSystem::checkCells(Sphere **cell1, Sphere **cell2) {
-	if (cell1 == NULL || cell2 == NULL)
+	if (*cell1 == NULL || *cell2 == NULL)
 		return;
-	for (int i = 0; i < maxSpheres && cell1[i] != NULL; i++) {
-		int j = 0;
-		if (cell1 == cell2)
-			j = i + 1;
-		for (; j < maxSpheres && cell2[j] != NULL; j++) {
-			checkForCollision(*cell1[i], *cell2[j]);
+	if (*cell1 == *cell2)
+	{
+		for (int i = 0; i < maxSpheres && cell1[i] != NULL; i++) {
+			for (int j = i + 1; j < maxSpheres && cell2[j] != NULL; j++) {
+				checkForCollision(*cell1[i], *cell2[j]);
+			}
+		}
+	}
+	else {
+
+		for (int i = 0; i < maxSpheres && cell1[i] != NULL; i++) {
+			for (int j = 0; j < maxSpheres && cell2[j] != NULL; j++) {
+				checkForCollision(*cell1[i], *cell2[j]);
+			}
 		}
 	}
 }
-
-void SphereSystem::checkCells(std::vector<std::reference_wrapper<Sphere>>& cell1, std::vector<std::reference_wrapper<Sphere>>& cell2, bool same)
-{
-	if (cell1.size() == 0 || cell2.size() == 0)
-		return;
-
-	for (int i = 0; i < cell1.size(); i++) {
-		int j = 0;
-		if (same)
-			j = i + 1;
-		for (; j < cell2.size(); j++) {
-			checkForCollision(cell1[i], cell2[j]);
-		}
-	}
-}
-
 
 void SphereSystem::checkBox() {
 	float boxSizeHalf = boxSize / 2;
@@ -228,7 +182,7 @@ void SphereSystem::checkBox() {
 }
 
 void SphereSystem::resolveCollision(Sphere &a, Sphere &b) {
-	float lam = 10;
+	float lam = (acc)?5:10;
 	Vec3 penForce;
 	penForce.x = lam*(1 - (b.pos.x - a.pos.x) / (2 * a.r));
 	penForce.y = lam*(1 - (b.pos.y - a.pos.y) / (2 * a.r));
@@ -239,13 +193,17 @@ void SphereSystem::resolveCollision(Sphere &a, Sphere &b) {
 	b.addPenaltyForce(-penForce);
 }
 
-void SphereSystem::checkForCollision(Sphere &a, Sphere &b) {
+void SphereSystem::checkForCollision(Sphere& a, Sphere& b) {
 	float distance = FLT_MAX;
 	float dx = a.pos.x - b.pos.x;
 	float dy = a.pos.y - b.pos.y;
 	float dz = a.pos.z - b.pos.z;
 	distance = dx*dx + dy * dy + dz * dz;
-	if (sqrt(distance) <= 2*a.r) {
+
+	//std::cout << a.pos.z << " " << b.pos.z << std::endl;
+
+	if (distance <= 4*a.r*a.r) {
+
 		resolveCollision(a, b);
 
 		/*

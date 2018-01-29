@@ -18,7 +18,6 @@ public:
 	void naiveCollision();
 	void uniformGridCollision();
 	void checkCells(Sphere **cell1, Sphere **cell2);
-	void checkCells(std::vector<std::reference_wrapper<Sphere>>& cell1, std::vector<std::reference_wrapper<Sphere>>& cell2, bool same);
 	void resolveCollision(Sphere &a, Sphere &b);
 	void checkForCollision(Sphere &a, Sphere &b);
 
@@ -26,9 +25,11 @@ public:
 	std::vector<Sphere> spheres;
 	float boxSize;
 
+	bool acc = false;
+
 	std::map<int, std::vector<std::reference_wrapper<Sphere>>> grid_map;
 
-	static const int numCells = 5;
+	static const int numCells = 12;
 	static const int maxSpheres = 10;
 
 };
