@@ -92,9 +92,10 @@ void SphereSystem::uniformGridCollision() {
 	float cellSize = boxSize / numCells;
 
 	for (auto& sphere : spheres) {
-		int x = int((sphere.pos.x + 0.5f) / 1.6);
-		int y = int((sphere.pos.y + 0.5f) / 1.6);
-		int z = int((sphere.pos.z + 0.5f) / 1.6);
+
+		int x = int((sphere.pos.x + boxSize / 2.0f) * cellSize);
+		int y = int((sphere.pos.y + boxSize / 2.0f) *cellSize);
+		int z = int((sphere.pos.z + boxSize / 2.0f) *cellSize);
 		int gridPos = x + numCells * (y + z * numCells);
 		
 		int i = 0;
@@ -106,11 +107,11 @@ void SphereSystem::uniformGridCollision() {
 
 	for(auto & occCell : occCells){
 
-		for (int i = -1; i <= 1; i++)
+		for (int i = -1; i <= 0; i++)
 		{
-			for (int j = -1; j <= 1; j++)
+			for (int j = -1; j <= 0; j++)
 			{
-				for (int k = -1; k <=1;  k++)
+				for (int k = -1; k <=0;  k++)
 				{
 					if (!((std::get<1>(occCell) + j) <= -1 || (std::get<1>(occCell) + j) >= numCells || (std::get<0>(occCell) + i) <= -1 || (std::get<0>(occCell) + i) >= numCells || (std::get<2>(occCell) + k) <= -1 || (std::get<2>(occCell) + k) >=numCells))
 						checkCells(grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)], grid[IDX(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k, numCells)]);
@@ -182,7 +183,7 @@ void SphereSystem::checkBox() {
 }
 
 void SphereSystem::resolveCollision(Sphere &a, Sphere &b) {
-	float lam = (acc)?5:10;
+	float lam = 10;
 	Vec3 penForce;
 	penForce.x = lam*(1 - (b.pos.x - a.pos.x) / (2 * a.r));
 	penForce.y = lam*(1 - (b.pos.y - a.pos.y) / (2 * a.r));
