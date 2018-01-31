@@ -127,26 +127,56 @@ void SphereSystem::uniformGridCollision() {
 		{
 			for (int k = -1; k <= 1; k++)
 			{
-				if (!((std::get<1>(occCell) + j) <= -1 || (std::get<1>(occCell) + j) >= numCells || (std::get<0>(occCell) + i) <= -1 || (std::get<0>(occCell) + i) >= numCells || (std::get<2>(occCell) + k) <= -1 || (std::get<2>(occCell) + k) >= numCells))
-					checkCells(grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)], grid[IDX(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k, numCells)]);
+				if (!((std::get<1>(occCell) + j) >= -1 || (std::get<1>(occCell) + j) >= numCells || (std::get<0>(occCell) + i) <= -1 || (std::get<0>(occCell) + i) >= numCells || (std::get<2>(occCell) + k) <= -1 || (std::get<2>(occCell) + k) >= numCells))
+				{
+					int x1 = std::get<0>(occCell);
+					int y1 = std::get<1>(occCell);
+					int z1 = std::get<2>(occCell);
 
+					int x2 = std::get<0>(occCell) + i;
+					int y2 = std::get<1>(occCell) + j;
+					int z2 = std::get<2>(occCell) + k;
+
+					checkCells(grid[IDX(x1, y1, z1, numCells)], grid[IDX(x2, y2, z2, numCells)]);
+				}
+					
 			}
 		}
 
 		j = 0;
 		for (int i = 0; i <= 1; i++)
 		{
-			for (int k = 0; k <= 1; k++)
+			for (int k = 0; k >= -1; k--)
 			{
 				if (!((std::get<1>(occCell) + j) <= -1 || (std::get<1>(occCell) + j) >= numCells || (std::get<0>(occCell) + i) <= -1 || (std::get<0>(occCell) + i) >= numCells || (std::get<2>(occCell) + k) <= -1 || (std::get<2>(occCell) + k) >= numCells))
-					checkCells(grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)], grid[IDX(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k, numCells)]);
+				{
+					int x1 = std::get<0>(occCell);
+					int y1 = std::get<1>(occCell);
+					int z1 = std::get<2>(occCell);
+
+					int x2 = std::get<0>(occCell) + i;
+					int y2 = std::get<1>(occCell) + j;
+					int z2 = std::get<2>(occCell) + k;
+
+					checkCells(grid[IDX(x1, y1, z1, numCells)], grid[IDX(x2, y2, z2, numCells)]);
+				}
 			}
 		}
 
-		int i = +1; int k = -1; j = 0;
+		int i = +1; int k = +1; j = 0;
 
 		if (!((std::get<1>(occCell) + j) <= -1 || (std::get<1>(occCell) + j) >= numCells || (std::get<0>(occCell) + i) <= -1 || (std::get<0>(occCell) + i) >= numCells || (std::get<2>(occCell) + k) <= -1 || (std::get<2>(occCell) + k) >= numCells))
-			checkCells(grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)], grid[IDX(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k, numCells)]);
+		{
+			int x1 = std::get<0>(occCell);
+			int y1 = std::get<1>(occCell);
+			int z1 = std::get<2>(occCell);
+
+			int x2 = std::get<0>(occCell) + i;
+			int y2 = std::get<1>(occCell) + j;
+			int z2 = std::get<2>(occCell) + k;
+
+			checkCells(grid[IDX(x1, y1, z1, numCells)], grid[IDX(x2, y2, z2, numCells)]);
+		}
 
 	}
 
@@ -155,7 +185,7 @@ void SphereSystem::uniformGridCollision() {
 void SphereSystem::checkCells(Sphere **cell1, Sphere **cell2) {
 	if (*cell1 == NULL || *cell2 == NULL)
 		return;
-	if (*cell1 == *cell2)
+	if (cell1 == cell2)
 	{
 		for (int i = 0; i < maxSpheres && cell1[i] != NULL; i++) {
 			for (int j = i + 1; j < maxSpheres && cell2[j] != NULL; j++) {
