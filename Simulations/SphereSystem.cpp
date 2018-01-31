@@ -93,9 +93,9 @@ void SphereSystem::uniformGridCollision() {
 
 	for (auto& sphere : spheres) {
 
-		int x = int((sphere.pos.x + boxSize / 2.0f) * cellSize);
-		int y = int((sphere.pos.y + boxSize / 2.0f) *cellSize);
-		int z = int((sphere.pos.z + boxSize / 2.0f) *cellSize);
+		int x = int((sphere.pos.x + boxSize / 2.0f) * (numCells ) );
+		int y = int((sphere.pos.y + boxSize / 2.0f) * (numCells ) );
+		int z = int((sphere.pos.z + boxSize / 2.0f) * (numCells ) );
 		int gridPos = x + numCells * (y + z * numCells);
 		
 		int i = 0;
@@ -115,15 +115,40 @@ void SphereSystem::uniformGridCollision() {
 				{
 					if (!((std::get<1>(occCell) + j) <= -1 || (std::get<1>(occCell) + j) >= numCells || (std::get<0>(occCell) + i) <= -1 || (std::get<0>(occCell) + i) >= numCells || (std::get<2>(occCell) + k) <= -1 || (std::get<2>(occCell) + k) >=numCells))
 						checkCells(grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)], grid[IDX(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k, numCells)]);
-					/*
-					std::tuple<int, int, int> tmp(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k);
-					if (occCells.find(tmp) != occCells.end())
-					*/
 					
 				}
 			}
 		}
+	
+		/*
+		int j = -1;
 
+		for (int i = -1; i <= 1; i++)
+		{
+			for (int k = -1; k <= 1; k++)
+			{
+				if (!((std::get<1>(occCell) + j) <= -1 || (std::get<1>(occCell) + j) >= numCells || (std::get<0>(occCell) + i) <= -1 || (std::get<0>(occCell) + i) >= numCells || (std::get<2>(occCell) + k) <= -1 || (std::get<2>(occCell) + k) >= numCells))
+					checkCells(grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)], grid[IDX(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k, numCells)]);
+
+			}
+		}
+
+		j = 0; int k = -1;
+
+		for (int i = -1; i <= 1; i++)
+		{
+			if (!((std::get<1>(occCell) + j) <= -1 || (std::get<1>(occCell) + j) >= numCells || (std::get<0>(occCell) + i) <= -1 || (std::get<0>(occCell) + i) >= numCells || (std::get<2>(occCell) + k) <= -1 || (std::get<2>(occCell) + k) >= numCells))
+				checkCells(grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)], grid[IDX(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k, numCells)]);
+		}
+
+		int i = -1; j = 0; k = 0;
+
+		if (!((std::get<1>(occCell) + j) <= -1 || (std::get<1>(occCell) + j) >= numCells || (std::get<0>(occCell) + i) <= -1 || (std::get<0>(occCell) + i) >= numCells || (std::get<2>(occCell) + k) <= -1 || (std::get<2>(occCell) + k) >= numCells))
+			checkCells(grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)], grid[IDX(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k, numCells)]);
+
+		i = 0; j = 0; k = 0;
+		checkCells(grid[IDX(std::get<0>(occCell), std::get<1>(occCell), std::get<2>(occCell), numCells)], grid[IDX(std::get<0>(occCell) + i, std::get<1>(occCell) + j, std::get<2>(occCell) + k, numCells)]);
+		*/
 	}
 
 }
