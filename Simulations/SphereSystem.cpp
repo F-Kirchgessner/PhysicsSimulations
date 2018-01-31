@@ -92,9 +92,9 @@ void SphereSystem::uniformGridCollision() {
 	float cellSize = boxSize / numCells;
 
 	for (auto& sphere : spheres) {
-		int x = int((sphere.pos.x + (boxSize / 2)) / (boxSize / numCells));
-		int y = int((sphere.pos.y + (boxSize / 2)) / (boxSize / numCells));
-		int z = int((sphere.pos.z + (boxSize / 2)) / (boxSize / numCells));
+		int x = int((sphere.pos.x + 0.5f) / 1.6);
+		int y = int((sphere.pos.y + 0.5f) / 1.6);
+		int z = int((sphere.pos.z + 0.5f) / 1.6);
 		int gridPos = x + numCells * (y + z * numCells);
 		
 		int i = 0;
