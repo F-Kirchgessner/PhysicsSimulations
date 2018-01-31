@@ -91,8 +91,6 @@ void SphereSystem::uniformGridCollision() {
 	
 	float cellSize = boxSize / numCells;
 
-	int assert = 2;
-
 	for (auto& sphere : spheres) {
 
 		int x = int((sphere.pos.x + boxSize / 2.0f) * (numCells ) );
@@ -106,9 +104,6 @@ void SphereSystem::uniformGridCollision() {
 
 		occCells.insert(std::tuple<int, int, int>(x,y,z));	
 	}
-
-	if (occCells.size() == 1)
-		std::cout << occCells.size() << std::endl;
 
 	for(auto & occCell : occCells){
 /*
