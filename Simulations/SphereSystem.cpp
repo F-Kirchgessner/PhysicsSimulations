@@ -185,7 +185,7 @@ void SphereSystem::uniformGridCollision() {
 void SphereSystem::checkCells(Sphere **cell1, Sphere **cell2) {
 	if (*cell1 == NULL || *cell2 == NULL)
 		return;
-	if (cell1 == cell2)
+	if (*cell1 == *cell2)
 	{
 		for (int i = 0; i < maxSpheres && cell1[i] != NULL; i++) {
 			for (int j = i + 1; j < maxSpheres && cell2[j] != NULL; j++) {
