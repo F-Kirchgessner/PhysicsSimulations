@@ -242,7 +242,7 @@ void SphereSystem::resolveCollision(Sphere &a, Sphere &b) {
 	penForce.x = lam*(1 - (b.pos.x - a.pos.x) / (2 * a.r));
 	penForce.y = lam*(1 - (b.pos.y - a.pos.y) / (2 * a.r));
 	penForce.z = lam*(1 - (b.pos.z - a.pos.z) / (2 * a.r));
-	//std::cout << penForce.x << ' ' << penForce.y << ' ' << penForce.z << '\n';
+    std::cout << penForce.x << ' ' << penForce.y << ' ' << penForce.z << '\n';
 
 	a.addPenaltyForce(penForce);
 	b.addPenaltyForce(-penForce);

@@ -52,10 +52,12 @@ void RigidbodySystem::updateStep(float elapsedTime)
 
 	m_position += h * velocity;
 	velocity += h * (force / mass);
+	std::cout << velocity << std::endl;
 	angularMomentum += h * torque;
 
 	Mat4 tempInteriatensor = rotation * interiatensorInv * rotMatTranspose;
 	angluarvelocity = tempInteriatensor *angularMomentum;
+	std::cout << angluarvelocity << std::endl;
 
 	orientation += h / 2.0f * Quat(angluarvelocity.x, angluarvelocity.y, angluarvelocity.z,0) * orientation;
 	orientation = orientation.unit();

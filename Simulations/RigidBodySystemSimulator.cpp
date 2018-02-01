@@ -24,7 +24,7 @@ void RigidBodySystemSimulator::initTestScene()
 	switch (m_iTestCase)
 	{
 	case 0:
-		addRigidBody(Vec3(0.0f, 0.0f, 0.0f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
+		addRigidBody(Vec3(0.3f, 0.5f, 0.25f), Vec3(0.25f, 0.25f, 0.25f), 2.0f);
 		applyForceOnBody(getNumberOfRigidBodies() - 1, Vec3(0, 0, 0.125f), Vec3(2, 1, 1));
 		break;
 	case 1:
